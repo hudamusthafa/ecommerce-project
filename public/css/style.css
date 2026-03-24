@@ -116,3 +116,10 @@ input {
   margin-top: 10px;
   color: green;
 }
+
+/* forgot password link */
+.card a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 12px;
+}

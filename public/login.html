@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT IMAGE  -->
+  <div class="left">
+    <img src="https://images.unsplash.com/photo-1603974372039-adc49044b6bd" alt="jewelry">
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="card">
+      <h2>Sign-in</h2>
+
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <div style="text-align:right; font-size:12px; margin-top:5px;">
+          <a href="#">Forgot password</a>
+        </div>
+
+        <button class="btn" type="submit">Login</button>
+      </form>
+
+      <p id="message"></p>
+
+      <div class="login-link">
+        Don’t have an account? <a href="/register.html">Signup Here</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("message").innerText = data.message;
+  });
+</script>
+
+</body>
+</html>
