@@ -61,20 +61,32 @@ h2 {
   margin-bottom: 20px;
 }
 
-
 .google-btn {
-  padding: 10px;
   width: 100%;
-  border: 1px solid #ccc;
+  padding: 10px;
+  border: 1px solid #aaa;
   background: white;
   cursor: pointer;
   border-radius: 5px;
-  font-weight: 500;
 }
-
 /* OR TEXT */
 .or {
+  text-align: center;
   margin: 20px 0;
+  color: gray;
+}
+
+
+/* PASSWORD BOX */
+.password-box {
+  position: relative;
+}
+
+.password-box i {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
   color: gray;
 }
 
@@ -122,4 +134,12 @@ input {
   color: #3b82f6;
   text-decoration: none;
   font-size: 12px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: -5px;   
+  margin-bottom: 5px;
+  text-align: left;
 }

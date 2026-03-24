@@ -4,33 +4,44 @@ const connectDB = require("./src/config/db");
 const authRoutes = require("./src/routes/authRoutes");
 const path = require("path");
 
-
 dotenv.config();
 
 const app = express();
 
-
-// DB connection
+//  DB connection
 connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 
-// Static
+//  Static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// API routes
+// EJS setup
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "src/views"));
+
+//  API routes
 app.use("/api/auth", authRoutes);
 
-// Page routes
+//  Page routes (User)
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
+  res.render("user/login");
 });
 
 app.get("/register", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "register.html"));
+  res.render("user/register");
 });
 
+//  Page routes (Admin)
+app.get("/admin/login", (req, res) => {
+  res.render("admin/login");
+});
+
+
+
+//  Start server
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });

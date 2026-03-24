@@ -9,38 +9,32 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields required" });
+      return res.render("user/register", { message: "All fields required" });
     }
-     const emailLower = email.toLowerCase();
 
-    const userExists = await User.findOne({ email:emailLower});
+    const emailLower = email.toLowerCase();
+
+    const userExists = await User.findOne({ email: emailLower });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.render("user/register", { message: "User already exists" });
     }
 
-  
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    await User.create({
       name,
       email: emailLower,
       password: hashedPassword,
     });
 
-    return res.json({
-  message: "User registered successfully",
-  user: {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-  },
-});
+    //  redirect after success
+    return res.redirect("/login");
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.render("user/register", { message: error.message });
   }
 };
-
 //------------login----------------------
 
 
@@ -49,46 +43,33 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // validation
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields required" });
+      return res.render("user/login", { message: "All fields required" });
     }
-   
 
-    // check user exists
-     const emailLower = email.toLowerCase();
+    const emailLower = email.toLowerCase();
 
-    const user = await User.findOne({ email:emailLower });
+    const user = await User.findOne({ email: emailLower });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.render("user/login", { message: "Invalid credentials" });
     }
 
-    // check blocked user
     if (user.isBlocked) {
-      return res.status(403).json({ message: "User is blocked" });
+      return res.render("user/login", { message: "User is blocked" });
     }
 
-    // compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.render("user/login", { message: "Invalid credentials" });
     }
 
-    // send response (without password)
-    return res.json({
-      message: "Login successful",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    //  success (later redirect to dashboard)
+    return res.send("Login successful");
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.render("user/login", { message: error.message });
   }
 };
-
 

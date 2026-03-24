@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT IMAGE -->
+  <div class="left">
+    <img src="https://images.unsplash.com/photo-1603974372039-adc49044b6bd">
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="card">
+      <h2>Create Account</h2>
+
+      <% if (typeof message !== 'undefined') { %>
+        <p style="color:red;"><%= message %></p>
+      <% } %>
+
+      <!-- GOOGLE BUTTON -->
+      <div class="social">
+        <button class="google-btn" type="button">
+          Sign up with Google
+        </button>
+      </div>
+
+      <div class="or">— OR —</div>
+
+      <!-- FORM -->
+      <form method="POST" action="/api/auth/register" onsubmit="return validateForm()"novalidate>
+
+        <input type="text" name="name" id="name" placeholder="Full Name">
+            <p class="error" id="nameError"></p>
+
+           <input type="text" name="email" id="email" placeholder="Email">
+           <p class="error" id="emailError"></p>
+
+            <div class="password-box">
+              <input type="password" name="password" id="password" placeholder="Password">
+              <i class="fas fa-eye" onclick="togglePassword('password', this)"></i>
+            </div>
+            <p class="error" id="passwordError"></p>
+
+        <button class="btn" type="submit">Create Account</button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="/login">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function togglePassword(id, icon) {
+  const input = document.getElementById(id);
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  }
+}
+
+function validateForm() {
+  let isValid = true;
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  // Clear old errors
+  document.getElementById("nameError").innerText = "";
+  document.getElementById("emailError").innerText = "";
+  document.getElementById("passwordError").innerText = "";
+
+  // Name validation
+  if (!name) {
+    document.getElementById("nameError").innerText = "Name is required";
+    isValid = false;
+  }
+
+  // Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!email) {
+  document.getElementById("emailError").innerText = "Email is required";
+  isValid = false;
+} else if (!emailRegex.test(email)) {
+  document.getElementById("emailError").innerText = "Enter a valid email address";
+  isValid = false;
+}
+
+  // Password validation
+  const regex = /^(?=.*\d).{6,10}$/;
+
+  if (!password) {
+    document.getElementById("passwordError").innerText = "Password is required";
+    isValid = false;
+  } else if (!regex.test(password)) {
+    document.getElementById("passwordError").innerText =
+      "Password must be 6-10 characters with at least one number";
+    isValid = false;
+  }
+
+  return isValid; //  stops form if false
+}
+</script>
+
+</body>
+</html>
