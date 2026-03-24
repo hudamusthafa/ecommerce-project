@@ -118,6 +118,12 @@ if (!email) {
 
   return isValid; //  stops form if false
 }
+
+
+// Replace history so user cannot go back to register
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
 </script>
 
 </body>

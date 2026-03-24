@@ -25,25 +25,27 @@
 
       <!--  Backend Message -->
       <% if (typeof message !== 'undefined') { %>
-        <p style="color:red;"><%= message %></p>
+          <p class="error"><%= message %></p>
       <% } %>
 
       <!--  FORM -->
-      <form method="POST" action="/api/auth/login">
+     <form method="POST" action="/api/auth/login" onsubmit="return validateLogin()" novalidate>
 
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="email" id="email" placeholder="Email">
+        <p class="error" id="emailError"></p>
 
         <div class="password-box">
-          <input type="password" name="password" id="password" placeholder="Password" required>
+          <input type="password" name="password" id="password" placeholder="Password">
           <i class="fas fa-eye" onclick="togglePassword('password', this)"></i>
         </div>
+        <p class="error" id="passwordError"></p>
 
         <div style="text-align:right; font-size:12px; margin-top:5px;">
           <a href="#">Forgot password</a>
         </div>
 
         <button class="btn" type="submit">Login</button>
-      </form>
+    </form>
 
       <div class="login-link">
         Don’t have an account? <a href="/register">Signup Here</a>
@@ -65,6 +67,45 @@ function togglePassword(id, icon) {
     icon.classList.replace("fa-eye-slash", "fa-eye");
   }
 }
+
+function validateLogin() {
+  let isValid = true;
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  // Clear errors
+  document.getElementById("emailError").innerText = "";
+  document.getElementById("passwordError").innerText = "";
+
+  // Email check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    document.getElementById("emailError").innerText = "Email is required";
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    document.getElementById("emailError").innerText = "Enter a valid email";
+    isValid = false;
+  }
+
+  // Password check
+  if (!password) {
+    document.getElementById("passwordError").innerText = "Password is required";
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+
+document.getElementById("email").addEventListener("input", () => {
+  document.getElementById("emailError").innerText = "";
+});
+
+document.getElementById("password").addEventListener("input", () => {
+  document.getElementById("passwordError").innerText = "";
+});
 </script>
 
 </body>
