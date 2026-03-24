@@ -65,8 +65,9 @@ exports.login = async (req, res) => {
       return res.render("user/login", { message: "Invalid credentials" });
     }
 
-    //  success (later redirect to dashboard)
-    return res.send("Login successful");
+    //  success (later redirect to home)
+   // return res.send("Login successful");
+   return res.redirect("/home");
 
   } catch (error) {
     return res.render("user/login", { message: error.message });

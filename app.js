@@ -26,12 +26,15 @@ app.set("views", path.join(__dirname, "src/views"));
 app.use("/api/auth", authRoutes);
 
 //  Page routes (User)
-app.get("/login", (req, res) => {
-  res.render("user/login");
-});
 
 app.get("/register", (req, res) => {
   res.render("user/register");
+});
+app.get("/login", (req, res) => {
+  res.render("user/login");
+});
+app.get("/home", (req, res) => {
+  res.render("user/home");
 });
 
 //  Page routes (Admin)
