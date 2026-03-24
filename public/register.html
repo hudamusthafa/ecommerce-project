@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT IMAGE -->
+  <div class="left">
+    <img src="https://images.unsplash.com/photo-1603974372039-adc49044b6bd" alt="jewelry">
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="card">
+      <h2>Create Account</h2>
+
+      <div class="social">
+       <button class="google-btn">Sign up with Google</button>
+        
+      </div>
+
+      <div class="or">— OR —</div>
+
+      <form id="registerForm">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <button class="btn" type="submit">Create Account</button>
+      </form>
+
+      <p id="message"></p>
+
+      <div class="login-link">
+        Already have an account? <a href="/login.html">Login</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("message").innerText = data.message;
+  });
+</script>
+
+</body>
+</html>

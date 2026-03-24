@@ -1,0 +1,118 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  height: 100vh;
+  background: #7f8c84;
+}
+
+/* CONTAINER */
+.container {
+  display: flex;
+  width: 100%;
+}
+
+/* LEFT SIDE */
+.left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left img {
+  width: 350px;
+  transform: rotate(-10deg);
+  border-radius: 10px;
+}
+
+/* RIGHT SIDE */
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CARD */
+.card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 400px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* SOCIAL BUTTONS */
+.social {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+.google-btn {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+/* OR TEXT */
+.or {
+  margin: 20px 0;
+  color: gray;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+}
+
+/* BUTTON */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #e05252;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+/* LOGIN LINK */
+.login-link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: blue;
+  text-decoration: none;
+}
+
+/* MESSAGE */
+#message {
+  margin-top: 10px;
+  color: green;
+}
