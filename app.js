@@ -37,6 +37,9 @@ app.get("/home", (req, res) => {
   res.render("user/home");
 });
 
+app.get("/otp", (req, res) => {
+  res.render("user/otp");
+});
 //  Page routes (Admin)
 app.get("/admin/login", (req, res) => {
   res.render("admin/login");

@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const Otp = require("../models/Otp");
+const sendEmail = require("../helpers/sendEmail");
 
 
 //-------------register------------
@@ -74,3 +76,98 @@ exports.login = async (req, res) => {
   }
 };
 
+//-------------------OTP send--------------
+
+exports.sendOtp = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const emailLower = email.toLowerCase();
+
+    //  CHECK USER FIRST
+    const existingUser = await User.findOne({ email: emailLower });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    //  GENERATE OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await Otp.deleteMany({ email: emailLower });
+
+    await Otp.create({
+      email: emailLower,
+      otp,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+    });
+
+    await sendEmail(emailLower, otp);
+
+    return res.json({ message: "OTP sent successfully" });
+
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+//-------------verify OTP------------
+
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { email, otp, name, password } = req.body;
+
+    if (!email || !otp || !name || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const emailLower = email.toLowerCase();
+
+    //  Find OTP
+    const record = await Otp.findOne({ email: emailLower, otp });
+
+    if (!record) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    //  Check expiry
+    if (record.expiresAt < new Date()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    //  Check existing user
+    const existingUser = await User.findOne({ email: emailLower });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    //  Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    //  Create user
+    const user = await User.create({
+      name,
+      email: emailLower,
+      password: hashedPassword
+    });
+
+    //  Delete OTP
+    await Otp.deleteMany({ email: emailLower });
+
+    //  Response
+    return res.json({
+      message: "User verified successfully",
+      user: {
+        name: user.name,
+        email: user.email
+      }
+    });
+
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
