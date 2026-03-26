@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Verification</title>
+  <link rel="stylesheet" href="/css/otp.css">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="card">
+
+    <h2>Verify Your Email</h2>
+    <p class="sub-text">
+      Enter the 6-digit code sent to your email to verify your account
+    </p>
+
+    <p id="userEmail"></p>
+
+    <!-- OTP INPUT -->
+    <div class="otp-box">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      
+    </div>
+
+    <p class="error" id="otpError"></p>
+
+    <!-- BUTTON -->
+    <button class="verify-btn" onclick="verifyOtp()">Verify</button>
+
+    <!-- TIMER -->
+    <p class="timer" id="timer">Resend code in 0:45</p>
+
+    <p class="resend-text">
+      Didn’t receive the code?
+      <span id="resend" onclick="resendOtp()">Resend OTP ></span>
+    </p>
+
+    <!-- NOTICE BOX -->
+    <div class="notice">
+      <p>⚠ The 6-digit code will expire in 10 minutes for your security.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+if (!localStorage.getItem("email")) {
+  window.location.href = "/register";
+}
+
+const inputs = document.querySelectorAll(".otp-box input");
+
+inputs.forEach((input, index) => {
+
+  // FORWARD + CLEAR ERROR
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/[^0-9]/g, "");
+    document.getElementById("otpError").innerText = "";
+
+    if (input.value && index < inputs.length - 1) {
+      inputs[index + 1].focus();
+    }
+  });
+
+  // BACKSPACE MOVE
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && index > 0) {
+      inputs[index - 1].focus();
+    }
+  });
+
+});
+inputs[0].focus();
+
+const email = localStorage.getItem("email");
+document.getElementById("userEmail").innerText = email || "No email found";
+
+// TIMER
+let time = 45;
+const timerEl = document.getElementById("timer");
+const resendEl = document.getElementById("resend");
+
+resendEl.style.display = "none";
+
+const interval = setInterval(() => {
+  time--;
+  timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
+
+  if (time <= 0) {
+    clearInterval(interval);
+    timerEl.style.display = "none";
+    resendEl.style.display = "inline";
+  }
+}, 1000);
+
+// VERIFY
+async function verifyOtp() {
+  let otp = "";
+  inputs.forEach(i => otp += i.value);
+
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+  const password = localStorage.getItem("password");
+
+  if (otp.length !== 6) {
+    document.getElementById("otpError").innerText = "Enter valid OTP";
+    return;
+  }
+
+  const res = await fetch("/api/auth/verify-otp", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, otp, name, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+     localStorage.clear(); 
+    window.location.href = "/success";
+  } else {
+    document.getElementById("otpError").innerText = data.message;
+  }
+}
+
+// RESEND
+async function resendOtp() {
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+  const password = localStorage.getItem("password");
+
+  await fetch("/api/auth/send-otp", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, name, password })
+  });
+
+  alert("OTP resent");
+
+  // RESET TIMER
+  time = 45;
+  timerEl.style.display = "block";
+  resendEl.style.display = "none";
+
+  const newInterval = setInterval(() => {
+    time--;
+    timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
+
+    if (time <= 0) {
+      clearInterval(newInterval);
+      timerEl.style.display = "none";
+      resendEl.style.display = "inline";
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>

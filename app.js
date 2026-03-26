@@ -40,6 +40,11 @@ app.get("/home", (req, res) => {
 app.get("/otp", (req, res) => {
   res.render("user/otp");
 });
+
+app.get("/success", (req, res) => {
+  res.render("user/success"); // or res.send("Success")
+});
+
 //  Page routes (Admin)
 app.get("/admin/login", (req, res) => {
   res.render("admin/login");
