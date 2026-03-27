@@ -97,6 +97,8 @@ exports.sendOtp = async (req, res) => {
 
     //  GENERATE OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    console.log("Generated OTP:", otp);
 
     await Otp.deleteMany({ email: emailLower });
 
@@ -106,9 +108,13 @@ exports.sendOtp = async (req, res) => {
       expiresAt: new Date(Date.now() + 5 * 60 * 1000)
     });
 
-    await sendEmail(emailLower, otp);
+    //send response first
+res.json({ message: "OTP sent successfully" });
 
-    return res.json({ message: "OTP sent successfully" });
+// send email in background
+sendEmail(email, otp).catch(err => console.log(err));
+
+
 
   } catch (err) {
     return res.status(500).json({ message: err.message });

@@ -90,7 +90,7 @@ const resendEl = document.getElementById("resend");
 
 resendEl.style.display = "none";
 
-const interval = setInterval(() => {
+let interval = setInterval(() => {
   time--;
   timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
 
@@ -104,16 +104,32 @@ const interval = setInterval(() => {
 // VERIFY
 async function verifyOtp() {
   let otp = "";
-  inputs.forEach(i => otp += i.value);
+  inputs.forEach(i => otp += i.value.trim());
 
   const email = localStorage.getItem("email");
   const name = localStorage.getItem("name");
   const password = localStorage.getItem("password");
 
+if (!email || !name || !password) {
+  document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+  setTimeout(() => {
+    window.location.href = "/register";
+  }, 2000);
+  return;
+}
+
+
   if (otp.length !== 6) {
     document.getElementById("otpError").innerText = "Enter valid OTP";
     return;
   }
+
+  const btn = document.querySelector(".verify-btn");
+btn.disabled = true;
+btn.innerText = "Verifying...";
+
+  try {
+    document.getElementById("otpError").innerText = "";
 
   const res = await fetch("/api/auth/verify-otp", {
     method: "POST",
@@ -124,38 +140,69 @@ async function verifyOtp() {
   const data = await res.json();
 
   if (res.ok) {
-     localStorage.clear(); 
+    btn.disabled = false;
+    btn.innerText = "Verify";
+
+    localStorage.clear();
     window.location.href = "/success";
   } else {
     document.getElementById("otpError").innerText = data.message;
+
+    btn.disabled = false;
+    btn.innerText = "Verify";
   }
+
+} catch (err) {
+  document.getElementById("otpError").innerText = "Network error";
+
+  btn.disabled = false;
+  btn.innerText = "Verify";
+}
+  
 }
 
-// RESEND
+//RESEND OTP
 async function resendOtp() {
   const email = localStorage.getItem("email");
   const name = localStorage.getItem("name");
   const password = localStorage.getItem("password");
 
-  await fetch("/api/auth/send-otp", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ email, name, password })
-  });
+  if (!email || !name || !password) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => {
+      window.location.href = "/register";
+    }, 2000);
+    return;
+  }
 
-  alert("OTP resent");
+  try {
+    document.getElementById("otpError").innerText = "";
+
+    await fetch("/api/auth/send-otp", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ email, name, password })
+    });
+
+    document.getElementById("otpError").innerText = "OTP sent successfully. Please check your email.";
+
+  } catch (err) {
+    document.getElementById("otpError").innerText = "Failed to resend OTP";
+  }
 
   // RESET TIMER
   time = 45;
   timerEl.style.display = "block";
   resendEl.style.display = "none";
 
-  const newInterval = setInterval(() => {
+  clearInterval(interval);
+
+  interval = setInterval(() => {
     time--;
     timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
 
     if (time <= 0) {
-      clearInterval(newInterval);
+      clearInterval(interval);
       timerEl.style.display = "none";
       resendEl.style.display = "inline";
     }
