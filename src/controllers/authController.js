@@ -47,7 +47,12 @@ exports.login = async (req, res) => {
 
     const user = await loginService(email, password);
 
-    return res.redirect("/home");
+   req.login(user, (err) => {
+  if (err) {
+    return res.render("user/login", { message: "Login failed" });
+  }
+  return res.redirect("/home");
+});
 
   } catch (error) {
     return res.render("user/login", { message: error.message });

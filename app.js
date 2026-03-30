@@ -68,6 +68,12 @@ app.get("/reset-password", (req, res) => {
   res.render("user/reset-password");
 });
 
+app.get("/profile", isLoggedIn, (req, res) => {
+  res.render("user/profile", { user: req.user });
+});
+
+
+
 //  Page routes (Admin)
 app.get("/admin/login", (req, res) => {
   res.render("admin/login");

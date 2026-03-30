@@ -1,0 +1,32 @@
+.profile-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.profile-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.profile-img img {
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.profile-info p {
+  margin: 10px 0;
+}
+
+.profile-actions button {
+  padding: 10px 20px;
+  background: #a8743b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

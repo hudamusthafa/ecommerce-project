@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="profile-container">
+
+  <h2>My Profile</h2>
+
+  <div class="profile-card">
+
+    <div class="profile-img">
+      <img src="/images/default.png" alt="Profile" width="120">
+    </div>
+
+    <div class="profile-info">
+      <p><strong>Name:</strong> <%= user.name %></p>
+      <p><strong>Email:</strong> <%= user.email %></p>
+    </div>
+
+    <div class="profile-actions">
+      <a href="/profile/edit">
+        <button>Edit Profile</button>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
