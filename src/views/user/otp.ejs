@@ -52,8 +52,16 @@
 </div>
 
 <script>
-if (!localStorage.getItem("email")) {
+const emailCheck = localStorage.getItem("email");
+const typeCheck = localStorage.getItem("type");
+
+if (!emailCheck) {
   window.location.href = "/register";
+}
+
+//  forgot flow safety
+if (typeCheck === "forgot" && !emailCheck) {
+  window.location.href = "/forgot-password";
 }
 
 const inputs = document.querySelectorAll(".otp-box input");
@@ -101,7 +109,8 @@ let interval = setInterval(() => {
   }
 }, 1000);
 
-// VERIFY
+
+// VERIFY OTP
 async function verifyOtp() {
   let otp = "";
   inputs.forEach(i => otp += i.value.trim());
@@ -109,15 +118,20 @@ async function verifyOtp() {
   const email = localStorage.getItem("email");
   const name = localStorage.getItem("name");
   const password = localStorage.getItem("password");
+  const type = localStorage.getItem("type");
 
-if (!email || !name || !password) {
-  document.getElementById("otpError").innerText = "Session expired. Redirecting...";
-  setTimeout(() => {
-    window.location.href = "/register";
-  }, 2000);
-  return;
-}
+  //  check based on type
+  if (!email) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => window.location.href = "/register", 2000);
+    return;
+  }
 
+  if (type !== "forgot" && (!name || !password)) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => window.location.href = "/register", 2000);
+    return;
+  }
 
   if (otp.length !== 6) {
     document.getElementById("otpError").innerText = "Enter valid OTP";
@@ -125,42 +139,58 @@ if (!email || !name || !password) {
   }
 
   const btn = document.querySelector(".verify-btn");
-btn.disabled = true;
-btn.innerText = "Verifying...";
+  btn.disabled = true;
+  btn.innerText = "Verifying...";
 
   try {
     document.getElementById("otpError").innerText = "";
 
-  const res = await fetch("/api/auth/verify-otp", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ email, otp, name, password })
-  });
+    //  send different body for forgot/signup
+    let bodyData;
 
-  const data = await res.json();
+    if (type === "forgot") {
+      bodyData = { email, otp };
+    } else {
+      bodyData = { email, otp, name, password };
+    }
 
-  if (res.ok) {
-    btn.disabled = false;
-    btn.innerText = "Verify";
+    const res = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(bodyData)
+    });
 
-    localStorage.clear();
-    window.location.href = "/success";
-  } else {
-    document.getElementById("otpError").innerText = data.message;
+    const data = await res.json();
 
+    if (res.ok) {
+      btn.disabled = false;
+      btn.innerText = "Verify";
+
+      //  store type BEFORE clearing
+      const flowType = type;
+
+      if (flowType !== "forgot") {
+  localStorage.clear(); // only for signup
+}
+
+      if (flowType === "forgot") {
+        window.location.href = "/reset-password";
+      } else {
+        window.location.href = "/success";
+      }
+
+    } else {
+      document.getElementById("otpError").innerText = data.message;
+      btn.disabled = false;
+      btn.innerText = "Verify";
+    }
+
+  } catch (err) {
+    document.getElementById("otpError").innerText = "Network error";
     btn.disabled = false;
     btn.innerText = "Verify";
   }
-
-} catch (err) {
-  document.getElementById("otpError").innerText = "Network error";
-
-  btn.disabled = false;
-  btn.innerText = "Verify";
 }
-  
-}
-
 //RESEND OTP
 async function resendOtp() {
   const email = localStorage.getItem("email");

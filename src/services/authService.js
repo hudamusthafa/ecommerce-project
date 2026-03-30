@@ -107,3 +107,28 @@ exports.verifyOtpService = async (email, otp, name, password) => {
 
   return user;
 };
+
+
+//------------FORGOT PASSWORD----------
+
+exports.forgotPasswordService = async (email) => {
+  const emailLower = email.toLowerCase();
+
+  const user = await User.findOne({ email: emailLower });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  await Otp.deleteMany({ email: emailLower });
+
+  await Otp.create({
+    email: emailLower,
+    otp,
+    expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+  });
+
+  return otp;
+};

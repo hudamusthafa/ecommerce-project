@@ -1,11 +1,19 @@
 
+const bcrypt = require("bcrypt");
+const User = require("../models/User");
+const Otp = require("../models/Otp");
 const {
   registerService,
   loginService,
   sendOtpService,
-  verifyOtpService
-} = require("../services/authService");
+  verifyOtpService,
+  forgotPasswordService,
+  resetPasswordService
+        } = require("../services/authService");
 const sendEmail = require("../helpers/sendEmail");
+
+
+
 // ------------------------REGISTER-------------
 
 exports.register = async (req, res) => {
@@ -77,19 +85,80 @@ exports.verifyOtp = async (req, res) => {
   try {
     const { email, otp, name, password } = req.body;
 
-    if (!email || !otp || !name || !password) {
+    //  always required
+    if (!email || !otp) {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    const user = await verifyOtpService(email, otp, name, password);
+    let user;
 
-    return res.json({
-      message: "User verified successfully",
-      user: {
-        name: user.name,
-        email: user.email
-      }
-    });
+    //  SIGNUP FLOW
+    if (name && password) {
+      user = await verifyOtpService(email, otp, name, password);
+
+      return res.json({
+        message: "User verified successfully",
+        user: {
+          name: user.name,
+          email: user.email
+        }
+      });
+    }
+
+    //  FORGOT PASSWORD FLOW
+    const record = await Otp.findOne({ email: email.toLowerCase(), otp });
+
+    if (!record) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (record.expiresAt < new Date()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    return res.json({ message: "OTP verified" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+//-------------FORGOT PASSWORD-------
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email required" });
+    }
+
+    const otp = await forgotPasswordService(email);
+
+    console.log("OTP:", otp);
+
+    res.json({ message: "OTP sent successfully" });
+
+    sendEmail(email, otp).catch(err => console.log(err));
+
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+//-----------------reset password---------------
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await User.updateOne(
+      { email: email.toLowerCase() },
+      { password: hashed }
+    );
+
+    res.json({ message: "Password updated" });
 
   } catch (err) {
     res.status(500).json({ message: err.message });

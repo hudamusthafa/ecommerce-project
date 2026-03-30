@@ -19,6 +19,8 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
+const { isLoggedIn } = require("./src/middleware/authMiddleware");
+
 //  Static files
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -46,8 +48,8 @@ app.get("/register", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("user/login");
 });
-app.get("/home", (req, res) => {
-  res.render("user/home");
+app.get("/home", isLoggedIn, (req, res) => {
+  res.render("user/home", { user: req.user });
 });
 
 app.get("/otp", (req, res) => {
@@ -56,6 +58,14 @@ app.get("/otp", (req, res) => {
 
 app.get("/success", (req, res) => {
   res.render("user/success"); // or res.send("Success")
+});
+
+app.get("/forgot-password", (req, res) => {
+  res.render("user/forgot-password");
+});
+
+app.get("/reset-password", (req, res) => {
+  res.render("user/reset-password");
 });
 
 //  Page routes (Admin)
