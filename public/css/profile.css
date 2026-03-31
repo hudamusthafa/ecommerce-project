@@ -4,25 +4,7 @@ body {
   background-color: #f3f3f3;
 }
 
-/* NAVBAR */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #efe2cf;
-  padding: 15px 40px;
-}
 
-.logo {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.nav-links a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: #333;
-}
 
 .contact-btn {
   background: #b08968;
@@ -178,4 +160,13 @@ copyright {
   border: none;
   border-radius: 20px;
   cursor: pointer;
+}
+.password-btn {
+  background: #6b4f3b;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: inline-block; 
 }
