@@ -3,34 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <title>My Profile</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
 
-<div class="profile-container">
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">Aura</div>
+  <div class="nav-links">
+    <a href="/home">Home</a>
+    <a href="#">Shop</a>
+    <a href="#">Collections</a>
+    <a href="#" class="contact-btn">Contact Us</a>
+  </div>
+</nav>
+
+<div class="profile-page">
 
   <h2>My Profile</h2>
 
   <div class="profile-card">
 
-    <div class="profile-img">
-      <img src="/images/default.png" alt="Profile" width="120">
+  <form action="/profile/update" method="POST" enctype="multipart/form-data">
+
+    <!-- PROFILE IMAGE -->
+    <!--<img src="<%= user.profileImage || '/images/default.png' %>" class="profile-img"> -->
+
+    <!--<input type="file" name="image">-->
+
+    <!-- NAME -->
+    <label>Name</label>
+    <input type="text" name="name" value="<%= user.name %>" required>
+
+    <!-- EMAIL -->
+    <label>Email</label>
+    <input type="email" name="email" value="<%= user.email %>" required>
+
+    <!-- PHONE -->
+    <label>Phone Number</label>
+    <input type="text" name="phone" value="<%= user.phone || '' %>" placeholder="+91xxxxxxxxxx">
+
+    <!-- GENDER -->
+    <label>Gender</label>
+    <div class="gender-box">
+      <label>
+        <input type="radio" name="gender" value="female"
+          <%= user.gender === 'female' ? 'checked' : '' %> > Female
+      </label>
+
+      <label>
+        <input type="radio" name="gender" value="male"
+          <%= user.gender === 'male' ? 'checked' : '' %> > Male
+      </label>
     </div>
 
-    <div class="profile-info">
-      <p><strong>Name:</strong> <%= user.name %></p>
-      <p><strong>Email:</strong> <%= user.email %></p>
-    </div>
+    <!-- SAVE BUTTON -->
+    <button type="submit" class="save-btn">Save Changes</button>
 
-    <div class="profile-actions">
-      <a href="/profile/edit">
-        <button>Edit Profile</button>
-      </a>
-    </div>
+  </form>
+
+</div>
+
+  <!-- EDIT PROFILE -->
+  <div class="edit-section">
+
+    
+
+  </div>
+
+  <!-- CHANGE PASSWORD -->
+  <div class="password-section">
+
+    <h3>Change Password</h3>
+
+    <form action="/profile/password" method="POST">
+
+      <input type="password" name="currentPassword" placeholder="Current Password">
+
+      <input type="password" name="newPassword" placeholder="New Password">
+
+      <input type="password" name="confirmPassword" placeholder="Confirm Password">
+
+      <button type="submit">Change Password</button>
+
+    </form>
 
   </div>
 
 </div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div>
+      <h4>ANTI TARNISH</h4>
+      <p>Timeless elegance crafted with anti-tarnish technology.</p>
+    </div>
+
+    <div>
+      <h4>SHOP</h4>
+      <p>Necklaces</p>
+      <p>Earrings</p>
+      <p>Rings</p>
+      <p>Anklets</p>
+    </div>
+
+    <div>
+      <h4>CUSTOMER CARE</h4>
+      <p>My Account</p>
+      <p>Track Order</p>
+      <p>Shipping & Delivery</p>
+    </div>
+
+    <div>
+      <h4>POLICIES</h4>
+      <p>Privacy Policy</p>
+      <p>Terms</p>
+      <p>Refund Policy</p>
+    </div>
+  </div>
+
+  <p class="copyright">© 2026 Your Brand Name. All Rights Reserved.</p>
+</footer>
 
 </body>
 </html>

@@ -1,32 +1,181 @@
-.profile-container {
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* NAVBAR */
+.navbar {
   display: flex;
-  justify-content: center;
-  margin-top: 50px;
+  justify-content: space-between;
+  align-items: center;
+  background: #efe2cf;
+  padding: 15px 40px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.nav-links a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #333;
+}
+
+.contact-btn {
+  background: #b08968;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+
+/* PROFILE */
+.profile-container {
+  text-align: center;
+  margin: 50px 0;
 }
 
 .profile-card {
   background: #fff;
-  padding: 30px;
+  width: 280px;
+  margin: auto;
+  padding: 25px;
   border-radius: 10px;
-  text-align: center;
-  width: 300px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .profile-img img {
   border-radius: 50%;
-  margin-bottom: 15px;
 }
 
-.profile-info p {
-  margin: 10px 0;
-}
-
-.profile-actions button {
+.edit-btn {
+  margin-top: 15px;
   padding: 10px 20px;
-  background: #a8743b;
+  background: #6b4f3b;
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+/* FOOTER */
+.footer {
+  background: #6b4f3b;
+  color: white;
+  padding: 40px 20px;
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer h4 {
+  margin-bottom: 10px;
+}
+
+.footer p {
+  font-size: 14px;
+}
+
+copyright {
+  text-align: center;
+}
+.profile-page {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  background: #fff;
+  width: 260px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.profile-img {
+  width: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.edit-btn {
+  background: #6b4f3b;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+/* EDIT SECTION */
+.edit-section {
+  width: 350px;
+  margin: 30px auto;
+}
+
+.edit-section input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+/* PASSWORD */
+.password-section {
+  width: 350px;
+  margin: 30px auto;
+}
+
+.password-section input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+.profile-card {
+  background: #fff;
+  width: 300px;
+  margin: 20px auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.profile-card label {
+  font-size: 14px;
+  margin-top: 10px;
+  display: block;
+}
+
+.profile-card input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.gender-box {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.save-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #6b4f3b;
+  color: white;
+  border: none;
+  border-radius: 20px;
   cursor: pointer;
 }
