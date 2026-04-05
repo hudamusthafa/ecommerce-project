@@ -36,19 +36,11 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
 
-const multer = require("multer");
+
 const User = require("../models/User");
 const { isLoggedIn } = require("../middleware/authMiddleware");
 
-// multer config
-const storage = multer.diskStorage({
-  destination: "public/uploads",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + file.originalname);
-  }
-});
-
-const upload = multer({ storage });
+const upload = require("../middleware/upload");
 
 //profile route
 router.get("/profile", isLoggedIn, (req, res) => {

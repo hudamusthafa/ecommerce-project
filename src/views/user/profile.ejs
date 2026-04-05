@@ -22,7 +22,14 @@
   <form action="/profile/update" method="POST" enctype="multipart/form-data">
 
     <!-- PROFILE IMAGE -->
-    <!--<img src="<%= user.profileImage || '/images/default.png' %>" class="profile-img"> -->
+<img 
+  src="<%= user.profileImage && user.profileImage !== '' 
+          ? user.profileImage 
+          : '/images/default-avatar.png' %>" 
+  class="profile-img"
+>
+
+   
 
     
 

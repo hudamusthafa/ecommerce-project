@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String
     },
+     profileImage: {
+      type: String,
+      default: "/images/default-avatar.png",
+    },
     isBlocked: {
       type: Boolean,
       default: false,
