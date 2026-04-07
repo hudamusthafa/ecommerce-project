@@ -8,7 +8,8 @@ const {
   sendOtpService,
   verifyOtpService,
   forgotPasswordService,
-  resetPasswordService
+  resetPasswordService,
+  changePasswordService 
         } = require("../services/authService");
 const sendEmail = require("../helpers/sendEmail");
 
@@ -167,5 +168,64 @@ exports.resetPassword = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+//----------------change paswrd in profile---------
+
+// exports.changePassword = async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+//     const { currentPassword, newPassword, confirmPassword } = req.body;
+
+//     // validation (keep here)
+//     if (!currentPassword || !newPassword || !confirmPassword) {
+//       return res.send("All fields are required");
+//     }
+
+//     if (newPassword !== confirmPassword) {
+//       return res.send("Passwords do not match");
+//     }
+
+//     // call service
+//     await changePasswordService(userId, currentPassword, newPassword);
+
+//     res.redirect("/profile");
+
+//   } catch (error) {
+//     res.send(error.message);
+//   }
+// };
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.render("user/profile", { 
+        user: req.user, 
+        message: "All fields are required" 
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.render("user/profile", { 
+        user: req.user, 
+        message: "Passwords do not match" 
+      });
+    }
+
+    await changePasswordService(userId, currentPassword, newPassword);
+
+    return res.render("user/profile", { 
+      user: req.user, 
+      message: "Password changed successfully" 
+    });
+
+  } catch (error) {
+    return res.render("user/profile", { 
+      user: req.user, 
+      message: error.message 
+    });
   }
 };

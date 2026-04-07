@@ -132,3 +132,29 @@ exports.forgotPasswordService = async (email) => {
 
   return otp;
 };
+
+// ---------------- CHANGE PASSWORD IN PROFILE----------------
+
+exports.changePasswordService = async (userId, currentPassword, newPassword) => {
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // check current password
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isMatch) {
+    throw new Error("Current password is incorrect");
+  }
+
+  // hash new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+  await user.save();
+
+  return true;
+};
