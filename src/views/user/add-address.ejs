@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Address</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+</head>
+<body>
+
+<%- include('../partials/header') %>
+
+<h2 style="text-align:center;">Add New Address</h2>
+
+<form action="/api/auth/address/add" method="POST" style="width:400px; margin: auto;">
+
+  <input name="fullName" placeholder="Full Name" required><br><br>
+  <input name="phone" placeholder="Phone" required><br><br>
+  <input name="pincode" placeholder="Pincode" required><br><br>
+  <input name="city" placeholder="City" required><br><br>
+  <input name="state" placeholder="State" required><br><br>
+  <input name="house" placeholder="House No" required><br><br>
+  <input name="area" placeholder="Area" required><br><br>
+
+  <button type="submit">Save Address</button>
+
+</form>
+
+</body>
+</html>

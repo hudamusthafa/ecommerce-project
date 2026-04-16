@@ -8,6 +8,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const path = require("path");
 const passport = require("./src/config/passport");
 const session = require("express-session");
+const User = require("./src/models/User");
 
 
 const app = express();
@@ -72,14 +73,19 @@ app.get("/profile", isLoggedIn, (req, res) => {
   res.render("user/profile", { user: req.user });
 });
 
-
+app.get("/checkout", isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user._id);
+  res.render("user/checkout", { user });
+});
 
 //  Page routes (Admin)
 app.get("/admin/login", (req, res) => {
   res.render("admin/login");
 });
 
-
+app.get("/address/new", isLoggedIn, (req, res) => {
+  res.render("user/add-address");
+});
 
 //  Start server
 app.listen(process.env.PORT, () => {

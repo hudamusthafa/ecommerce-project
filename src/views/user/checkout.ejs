@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<%- include('../partials/header') %>
+
+<h2 style="text-align:center;">Check Out</h2>
+
+<div class="checkout-container">
+
+  <!-- LEFT SIDE -->
+  <div class="left-section">
+
+    <!-- ADDRESS -->
+    <h3>Select Delivery Address</h3>
+   
+
+    <div class="address-list">
+
+  <!-- ADDRESS 1 -->
+  <div class="address-block">
+    <label class="address-title">
+      <input type="radio" name="selectedAddress">
+      Address 1
+    </label>
+
+    <div class="address-card">
+      <p>Jasna</p>
+      <p>Sreyas house</p>
+      <p>nilagiri</p>
+      <p>nilagiri,679 885</p>
+      <p>kerala,India</p>
+      <p>ph:</p>
+
+      <div class="address-actions">
+        <button class="btn">Edit</button>
+        <button class="btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDRESS 2 -->
+  <div class="address-block">
+    <label class="address-title">
+      <input type="radio" name="selectedAddress">
+      Address 2
+    </label>
+
+    <div class="address-card">
+      <p>Jasna</p>
+      <p>Sreyas house</p>
+      <p>nilagiri</p>
+      <p>nilagiri,679 885</p>
+      <p>kerala,India</p>
+      <p>ph:</p>
+
+      <div class="address-actions">
+        <button class="btn">Edit</button>
+        <button class="btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+ 
+
+    <!-- PAYMENT (NOW UNDER ADDRESS) -->
+    <div class="payment-section">
+
+      <h3>Payment Methods</h3>
+
+      <!-- BANK + ICONS -->
+      <div class="payment-row">
+        <input type="radio" name="payment">
+        <span>Bank</span>
+
+        <div class="payment-icons">
+          <img src="https://img.icons8.com/color/48/visa.png">
+          <img src="https://img.icons8.com/color/48/mastercard.png">
+          <img src="https://img.icons8.com/color/48/amex.png">
+        </div>
+      </div>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Cash on delivery
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Google Pay
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Razor Pay
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Wallet
+      </label>
+
+      <!-- COUPON -->
+      <div class="coupon">
+        <input type="text" placeholder="Coupon Code">
+        <button class="btn">Apply</button>
+      </div>
+
+      <button class="btn" style="margin-top:10px;">View all coupons</button>
+
+    </div>
+
+  </div>
+<div class="center-add-address">
+  <a href="/address/new" class="add-new">Add new Address</a>
+</div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-section">
+
+    <h4>Order Summary</h4>
+
+    <p>Items $1457</p>
+    <p>Delivery $0</p>
+    <p>Total $1457</p>
+
+    <h5 style="margin-top:10px;">Order Total $1457</h5>
+
+    <button class="btn" style="margin-top:10px;">Pay now</button>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<%- include('../partials/footer') %>
+
+</body>
+</html>

@@ -229,3 +229,38 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
+//-----------------add address-------------
+exports.addAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    user.address.push(req.body);
+
+    await user.save();
+
+    res.redirect("/api/auth/checkout");
+
+  } catch (err) {
+    res.send("Error adding address");
+  }
+};
+
+//---------------delete address---------
+
+exports.deleteAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    user.address = user.address.filter(
+      addr => addr._id.toString() !== req.params.id
+    );
+
+    await user.save();
+
+    res.redirect("/api/auth/checkout");
+
+  } catch (err) {
+    res.send("Error deleting address");
+  }
+};

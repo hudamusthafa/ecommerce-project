@@ -22,8 +22,21 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+     address: [
+      {
+        fullName: String,
+        phone: String,
+        pincode: String,
+        city: String,
+        state: String,
+        house: String,
+        area: String,
+      }
+    ]
+
   },
-  { timestamps: true }
+  { timestamps: true },
+  
 );
 
 module.exports = mongoose.model("User", userSchema);

@@ -8,7 +8,9 @@ const {
   verifyOtp,
   forgotPassword,   
   resetPassword,
-  changePassword     
+  changePassword,
+  addAddress,          
+  deleteAddress   
 } = require("../controllers/authController");
 
 router.post("/register", register);
@@ -88,9 +90,15 @@ router.post("/profile/password", isLoggedIn, changePassword);
 
 
 
+router.get("/checkout", isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user._id);
+  res.render("user/checkout", { user });
+});
 
+// router.post("/address/add", isLoggedIn, addAddress);
+// router.post("/address/delete/:id", isLoggedIn, deleteAddress);
 
-
-
-
+router.get("/address/new", isLoggedIn, (req, res) => {
+  res.render("user/add-address"); // we will create this page later
+});
 module.exports = router;
