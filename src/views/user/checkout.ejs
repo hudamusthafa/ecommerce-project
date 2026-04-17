@@ -47,13 +47,17 @@
               <p><%= addr.state %>, India</p>
               <p>Ph: <%= addr.phone %></p>
 
-              <div class="address-actions">
-                <button class="btn">Edit</button>
+         <div class="address-actions">
 
-                <button type="button" class="btn delete-btn" onclick="openDeleteModal('<%= addr._id %>')">
-                  Delete
-                </button>
-              </div>
+  <!-- EDIT BUTTON -->
+  <a href="/api/auth/address/edit/<%= addr._id %>" class="btn">Edit</a>
+
+  <!-- DELETE BUTTON -->
+  <button class="btn" onclick="openDeleteModal('<%= addr._id %>')">
+    Delete
+  </button>
+
+</div>
             </div>
 
           </div>

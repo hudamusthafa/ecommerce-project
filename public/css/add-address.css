@@ -73,3 +73,9 @@ textarea {
   margin-top: 15px;
   cursor: pointer;
 }
+.page-title {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 28px;
+  font-weight: 600;
+}

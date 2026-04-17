@@ -10,7 +10,8 @@ const {
   resetPassword,
   changePassword,
   addAddress,          
-  deleteAddress   
+  deleteAddress,
+  updateAddress 
 } = require("../controllers/authController");
 
 router.post("/register", register);
@@ -99,6 +100,21 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
  router.post("/address/delete/:id", isLoggedIn, deleteAddress);
 
 router.get("/address/new", isLoggedIn, (req, res) => {
-  res.render("user/add-address"); // we will create this page later
+  res.render("user/add-address", { address: null });
 });
+
+
+router.get("/address/edit/:id", isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  const address = user.address.id(req.params.id);
+
+  res.render("user/add-address", { address }); // reuse same page
+});
+
+
+router.post("/address/update/:id", isLoggedIn, updateAddress);
+
+
+
 module.exports = router;

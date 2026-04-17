@@ -238,8 +238,7 @@ exports.addAddress = async (req, res) => {
     user.address.push(req.body);
 
     await user.save();
-console.log(user.address);
-console.log(user.address);
+
     res.redirect("/api/auth/checkout");
 
   } catch (err) {
@@ -263,5 +262,31 @@ exports.deleteAddress = async (req, res) => {
 
   } catch (err) {
     res.send("Error deleting address");
+  }
+};
+
+
+exports.updateAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    const address = user.address.id(req.params.id);
+
+    if (address) {
+      address.fullName = req.body.fullName;
+      address.phone = req.body.phone;
+      address.pincode = req.body.pincode;
+      address.city = req.body.city;
+      address.state = req.body.state;
+      address.house = req.body.house;
+      address.area = req.body.area;
+    }
+
+    await user.save();
+
+    res.redirect("/api/auth/checkout");
+
+  } catch (err) {
+    res.send("Error updating address");
   }
 };
