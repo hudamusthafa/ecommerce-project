@@ -238,7 +238,8 @@ exports.addAddress = async (req, res) => {
     user.address.push(req.body);
 
     await user.save();
-
+console.log(user.address);
+console.log(user.address);
     res.redirect("/api/auth/checkout");
 
   } catch (err) {

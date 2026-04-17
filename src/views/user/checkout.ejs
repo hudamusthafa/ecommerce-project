@@ -23,63 +23,56 @@
 
     <!-- ADDRESS -->
     <h3>Select Delivery Address</h3>
-   
 
     <div class="address-list">
 
-  <!-- ADDRESS 1 -->
-  <div class="address-block">
-    <label class="address-title">
-      <input type="radio" name="selectedAddress">
-      Address 1
-    </label>
+      <% if (user.address && user.address.length > 0) { %>
 
-    <div class="address-card">
-      <p>Jasna</p>
-      <p>Sreyas house</p>
-      <p>nilagiri</p>
-      <p>nilagiri,679 885</p>
-      <p>kerala,India</p>
-      <p>ph:</p>
+        <% user.address.forEach((addr, index) => { %>
 
-      <div class="address-actions">
-        <button class="btn">Edit</button>
-        <button class="btn">Delete</button>
-      </div>
+          <div class="address-block">
+
+            <!-- RADIO + TITLE -->
+            <label class="address-title">
+              <input type="radio" name="selectedAddress" value="<%= addr._id %>">
+              Address <%= index + 1 %>
+            </label>
+
+            <!-- ADDRESS CARD -->
+            <div class="address-card">
+              <p><%= addr.fullName %></p>
+              <p><%= addr.house %></p>
+              <p><%= addr.area %></p>
+              <p><%= addr.city %>, <%= addr.pincode %></p>
+              <p><%= addr.state %>, India</p>
+              <p>Ph: <%= addr.phone %></p>
+
+              <div class="address-actions">
+                <button class="btn">Edit</button>
+
+                <form action="/api/auth/address/delete/<%= addr._id %>" method="POST">
+                  <button class="btn">Delete</button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      <% } else { %>
+
+        <p>No address found</p>
+
+      <% } %>
+
     </div>
-  </div>
 
-  <!-- ADDRESS 2 -->
-  <div class="address-block">
-    <label class="address-title">
-      <input type="radio" name="selectedAddress">
-      Address 2
-    </label>
-
-    <div class="address-card">
-      <p>Jasna</p>
-      <p>Sreyas house</p>
-      <p>nilagiri</p>
-      <p>nilagiri,679 885</p>
-      <p>kerala,India</p>
-      <p>ph:</p>
-
-      <div class="address-actions">
-        <button class="btn">Edit</button>
-        <button class="btn">Delete</button>
-      </div>
-    </div>
-  </div>
-
-</div>
- 
-
-    <!-- PAYMENT (NOW UNDER ADDRESS) -->
+    <!-- PAYMENT -->
     <div class="payment-section">
 
       <h3>Payment Methods</h3>
 
-      <!-- BANK + ICONS -->
       <div class="payment-row">
         <input type="radio" name="payment">
         <span>Bank</span>
@@ -118,9 +111,11 @@
     </div>
 
   </div>
-<div class="center-add-address">
-  <a href="/address/new" class="add-new">Add new Address</a>
-</div>
+
+  <!-- CENTER ADD ADDRESS -->
+  <div class="center-add-address">
+    <a href="/api/auth/address/new" class="add-new">Add new Address</a>
+  </div>
 
   <!-- RIGHT SIDE -->
   <div class="right-section">

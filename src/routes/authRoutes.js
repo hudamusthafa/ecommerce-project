@@ -95,8 +95,8 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
   res.render("user/checkout", { user });
 });
 
-// router.post("/address/add", isLoggedIn, addAddress);
-// router.post("/address/delete/:id", isLoggedIn, deleteAddress);
+ router.post("/address/add", isLoggedIn, addAddress);
+ router.post("/address/delete/:id", isLoggedIn, deleteAddress);
 
 router.get("/address/new", isLoggedIn, (req, res) => {
   res.render("user/add-address"); // we will create this page later
