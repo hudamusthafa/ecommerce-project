@@ -11,15 +11,40 @@
 
   <!-- NAVBAR -->
   <div class="navbar">
+
+    <!-- LEFT -->
     <div class="logo">JEWELLERY & CO.</div>
+
+    <!-- CENTER -->
     <div class="nav-links">
       <a href="#">Collection</a>
       <a href="#">About</a>
       <a href="#">Stores</a>
       <a href="#">Contact</a>
     </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+
+      <% if (user) { %>
+
+        <a href="/logout" class="logout">Logout</a>
+
+      <% } else { %>
+
+        <a href="/login" class="login-btn">Login</a>
+        <a href="/register" class="signup-btn">Sign Up</a>
+
+      <% } %>
+
+    </div>
+
   </div>
-  <h2>Welcome <%= user.name %></h2>
+
+  <!-- WELCOME TEXT -->
+ <% if (user) { %>
+  <h2 class="welcome-text">Welcome <%= user.name %></h2>
+<% } %>
 
   <!-- HERO SECTION -->
   <div class="hero-content">

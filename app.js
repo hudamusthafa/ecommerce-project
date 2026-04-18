@@ -37,6 +37,10 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
 //  API routes
 app.use("/api/auth", authRoutes);
@@ -49,10 +53,9 @@ app.get("/register", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("user/login");
 });
-app.get("/home", isLoggedIn, (req, res) => {
-  res.render("user/home", { user: req.user });
+app.get("/home", (req, res) => {
+  res.render("user/home", { user: req.user || null });
 });
-
 app.get("/otp", (req, res) => {
   res.render("user/otp");
 });
@@ -76,6 +79,24 @@ app.get("/profile", isLoggedIn, (req, res) => {
 app.get("/checkout", isLoggedIn, async (req, res) => {
   const user = await User.findById(req.user._id);
   res.render("user/checkout", { user });
+});
+
+app.get("/logout", (req, res) => {
+  req.logout(function(err) {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect("/login"); // 
+  });
+});
+app.get("/logout", (req, res) => {
+  req.logout(function(err) {
+    if (err) return next(err);
+
+    req.session.destroy(() => {
+      res.redirect("/login");
+    });
+  });
 });
 
 //  Page routes (Admin)

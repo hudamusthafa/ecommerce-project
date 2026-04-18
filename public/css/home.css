@@ -85,3 +85,42 @@ body {
 .hero-text button:hover {
   background: #ddd;
 }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* right section */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* buttons */
+.login-btn {
+  color: white;
+  text-decoration: none;
+}
+
+.signup-btn {
+  background: #b08968;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.logout {
+  background: #b08968;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.logout:hover {
+  background: #9c7456;
+}
