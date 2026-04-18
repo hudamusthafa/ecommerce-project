@@ -1,114 +1,56 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const path = require("path");
+const session = require("express-session");
 
 dotenv.config();
 
 const connectDB = require("./src/config/db");
-const authRoutes = require("./src/routes/authRoutes");
-const path = require("path");
 const passport = require("./src/config/passport");
-const session = require("express-session");
-const User = require("./src/models/User");
 
+// Routes
+const authRoutes = require("./src/routes/authRoutes");
+const userRoutes = require("./src/routes/userRoutes");
+const adminRoutes = require("./src/routes/adminRoutes");   // 👈 NEW
 
 const app = express();
 
-//  DB connection
+// DB
 connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
-
-const { isLoggedIn } = require("./src/middleware/authMiddleware");
-
-//  Static files
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// EJS setup
+// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
 
+// Session
 app.use(session({
   secret: "secretkey",
   resave: false,
   saveUninitialized: true
 }));
 
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Global user
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
 
-//  API routes
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/", userRoutes);   //  All page routes here
+app.use("/admin", adminRoutes);
 
-//  Page routes (User)
 
-app.get("/register", (req, res) => {
-  res.render("user/register");
-});
-app.get("/login", (req, res) => {
-  res.render("user/login");
-});
-app.get("/home", (req, res) => {
-  res.render("user/home", { user: req.user || null });
-});
-app.get("/otp", (req, res) => {
-  res.render("user/otp");
-});
-
-app.get("/success", (req, res) => {
-  res.render("user/success"); // or res.send("Success")
-});
-
-app.get("/forgot-password", (req, res) => {
-  res.render("user/forgot-password");
-});
-
-app.get("/reset-password", (req, res) => {
-  res.render("user/reset-password");
-});
-
-app.get("/profile", isLoggedIn, (req, res) => {
-  res.render("user/profile", { user: req.user });
-});
-
-app.get("/checkout", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  res.render("user/checkout", { user });
-});
-
-app.get("/logout", (req, res) => {
-  req.logout(function(err) {
-    if (err) {
-      console.log(err);
-    }
-    res.redirect("/login"); // 
-  });
-});
-app.get("/logout", (req, res) => {
-  req.logout(function(err) {
-    if (err) return next(err);
-
-    req.session.destroy(() => {
-      res.redirect("/login");
-    });
-  });
-});
-
-//  Page routes (Admin)
-app.get("/admin/login", (req, res) => {
-  res.render("admin/login");
-});
-
-app.get("/address/new", isLoggedIn, (req, res) => {
-  res.render("user/add-address");
-});
-
-//  Start server
+// Server
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
