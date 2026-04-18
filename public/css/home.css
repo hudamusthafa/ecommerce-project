@@ -124,3 +124,12 @@ body {
 .logout:hover {
   background: #9c7456;
 }
+.profile-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.profile-link:hover {
+  text-decoration: underline;
+}
