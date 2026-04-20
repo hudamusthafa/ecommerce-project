@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "/images/default-avatar.png",
     },
+     isAdmin: {
+    type: Boolean,
+    default: false
+  },
     isBlocked: {
       type: Boolean,
       default: false,

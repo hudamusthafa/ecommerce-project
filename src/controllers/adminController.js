@@ -1,14 +1,37 @@
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+
 exports.getLogin = (req, res) => {
   res.render("admin/login");
 };
 
-exports.postLogin = (req, res) => {
-  const { email, password } = req.body;
+exports.postLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  // TEMP LOGIN 
-  if (email === "admin@gmail.com" && password === "1234") {
-    return res.redirect("/admin/dashboard");
+    // 1. Find admin user
+    const admin = await User.findOne({ email, isAdmin: true });
+
+    if (!admin) {
+      return res.send("Invalid Admin Credentials");
+    }
+
+    // 2. Compare password
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isMatch) {
+      return res.send("Invalid Admin Credentials");
+    }
+
+    // 3. Success → go dashboard
+    res.redirect("/admin/dashboard");
+
+  } catch (error) {
+    console.log(error);
+    res.send("Server Error");
   }
+};
 
-  res.send("Invalid Admin Credentials");
+exports.getDashboard = (req, res) => {
+  res.render("admin/dashboard");
 };

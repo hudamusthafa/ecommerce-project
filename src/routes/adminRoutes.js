@@ -8,9 +8,7 @@ router.get("/login", adminController.getLogin);
 // POST login
 router.post("/login", adminController.postLogin);
 
-// dashboard (temporary)
-router.get("/dashboard", (req, res) => {
-  res.send("Admin Dashboard");
-});
+// dashboard 
+router.get("/dashboard", adminController.getDashboard);
 
 module.exports = router;

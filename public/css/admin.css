@@ -8,6 +8,7 @@ body {
 .login-container {
   display: flex;
   height: 100vh;
+  padding: 0 80px; 
 }
 
 /* LEFT IMAGE */
@@ -16,13 +17,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: transparent; 
 }
 
-.left img {
-  width: 350px;
-  transform: rotate(-10deg);
+/* .left img {
+  width: 520px;          
+  max-width: 90%;
+  transform: rotate(-12deg); 
   border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.25); 
+  background: none; 
+} */
+ .left img {
+  width: 650px;             
+  transform: rotate(-12deg);
+  border-radius: 14px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+
+  position: relative;
+  left: -60px;               
 }
 
 /* RIGHT */
@@ -36,23 +49,25 @@ body {
 /* CARD */
 .card {
   background: #f3eaea;
-  padding: 40px;
+  padding:  60px 50px; 
   border-radius: 20px;
-  width: 320px;
+  width: 420px;
   text-align: center;
 }
 
 .card h2 {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+   font-size: 32px; 
 }
 
 /* INPUT */
 .card input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 14px;        /* bigger */
+  margin: 18px 0;
+  font-size: 16px;      /* bigger text */
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #bbb;
   background: transparent;
   outline: none;
 }
@@ -60,23 +75,18 @@ body {
 /* BUTTON */
 .card button {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
+  font-size: 18px;     /* bigger text */
   background: #e05a52;
   color: white;
   border: none;
-  border-radius: 5px;
-  margin-top: 20px;
+  border-radius: 8px;
+  margin-top: 25px;
   cursor: pointer;
 }
 
 /* TEXT */
 .forgot {
-  margin-top: 15px;
-  font-size: 12px;
-}
-.left img {
-  width: 350px;
-  transform: rotate(-10deg);
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  margin-top: 20px;
+  font-size: 14px;   /* increased */
 }
