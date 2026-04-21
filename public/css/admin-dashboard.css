@@ -224,3 +224,18 @@ th, td {
 .dot.red {
   background: red;
 }
+.sidebar a {
+  text-decoration: none;
+  color: black;
+  display: block;
+  padding: 8px 0;
+}
+
+.sidebar a:hover {
+  color: #e05a52;
+}
+
+.sidebar .active a {
+  font-weight: bold;
+  color: #e05a52;
+}

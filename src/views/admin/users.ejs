@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+
+  <link rel="stylesheet" href="/css/users.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <h3>MENU</h3>
+    <ul>
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li>Products</li>
+      <li>Category</li>
+      <li>Orders</li>
+      <li>Coupon</li>
+      <li>Transaction</li>
+    </ul>
+
+    <ul class="section">
+      <li class="section-title active-section">User Management</li>
+      <li>Customers</li>
+    </ul>
+
+    <ul class="section">
+      <li class="section-title">Others</li>
+      <li>Settings</li>
+      <li>Help</li>
+      <li>Logout</li>
+    </ul>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="users-container">
+
+      <h2 class="title">Users</h2>
+
+      <!-- TOP BAR -->
+      <div class="top-bar">
+
+        <div class="tabs">
+          <a href="/admin/users" class="<%= !filter ? 'active-tab' : '' %>">All</a>
+          <a href="/admin/users?filter=active" class="<%= filter==='active' ? 'active-tab' : '' %>">Active</a>
+          <a href="/admin/users?filter=blocked" class="<%= filter==='blocked' ? 'active-tab' : '' %>">Blocked</a>
+        </div>
+
+        <div class="right-actions">
+          <form method="GET" action="/admin/users">
+            <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+            <button type="submit">Search</button>
+
+            <% if (search) { %>
+              <a href="/admin/users" class="clear-btn">Clear</a>
+            <% } %>
+          </form>
+
+          <button class="new-btn">+ New user</button>
+        </div>
+
+      </div>
+
+      <p>Total Users: <%= users.length %></p>
+
+      <!-- TABLE -->
+      <div class="table-box">
+
+        <table class="users-table">
+
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% users.forEach(user => { %>
+              <tr>
+
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.phone || '-' %></td>
+
+                <td class="<%= user.isBlocked ? 'blocked' : 'active' %>">
+                  <%= user.isBlocked ? "Blocked" : "Active" %>
+                </td>
+
+                <td class="action-btns">
+
+                  <% if(user.isBlocked) { %>
+                    <form action="/admin/unblock-user/<%= user._id %>" method="POST">
+                      <button>🔓</button>
+                    </form>
+                  <% } else { %>
+                    <form action="/admin/block-user/<%= user._id %>" method="POST">
+                      <button>🚫</button>
+                    </form>
+                  <% } %>
+
+                  <a href="/admin/edit-user/<%= user._id %>">
+                    <button type="button">✏️</button>
+                  </a>
+
+                  <!-- DELETE -->
+                  <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
+
+                </td>
+
+              </tr>
+            <% }) %>
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DELETE FORM -->
+<form id="deleteForm" method="POST"></form>
+
+<!-- MODAL -->
+<div id="deleteModal" class="modal">
+  <div class="modal-box">
+    <p>Delete this user?</p>
+
+    <button class="confirm-btn" onclick="confirmDelete()">Yes</button>
+    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  let deleteId = "";
+
+  function openModal(id) {
+    deleteId = id;
+    document.getElementById("deleteModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+  }
+
+  function confirmDelete() {
+    const form = document.getElementById("deleteForm");
+    form.action = "/admin/delete-user/" + deleteId;
+    form.submit();
+  }
+</script>
+
+</body>
+</html>

@@ -36,9 +36,19 @@ const userSchema = new mongoose.Schema(
         house: String,
         area: String,
       }
-    ]
+    ],
+     isBlocked: {
+        type: Boolean,
+        default: false
+    },
+    isDeleted: {
+  type: Boolean,
+  default: false
+},
+
 
   },
+ 
   { timestamps: true },
   
 );
