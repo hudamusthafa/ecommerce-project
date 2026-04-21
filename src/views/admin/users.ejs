@@ -100,24 +100,46 @@
 
                 <td class="action-btns">
 
-                  <% if(user.isBlocked) { %>
-                    <form action="/admin/unblock-user/<%= user._id %>" method="POST">
-                      <button>🔓</button>
-                    </form>
-                  <% } else { %>
-                    <form action="/admin/block-user/<%= user._id %>" method="POST">
-                      <button>🚫</button>
-                    </form>
-                  <% } %>
+  <!-- BLOCK -->
+  <% if(!user.isBlocked) { %>
+    <button type="button" onclick="openBlockModal('<%= user._id %>')">🚫</button>
+  <% } %>
 
-                  <a href="/admin/edit-user/<%= user._id %>">
-                    <button type="button">✏️</button>
-                  </a>
+  <!-- UNBLOCK -->
+  <% if(user.isBlocked) { %>
+    <button type="button" onclick="openUnblockModal('<%= user._id %>')">🔓</button>
+  <% } %>
 
-                  <!-- DELETE -->
-                  <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
+  <!-- EDIT -->
+  <a href="/admin/edit-user/<%= user._id %>">
+    <button type="button">✏️</button>
+  </a>
 
-                </td>
+  <!-- DELETE -->
+  <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
+
+</td>
+
+<form id="blockForm" method="POST"></form>
+<form id="unblockForm" method="POST"></form>
+
+<div id="blockModal" class="modal">
+  <div class="modal-box">
+    <p>Block this user?</p>
+
+    <button class="confirm-btn" onclick="confirmBlock()">Yes</button>
+    <button class="cancel-btn" onclick="closeBlockModal()">Cancel</button>
+  </div>
+</div>
+
+<div id="unblockModal" class="modal">
+  <div class="modal-box">
+    <p>Unblock this user?</p>
+
+    <button class="confirm-btn" onclick="confirmUnblock()">Yes</button>
+    <button class="cancel-btn" onclick="closeUnblockModal()">Cancel</button>
+  </div>
+</div>
 
               </tr>
             <% }) %>
@@ -164,6 +186,43 @@
     form.action = "/admin/delete-user/" + deleteId;
     form.submit();
   }
+
+  //---block/unblock-------//
+
+  
+  let blockId = "";
+  let unblockId = "";
+
+  function openBlockModal(id) {
+    blockId = id;
+    document.getElementById("blockModal").style.display = "flex";
+  }
+
+  function closeBlockModal() {
+    document.getElementById("blockModal").style.display = "none";
+  }
+
+  function confirmBlock() {
+    const form = document.getElementById("blockForm");
+    form.action = "/admin/block-user/" + blockId;
+    form.submit();
+  }
+
+  function openUnblockModal(id) {
+    unblockId = id;
+    document.getElementById("unblockModal").style.display = "flex";
+  }
+
+  function closeUnblockModal() {
+    document.getElementById("unblockModal").style.display = "none";
+  }
+
+  function confirmUnblock() {
+    const form = document.getElementById("unblockForm");
+    form.action = "/admin/unblock-user/" + unblockId;
+    form.submit();
+  }
+
 </script>
 
 </body>
