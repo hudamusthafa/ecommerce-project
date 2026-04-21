@@ -322,3 +322,30 @@ body {
   cursor: pointer;
   font-size: 14px;
 }
+
+/*----------pagination ---------*/
+
+.pagination {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.pagination a {
+  margin: 0 6px;
+  padding: 8px 14px;
+  text-decoration: none;
+  background: #f0f0f0;
+  border-radius: 6px;
+  color: #333;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.pagination a:hover {
+  background: #ddd;
+}
+
+.pagination a.active-page {
+  background: #ff6b4a;
+  color: white;
+}

@@ -69,7 +69,7 @@
 
       </div>
 
-      <p>Total Users: <%= users.length %></p>
+      <p>Total Users: <%= totalUsers %></p>
 
       <!-- TABLE -->
       <div class="table-box">
@@ -100,23 +100,23 @@
 
                 <td class="action-btns">
 
-  <!-- BLOCK -->
-  <% if(!user.isBlocked) { %>
-    <button type="button" onclick="openBlockModal('<%= user._id %>')">🚫</button>
-  <% } %>
+                    <!-- BLOCK -->
+                    <% if(!user.isBlocked) { %>
+                      <button type="button" onclick="openBlockModal('<%= user._id %>')">🚫</button>
+                    <% } %>
 
-  <!-- UNBLOCK -->
-  <% if(user.isBlocked) { %>
-    <button type="button" onclick="openUnblockModal('<%= user._id %>')">🔓</button>
-  <% } %>
+                    <!-- UNBLOCK -->
+                    <% if(user.isBlocked) { %>
+                      <button type="button" onclick="openUnblockModal('<%= user._id %>')">🔓</button>
+                    <% } %>
 
-  <!-- EDIT -->
-  <a href="/admin/edit-user/<%= user._id %>">
-    <button type="button">✏️</button>
-  </a>
+                    <!-- EDIT -->
+                    <a href="/admin/edit-user/<%= user._id %>">
+                      <button type="button">✏️</button>
+                    </a>
 
-  <!-- DELETE -->
-  <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
+                    <!-- DELETE -->
+                    <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
 
 </td>
 
@@ -146,6 +146,25 @@
           </tbody>
 
         </table>
+
+        <div class="pagination">
+
+  <% if(currentPage > 1) { %>
+    <a href="/admin/users?page=<%= currentPage - 1 %>&search=<%= search %>&filter=<%= filter %>">Prev</a>
+  <% } %>
+
+  <% for(let i = 1; i <= totalPages; i++) { %>
+    <a href="/admin/users?page=<%= i %>&search=<%= search %>&filter=<%= filter %>" 
+       class="<%= currentPage === i ? 'active-page' : '' %>">
+      <%= i %>
+    </a>
+  <% } %>
+
+  <% if(currentPage < totalPages) { %>
+    <a href="/admin/users?page=<%= currentPage + 1 %>&search=<%= search %>&filter=<%= filter %>">Next</a>
+  <% } %>
+
+</div>
 
       </div>
 

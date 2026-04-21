@@ -38,31 +38,41 @@ exports.getUsers = async (req, res) => {
   try {
     const search = req.query.search || "";
     const filter = req.query.filter || "";
+    const page = parseInt(req.query.page) || 1;   // current page
+    const limit = 5; // users per page
 
-   let query = {
+    let query = {
   isAdmin: { $ne: true },
-  $or: [
-    { isDeleted: false },
-    { isDeleted: { $exists: false } }
-  ],
+  isDeleted: { $ne: true },   //  better condition
   name: { $regex: search, $options: "i" }
 };
 
     if (filter === "active") query.isBlocked = false;
     if (filter === "blocked") query.isBlocked = true;
 
-    const users = await User.find(query).sort({ createdAt: -1 });
+    // total users count
+    const totalUsers = await User.countDocuments(query);
 
-    //console.log("Users:", users);
+    // fetch users with pagination
+    const users = await User.find(query)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    res.render("admin/users", { users, search, filter });
+    res.render("admin/users", {
+      users,
+      search,
+      filter,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+       totalUsers
+    });
 
   } catch (err) {
     console.log(err);
     res.send("Server Error");
   }
 };
-
 /* ================= BLOCK / UNBLOCK ================= */
 
 exports.blockUser = async (req, res) => {
