@@ -349,3 +349,92 @@ body {
   background: #ff6b4a;
   color: white;
 }
+
+/*adduser*/
+
+/* FORM CONTAINER */
+/* BIGGER FORM CONTAINER */
+.form-container {
+  background: #fff;
+  padding: 50px 60px;
+  border-radius: 16px;
+  width: 700px;          /* increased */
+  max-width: 90%;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+.form-container h2 {
+  text-align: center;
+  font-size: 32px;       /* bigger */
+  margin-bottom: 35px;
+  font-weight: 600;
+}
+
+/* FORM GROUP */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* LABEL */
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;       /* bigger */
+  color: #444;
+}
+
+/* INPUTS */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;    /* bigger */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  font-size: 15px;
+}
+
+/* BUTTON AREA */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+/* CANCEL BUTTON */
+.cancel-btn {
+  background: #8b5e3c;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* ADD BUTTON */
+.add-btn {
+  background: #ff6b4a;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* MAIN spacing fix */
+.main {
+  flex: 1;
+  padding: 60px 40px;
+}
+.error-msg {
+  background: #ffe5e5;
+  color: #e74c3c;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}

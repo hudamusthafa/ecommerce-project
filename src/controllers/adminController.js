@@ -95,13 +95,33 @@ exports.unblockUser = async (req, res) => {
 
 /* ================= ADD USER ================= */
 
+// GET page
 exports.getAddUser = (req, res) => {
-  res.render("admin/add-user");
+  res.render("admin/add-user", {
+    error: null,
+    formData: {}
+  });
 };
-
+// POST create user
 exports.postAddUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword, phone, status } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.render("admin/add-user", {
+        error: "Passwords do not match",
+        formData: req.body
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.render("admin/add-user", {
+        error: "User already exists",
+        formData: req.body
+      });
+    }
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -109,16 +129,20 @@ exports.postAddUser = async (req, res) => {
       name,
       email,
       password: hashed,
-      isAdmin: false
+      phone,
+      isBlocked: status === "blocked"
     });
 
     res.redirect("/admin/users");
 
   } catch (err) {
     console.log(err);
+    res.render("admin/add-user", {
+      error: "Something went wrong",
+      formData: req.body
+    });
   }
 };
-
 /* ================= EDIT USER ================= */
 
 exports.getEditUser = async (req, res) => {
