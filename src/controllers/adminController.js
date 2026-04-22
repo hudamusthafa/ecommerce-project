@@ -145,17 +145,78 @@ exports.postAddUser = async (req, res) => {
 };
 /* ================= EDIT USER ================= */
 
+// GET EDIT USER PAGE
 exports.getEditUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
-  res.render("admin/edit-user", { user });
+  try {
+    const user = await User.findById(req.params.id);
+
+    res.render("admin/edit-user", {
+      user,
+      error: null,
+      success:null
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
 };
 
+
+// UPDATE USER
 exports.postEditUser = async (req, res) => {
-  const { name, email } = req.body;
+  try {
+    const { name, email, phone, status, password } = req.body;
+    const userId = req.params.id;
 
-  await User.findByIdAndUpdate(req.params.id, { name, email });
+    //  Check if email exists for another user
+    const existingUser = await User.findOne({
+      email,
+      _id: { $ne: userId } // exclude current user
+    });
 
-  res.redirect("/admin/users");
+    if (existingUser) {
+      const user = await User.findById(userId);
+      return res.render("admin/edit-user", {
+        user,
+        error: "Email already exists",
+        success: null
+      });
+    }
+
+ //  PHONE VALIDATION
+    if (phone && !/^[0-9]{10}$/.test(phone)) {
+      const user = await User.findById(userId);
+      return res.render("admin/edit-user", {
+        user,
+        error: "Phone must be 10 digits",
+        success: null
+      });
+    }
+
+    let updateData = {
+      name,
+      email,
+      phone,
+      isBlocked: status === "blocked"
+    };
+
+    //   password update
+    if (password && password.trim() !== "") {
+      const hashed = await bcrypt.hash(password, 10);
+      updateData.password = hashed;
+    }
+
+    await User.findByIdAndUpdate(userId, updateData);
+
+    //  Success message
+    const updatedUser = await User.findById(userId);
+
+   res.redirect("/admin/users");
+
+  } catch (err) {
+    console.log(err);
+    res.send("Error updating user");
+  }
 };
 
 /* ================= DELETE USER (SOFT) ================= */

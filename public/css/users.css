@@ -148,12 +148,41 @@ body {
   gap: 15px;
 }
 
-.right-actions input {
+/* .right-actions input {
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #ddd;
   width: 200px;
   font-size: 14px;
+} */
+/* SEARCH INPUT */
+.search-form input {
+  height: 50px;
+  padding: 0 18px;
+  width: 300px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+/* SEARCH BUTTON */
+.search-form button {
+  height: 50px;           /* match input */
+  padding: 0 22px;
+  border-radius: 8px;
+  border: none;
+  background: #ff6b4a;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-form button:hover {
+  background: #e85a3c;
 }
 
 /* ===== BUTTON ===== */
@@ -437,4 +466,62 @@ body {
   border-radius: 6px;
   margin-bottom: 15px;
   font-size: 14px;
+}
+.error-msg {
+  background: #ffe5e5;
+  color: #e74c3c;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.success-msg {
+  background: #e6ffed;
+  color: #2ecc71;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+/* 
+/*INPUT*/
+ .search-form input {
+  height: 50px ;
+  width: 320px ;
+  padding: 0 18px ;
+  border: 1px solid #ccc ;
+  border-radius: 8px ;
+  font-size: 16px ;
+  background: #fff ;
+}
+
+/* BUTTON */
+.search-form button {
+  height: 50px 
+  padding: 0 22px ;
+  border-radius: 8px ;
+  background: #ff6b4a ;
+  color: #fff ;
+  font-size: 16px ;
+  cursor: pointer ;
+  border: none ;
+} 
+.search-form button {
+  background: #eee;
+  color: #333;
+}
+
+.search-form button:hover {
+  background: #ddd;
+}
+/* COMMON BUTTON STYLE */
+.search-form button,
+.new-btn {
+  height: 50px;
+  padding: 0 22px;
+  font-size: 15px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

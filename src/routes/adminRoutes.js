@@ -32,5 +32,8 @@ router.post("/delete-user/:id", adminController.deleteUser);
 router.get("/add-user", adminController.getAddUser);
 router.post("/add-user", adminController.postAddUser);
 
+//edit user
+router.get("/edit-user/:id",adminController.getEditUser);
+router.post("/edit-user/:id",adminController.postEditUser);
 
 module.exports = router;
