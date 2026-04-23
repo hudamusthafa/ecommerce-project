@@ -154,3 +154,4 @@ exports.deleteUser = async (req, res) => {
   await adminService.deleteUser(req.params.id);
   res.redirect("/admin/users");
 };
+
