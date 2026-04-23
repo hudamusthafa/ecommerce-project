@@ -1,5 +1,4 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+const adminService = require("../services/adminService");
 
 /* ================= ADMIN LOGIN ================= */
 
@@ -11,7 +10,6 @@ exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    //  Basic validation
     if (!email || !email.includes("@")) {
       return res.render("admin/login", { error: "Enter a valid email" });
     }
@@ -20,61 +18,36 @@ exports.postLogin = async (req, res) => {
       return res.render("admin/login", { error: "Password must be at least 6 characters" });
     }
 
-    //  Find admin
-    const admin = await User.findOne({ email, isAdmin: true });
+    await adminService.adminLogin(email, password);
 
-    if (!admin) {
-      return res.render("admin/login", { error: "Invalid email or password" });
-    }
-
-    //  Compare password
-    const isMatch = await bcrypt.compare(password, admin.password);
-
-    if (!isMatch) {
-      return res.render("admin/login", { error: "Invalid email or password" });
-    }
-
-    //  Success
     res.redirect("/admin/dashboard");
 
   } catch (err) {
-    console.log(err);
-    res.render("admin/login", { error: "Server error" });
+    res.render("admin/login", { error: err.message });
   }
 };
 
-//dashboard
+/* ================= DASHBOARD ================= */
 
 exports.getDashboard = (req, res) => {
   res.render("admin/dashboard");
 };
+
 /* ================= USER MANAGEMENT ================= */
 
-// GET USERS
 exports.getUsers = async (req, res) => {
   try {
     const search = req.query.search || "";
     const filter = req.query.filter || "";
-    const page = parseInt(req.query.page) || 1;   // current page
-    const limit = 5; // users per page
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
 
-    let query = {
-  isAdmin: { $ne: true },
-  isDeleted: { $ne: true },   //  better condition
-  name: { $regex: search, $options: "i" }
-};
-
-    if (filter === "active") query.isBlocked = false;
-    if (filter === "blocked") query.isBlocked = true;
-
-    // total users count
-    const totalUsers = await User.countDocuments(query);
-
-    // fetch users with pagination
-    const users = await User.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const { users, totalUsers } = await adminService.getUsers({
+      search,
+      filter,
+      page,
+      limit
+    });
 
     res.render("admin/users", {
       users,
@@ -82,7 +55,7 @@ exports.getUsers = async (req, res) => {
       filter,
       currentPage: page,
       totalPages: Math.ceil(totalUsers / limit),
-       totalUsers
+      totalUsers
     });
 
   } catch (err) {
@@ -90,39 +63,31 @@ exports.getUsers = async (req, res) => {
     res.send("Server Error");
   }
 };
+
 /* ================= BLOCK / UNBLOCK ================= */
 
 exports.blockUser = async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.params.id, { isBlocked: true });
-    res.redirect("/admin/users");
-  } catch (err) {
-    console.log(err);
-  }
+  await adminService.updateBlockStatus(req.params.id, true);
+  res.redirect("/admin/users");
 };
 
 exports.unblockUser = async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.params.id, { isBlocked: false });
-    res.redirect("/admin/users");
-  } catch (err) {
-    console.log(err);
-  }
+  await adminService.updateBlockStatus(req.params.id, false);
+  res.redirect("/admin/users");
 };
 
 /* ================= ADD USER ================= */
 
-// GET page
 exports.getAddUser = (req, res) => {
   res.render("admin/add-user", {
     error: null,
     formData: {}
   });
 };
-// POST create user
+
 exports.postAddUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone, status } = req.body;
+    const { password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
       return res.render("admin/add-user", {
@@ -131,41 +96,23 @@ exports.postAddUser = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.render("admin/add-user", {
-        error: "User already exists",
-        formData: req.body
-      });
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    await User.create({
-      name,
-      email,
-      password: hashed,
-      phone,
-      isBlocked: status === "blocked"
-    });
+    await adminService.createUser(req.body);
 
     res.redirect("/admin/users");
 
   } catch (err) {
-    console.log(err);
     res.render("admin/add-user", {
-      error: "Something went wrong",
+      error: err.message,
       formData: req.body
     });
   }
 };
+
 /* ================= EDIT USER ================= */
 
-// GET EDIT USER PAGE
 exports.getEditUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await adminService.getUserById(req.params.id);
 
     res.render("admin/edit-user", {
       user,
@@ -178,75 +125,32 @@ exports.getEditUser = async (req, res) => {
   }
 };
 
-
-// UPDATE USER
 exports.postEditUser = async (req, res) => {
   try {
-    const { name, email, phone, status, password } = req.body;
-    const userId = req.params.id;
+    const { phone } = req.body;
 
-    //  Check if email exists for another user
-    const existingUser = await User.findOne({
-      email,
-      _id: { $ne: userId } // exclude current user
-    });
-
-    if (existingUser) {
-      const user = await User.findById(userId);
-      return res.render("admin/edit-user", {
-        user,
-        error: "Email already exists",
-        success: null
-      });
-    }
-
- //  PHONE VALIDATION
+    // simple validation
     if (phone && !/^[0-9]{10}$/.test(phone)) {
-      const user = await User.findById(userId);
+      const user = await adminService.getUserById(req.params.id);
       return res.render("admin/edit-user", {
         user,
         error: "Phone must be 10 digits",
-        success: null
+        success:null
       });
     }
 
-    let updateData = {
-      name,
-      email,
-      phone,
-      isBlocked: status === "blocked"
-    };
-
-    //   password update
-    if (password && password.trim() !== "") {
-      const hashed = await bcrypt.hash(password, 10);
-      updateData.password = hashed;
-    }
-
-    await User.findByIdAndUpdate(userId, updateData);
-
-    //  Success message
-    const updatedUser = await User.findById(userId);
-
-   res.redirect("/admin/users");
-
-  } catch (err) {
-    console.log(err);
-    res.send("Error updating user");
-  }
-};
-
-/* ================= DELETE USER (SOFT) ================= */
-
-exports.deleteUser = async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.params.id, {
-      isDeleted: true
-    });
+    await adminService.updateUser(req.params.id, req.body);
 
     res.redirect("/admin/users");
 
   } catch (err) {
-    console.log(err);
+    res.send(err.message);
   }
+};
+
+/* ================= DELETE USER ================= */
+
+exports.deleteUser = async (req, res) => {
+  await adminService.deleteUser(req.params.id);
+  res.redirect("/admin/users");
 };
