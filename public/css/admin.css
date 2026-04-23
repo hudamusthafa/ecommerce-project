@@ -70,6 +70,7 @@ body {
   border-bottom: 1px solid #bbb;
   background: transparent;
   outline: none;
+  margin-bottom: 12px;
 }
 
 /* BUTTON */
@@ -89,4 +90,27 @@ body {
 .forgot {
   margin-top: 20px;
   font-size: 14px;   /* increased */
+}
+.error-msg {
+  color: #e74c3c;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
 }

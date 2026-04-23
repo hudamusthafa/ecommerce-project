@@ -28,9 +28,7 @@ router.post("/edit-user/:id", adminController.postEditUser);
 //delete user
 router.post("/delete-user/:id", adminController.deleteUser);
 
-//add user
-router.get("/add-user", adminController.getAddUser);
-router.post("/add-user", adminController.postAddUser);
+
 
 //edit user
 router.get("/edit-user/:id",adminController.getEditUser);

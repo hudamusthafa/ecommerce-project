@@ -4,33 +4,50 @@ const bcrypt = require("bcryptjs");
 /* ================= ADMIN LOGIN ================= */
 
 exports.getLogin = (req, res) => {
-  res.render("admin/login");
+  res.render("admin/login", { error: null });
 };
 
 exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    //  Basic validation
+    if (!email || !email.includes("@")) {
+      return res.render("admin/login", { error: "Enter a valid email" });
+    }
+
+    if (!password || password.length < 6) {
+      return res.render("admin/login", { error: "Password must be at least 6 characters" });
+    }
+
+    //  Find admin
     const admin = await User.findOne({ email, isAdmin: true });
 
-    if (!admin) return res.send("Invalid Admin Credentials");
+    if (!admin) {
+      return res.render("admin/login", { error: "Invalid email or password" });
+    }
 
+    //  Compare password
     const isMatch = await bcrypt.compare(password, admin.password);
 
-    if (!isMatch) return res.send("Invalid Admin Credentials");
+    if (!isMatch) {
+      return res.render("admin/login", { error: "Invalid email or password" });
+    }
 
+    //  Success
     res.redirect("/admin/dashboard");
 
   } catch (err) {
     console.log(err);
-    res.send("Server Error");
+    res.render("admin/login", { error: "Server error" });
   }
 };
+
+//dashboard
 
 exports.getDashboard = (req, res) => {
   res.render("admin/dashboard");
 };
-
 /* ================= USER MANAGEMENT ================= */
 
 // GET USERS
