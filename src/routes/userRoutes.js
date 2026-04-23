@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { isLoggedIn } = require("../middleware/authMiddleware");
-const User = require("../models/User");
 
-// Pages
+const { isLoggedIn } = require("../middleware/authMiddleware");
+const userController = require("../controllers/userController");
+const upload = require("../middleware/upload");
+
+// PAGES
 router.get("/register", (req, res) => res.render("user/register"));
 router.get("/login", (req, res) => res.render("user/login"));
 router.get("/otp", (req, res) => res.render("user/otp"));
@@ -15,16 +17,33 @@ router.get("/home", (req, res) => {
   res.render("user/home", { user: req.user || null });
 });
 
-router.get("/profile", isLoggedIn, (req, res) => {
-  res.render("user/profile", { user: req.user });
+// PROFILE
+router.get("/profile", isLoggedIn, userController.getProfile);
+
+router.post(
+  "/profile/update",
+  isLoggedIn,
+  upload.single("image"),
+  userController.updateProfile
+);
+
+router.post("/profile/password", isLoggedIn, userController.changePassword);
+
+// CHECKOUT
+router.get("/checkout", isLoggedIn, userController.getCheckout);
+
+// ADDRESS
+router.post("/address/add", isLoggedIn, userController.addAddress);
+router.post("/address/delete/:id", isLoggedIn, userController.deleteAddress);
+router.post("/address/update/:id", isLoggedIn, userController.updateAddress);
+
+router.get("/address/new", isLoggedIn, (req, res) => {
+  res.render("user/add-address", { address: null });
 });
 
-router.get("/checkout", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  res.render("user/checkout", { user });
-});
+router.get("/address/edit/:id", isLoggedIn, userController.getEditAddress);
 
-// Logout (ONLY ONE)
+// LOGOUT
 router.get("/logout", (req, res, next) => {
   req.logout(function(err) {
     if (err) return next(err);

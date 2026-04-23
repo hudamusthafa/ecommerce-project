@@ -38,3 +38,7 @@ exports.updateAddress = async (userId, addressId, data) => {
 
   await user.save();
 };
+// UPDATE USER PROFILE
+exports.updateUser = async (userId, updates) => {
+  return await User.findByIdAndUpdate(userId, updates);
+};

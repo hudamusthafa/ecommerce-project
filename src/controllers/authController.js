@@ -1,7 +1,5 @@
 
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
-const Otp = require("../models/Otp");
+
 const {
   registerService,
   loginService,
@@ -12,7 +10,6 @@ const {
   changePasswordService 
         } = require("../services/authService");
 const sendEmail = require("../helpers/sendEmail");
-const userService = require("../services/userService");
 
 
 // ------------------------REGISTER-------------
@@ -157,12 +154,7 @@ exports.resetPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const hashed = await bcrypt.hash(password, 10);
-
-    await User.updateOne(
-      { email: email.toLowerCase() },
-      { password: hashed }
-    );
+    await resetPasswordService(email, password);
 
     res.json({ message: "Password updated" });
 
@@ -170,7 +162,6 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 //----------------change paswrd in profile---------
 
 // exports.changePassword = async (req, res) => {
@@ -230,39 +221,3 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-//-----------------add address-------------
-exports.addAddress = async (req, res) => {
-  try {
-   await userService.addAddress(req.user._id, req.body);
-    
-   res.redirect("/api/auth/checkout");
-
-  } catch (err) {
-    res.send("Error adding address");
-  }
-};
-
-//---------------delete address---------
-
-exports.deleteAddress = async (req, res) => {
-  try {
-    await userService.deleteAddress(req.user._id, req.params.id);
-
-    res.redirect("/api/auth/checkout");
-
-  } catch (err) {
-    res.send("Error deleting address");
-  }
-};
-
-
-exports.updateAddress = async (req, res) => {
-  try {
-    await userService.updateAddress(req.user._id, req.params.id, req.body);
-
-    res.redirect("/api/auth/checkout");
-
-  } catch (err) {
-    res.send("Error updating address");
-  }
-};

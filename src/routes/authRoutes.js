@@ -1,27 +1,28 @@
 const express = require("express");
 const router = express.Router();
 
-const { 
+const {
   register,
   login,
   sendOtp,
   verifyOtp,
-  forgotPassword,   
-  resetPassword,
-  changePassword,
-  addAddress,          
-  deleteAddress,
-  updateAddress 
+  forgotPassword,
+  resetPassword
 } = require("../controllers/authController");
 
+const passport = require("passport");
+
+// AUTH ROUTES 
 router.post("/register", register);
-router.post("/login",login);
+router.post("/login", login);
 
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
 
-const passport = require("passport");
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
+// GOOGLE AUTH
 router.get("/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
@@ -34,87 +35,5 @@ router.get("/google/callback",
     res.redirect("/home");
   }
 );
-
-
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
-
-
-
-const User = require("../models/User");
-const { isLoggedIn } = require("../middleware/authMiddleware");
-
-const upload = require("../middleware/upload");
-
-//profile route
-router.get("/profile", isLoggedIn, (req, res) => {
-  res.render("user/profile", { user: req.user });
-});
-
-
-//update profile
-router.post(
-  "/profile/update",
-  isLoggedIn,
-  upload.single("image"),
-  async (req, res) => {
-    try {
-      const updates = {};
-
-      if (req.body.name) updates.name = req.body.name;
-      if (req.body.email) updates.email = req.body.email;
-      if (req.body.phone) updates.phone = req.body.phone;
-      if (req.body.gender) updates.gender = req.body.gender;
-
-      if (req.file) {
-        updates.profileImage = "/uploads/" + req.file.filename;
-      }
-
-      await User.findByIdAndUpdate(req.user._id, updates, { new: true });
-
-      res.redirect("/profile");
-
-    } catch (err) {
-      console.log(err);
-      res.send("Error updating profile");
-    }
-  }
-);
-
-
-//router.post("/profile/password", isLoggedIn, authController.changePassword);
-
-
-//const { changePassword } = require("../controllers/authController");
-
-router.post("/profile/password", isLoggedIn, changePassword);
-
-
-
-router.get("/checkout", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  res.render("user/checkout", { user });
-});
-
- router.post("/address/add", isLoggedIn, addAddress);
- router.post("/address/delete/:id", isLoggedIn, deleteAddress);
-
-router.get("/address/new", isLoggedIn, (req, res) => {
-  res.render("user/add-address", { address: null });
-});
-
-
-router.get("/address/edit/:id", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  const address = user.address.id(req.params.id);
-
-  res.render("user/add-address", { address }); // reuse same page
-});
-
-
-router.post("/address/update/:id", isLoggedIn, updateAddress);
-
-
 
 module.exports = router;

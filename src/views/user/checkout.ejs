@@ -50,7 +50,7 @@
          <div class="address-actions">
 
   <!-- EDIT BUTTON -->
-  <a href="/api/auth/address/edit/<%= addr._id %>" class="btn">Edit</a>
+  <a href="/address/edit/<%= addr._id %>" class="btn">Edit</a>
 
   <!-- DELETE BUTTON -->
   <button class="btn" onclick="openDeleteModal('<%= addr._id %>')">
@@ -118,7 +118,7 @@
 
   <!-- CENTER ADD ADDRESS -->
   <div class="center-add-address">
-    <a href="/api/auth/address/new" class="add-new">Add new Address</a>
+    <a href="/address/new" class="add-new">Add new Address</a>
   </div>
 
   <!-- RIGHT SIDE -->
@@ -167,7 +167,7 @@
   }
 
   function confirmDelete() {
-    fetch(`/api/auth/address/delete/${selectedAddressId}`, {
+    fetch(`/address/delete/${selectedAddressId}`, {
       method: "POST"
     })
     .then(() => {

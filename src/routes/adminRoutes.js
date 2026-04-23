@@ -30,8 +30,5 @@ router.post("/delete-user/:id", adminController.deleteUser);
 
 
 
-//edit user
-router.get("/edit-user/:id",adminController.getEditUser);
-router.post("/edit-user/:id",adminController.postEditUser);
 
 module.exports = router;

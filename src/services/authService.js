@@ -31,7 +31,7 @@ exports.loginService = async (email, password) => {
 
   const user = await User.findOne({ email: emailLower });
 
-  if (!user) {
+  if (!user || user.isDeleted) {
     throw new Error("Invalid credentials");
   }
 
@@ -133,6 +133,26 @@ exports.forgotPasswordService = async (email) => {
   return otp;
 };
 
+// ---------------- RESET PASSWORD ----------------
+
+exports.resetPasswordService = async (email, password) => {
+  const emailLower = email.toLowerCase();
+
+  const user = await User.findOne({ email: emailLower });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const hashed = await bcrypt.hash(password, 10);
+
+  await User.updateOne(
+    { email: emailLower },
+    { password: hashed }
+  );
+
+  return true;
+};
 // ---------------- CHANGE PASSWORD IN PROFILE----------------
 
 exports.changePasswordService = async (userId, currentPassword, newPassword) => {
