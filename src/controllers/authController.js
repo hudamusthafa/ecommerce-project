@@ -12,7 +12,7 @@ const {
   changePasswordService 
         } = require("../services/authService");
 const sendEmail = require("../helpers/sendEmail");
-
+const userService = require("../services/userService");
 
 
 // ------------------------REGISTER-------------
@@ -233,13 +233,9 @@ exports.changePassword = async (req, res) => {
 //-----------------add address-------------
 exports.addAddress = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-
-    user.address.push(req.body);
-
-    await user.save();
-
-    res.redirect("/api/auth/checkout");
+   await userService.addAddress(req.user._id, req.body);
+    
+   res.redirect("/api/auth/checkout");
 
   } catch (err) {
     res.send("Error adding address");
@@ -250,13 +246,7 @@ exports.addAddress = async (req, res) => {
 
 exports.deleteAddress = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-
-    user.address = user.address.filter(
-      addr => addr._id.toString() !== req.params.id
-    );
-
-    await user.save();
+    await userService.deleteAddress(req.user._id, req.params.id);
 
     res.redirect("/api/auth/checkout");
 
@@ -268,21 +258,7 @@ exports.deleteAddress = async (req, res) => {
 
 exports.updateAddress = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-
-    const address = user.address.id(req.params.id);
-
-    if (address) {
-      address.fullName = req.body.fullName;
-      address.phone = req.body.phone;
-      address.pincode = req.body.pincode;
-      address.city = req.body.city;
-      address.state = req.body.state;
-      address.house = req.body.house;
-      address.area = req.body.area;
-    }
-
-    await user.save();
+    await userService.updateAddress(req.user._id, req.params.id, req.body);
 
     res.redirect("/api/auth/checkout");
 

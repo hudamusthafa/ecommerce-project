@@ -1,0 +1,40 @@
+const User = require("../models/User");
+
+// GET USER BY ID
+exports.getUserById = async (userId) => {
+  return await User.findById(userId);
+};
+
+// ADD ADDRESS
+exports.addAddress = async (userId, addressData) => {
+  const user = await User.findById(userId);
+
+  user.address.push(addressData);
+  await user.save();
+
+  return user;
+};
+
+// DELETE ADDRESS
+exports.deleteAddress = async (userId, addressId) => {
+  const user = await User.findById(userId);
+
+  user.address = user.address.filter(
+    addr => addr._id.toString() !== addressId
+  );
+
+  await user.save();
+};
+
+// UPDATE ADDRESS
+exports.updateAddress = async (userId, addressId, data) => {
+  const user = await User.findById(userId);
+
+  const address = user.address.id(addressId);
+
+  if (address) {
+    Object.assign(address, data);
+  }
+
+  await user.save();
+};
