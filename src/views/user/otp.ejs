@@ -216,6 +216,10 @@ async function resendOtp() {
 
     document.getElementById("otpError").innerText = "OTP sent successfully. Please check your email.";
 
+// CLEAR OTP INPUT BOXES
+inputs.forEach(input => input.value = "");
+inputs[0].focus();
+
   } catch (err) {
     document.getElementById("otpError").innerText = "Failed to resend OTP";
   }
