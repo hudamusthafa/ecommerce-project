@@ -22,6 +22,7 @@
 <form action="/profile/update" method="POST" enctype="multipart/form-data">
     <!-- PROFILE IMAGE -->
 <img 
+id="profilePreview"
   src="<%= user.profileImage && user.profileImage !== '' 
           ? user.profileImage 
           : '/images/default-avatar.png' %>" 
@@ -44,8 +45,8 @@
     <input type="email" name="email" value="<%= user.email %>" required>
 
     <!-- PHONE -->
-    <label>Phone Number</label>
-    <input type="text" name="phone" value="<%= user.phone || '' %>" placeholder="+91xxxxxxxxxx">
+    <!-- <label>Phone Number</label>
+    <input type="text" name="phone" value="<%= user.phone || '' %>" placeholder="+91xxxxxxxxxx"> -->
 
     <!-- GENDER -->
     <label>Gender</label>
@@ -111,6 +112,25 @@
 <!-- FOOTER -->
 <%- include('../partials/footer') %>
 
+<script>
+const imageInput = document.getElementById("imageUpload");
+const preview = document.getElementById("profilePreview");
+
+imageInput.addEventListener("change", function () {
+  const file = this.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      preview.src = e.target.result; 
+      
+    };
+
+    reader.readAsDataURL(file);
+  }
+});
+</script>
 
 </body>
 </html>
