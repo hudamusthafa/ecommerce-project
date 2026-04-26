@@ -58,7 +58,7 @@ exports.getProfile = (req, res) => {
   res.render("user/profile", { user: req.user,message:null });
 };
 
-// UPDATE PROFILE (using service recommended)
+// UPDATE PROFILE 
 exports.updateProfile = async (req, res) => {
   try {
     const updates = {
@@ -72,8 +72,8 @@ exports.updateProfile = async (req, res) => {
       updates.profileImage = "/uploads/" + req.file.filename;
     }
 
-    await userService.updateUser(req.user._id, updates);  // ✅ better
-
+    await userService.updateUser(req.user._id, updates);  // 
+console.log(req.file);
     res.redirect("/profile");
 
   } catch (err) {

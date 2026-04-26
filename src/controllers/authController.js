@@ -1,5 +1,5 @@
 
-
+const Otp = require("../models/Otp");
 const {
   registerService,
   loginService,

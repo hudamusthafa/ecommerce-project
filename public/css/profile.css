@@ -205,3 +205,18 @@ copyright {
 .address-btn:hover {
   background: #5a3f2d;
 }
+
+.upload-btn {
+  display: inline-block;
+  padding: 5px 12px;
+  background: #eae2db;
+  color: rgb(22, 2, 2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  width: auto;
+  width: fit-content;
+}
+.upload-btn:hover {
+  background: #cfc5be;
+}
