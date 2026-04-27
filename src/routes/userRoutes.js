@@ -1,17 +1,20 @@
 const express = require("express");
 const router = express.Router();
+const authController = require("../controllers/authController");
 
 const { isLoggedIn } = require("../middleware/authMiddleware");
 const userController = require("../controllers/userController");
 const upload = require("../middleware/upload");
 
+//router.use(isLoggedIn, checkBlockedUser);
+
 // PAGES
 router.get("/register", (req, res) => res.render("user/register"));
-router.get("/login", (req, res) => res.render("user/login"));
 router.get("/otp", (req, res) => res.render("user/otp"));
 router.get("/success", (req, res) => res.render("user/success"));
 router.get("/forgot-password", (req, res) => res.render("user/forgot-password"));
 router.get("/reset-password", (req, res) => res.render("user/reset-password"));
+router.get("/login", authController.getLogin);
 
 router.get("/home", (req, res) => {
   res.render("user/home", { user: req.user || null });

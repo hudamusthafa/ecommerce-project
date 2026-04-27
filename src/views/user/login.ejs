@@ -23,10 +23,7 @@
     <div class="card">
       <h2>Sign-in</h2>
 
-      <!--  Backend Message -->
-      <% if (typeof message !== 'undefined') { %>
-          <p class="error"><%= message %></p>
-      <% } %>
+     
     
       <div class="social">
   <button type="button" onclick="window.location.href='/api/auth/google'">
@@ -35,6 +32,11 @@
 </div>
 
 <div class="or">— OR —</div>
+
+  <!--  Backend Message -->
+      <% if (typeof message !== 'undefined') { %>
+          <p class="error"><%= message %></p>
+      <% } %>
 
       <!--  FORM -->
      <form method="POST" action="/api/auth/login" onsubmit="return validateLogin()" novalidate>
@@ -53,6 +55,8 @@
         </div>
 
         <button class="btn" type="submit">Login</button>
+
+       
     </form>
 
       <div class="login-link">
@@ -114,7 +118,13 @@ document.getElementById("email").addEventListener("input", () => {
 document.getElementById("password").addEventListener("input", () => {
   document.getElementById("passwordError").innerText = "";
 });
-</script>
 
+</script>
+<script>
+  // remove query params after showing message
+  if (window.location.search) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
 </body>
 </html>

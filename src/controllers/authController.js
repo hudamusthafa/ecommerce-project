@@ -34,6 +34,12 @@ exports.register = async (req, res) => {
 
 
 //------------LOGIN-------------------
+exports.getLogin = (req, res) => {
+  const message = req.query.message || null;
+
+  res.render("user/login", { message });
+};
+
 
 exports.login = async (req, res) => {
   try {
@@ -53,8 +59,9 @@ exports.login = async (req, res) => {
 });
 
   } catch (error) {
-    return res.render("user/login", { message: error.message });
-  }
+return res.redirect(
+  "/login?message=" + encodeURIComponent(error.message)
+);  }
 };
 
 //--------------------SEND OTP-------------------

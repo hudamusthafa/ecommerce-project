@@ -36,8 +36,18 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
+  try {
+    const user = await User.findById(id);
+
+    if (!user || user.isBlocked) {
+      return done(null, false);
+    }
+
+    done(null, user);
+
+  } catch (err) {
+    done(err, null);
+  }
 });
 
 module.exports = passport;

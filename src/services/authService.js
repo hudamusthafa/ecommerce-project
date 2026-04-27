@@ -26,6 +26,7 @@ exports.registerService = async (name, email, password) => {
 
 ////--------------------------- LOGIN
 
+
 exports.loginService = async (email, password) => {
   const emailLower = email.toLowerCase();
 
@@ -36,7 +37,7 @@ exports.loginService = async (email, password) => {
   }
 
   if (user.isBlocked) {
-    throw new Error("User is blocked");
+    throw new Error("Your account has been blocked by admin");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
