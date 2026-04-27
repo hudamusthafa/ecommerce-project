@@ -8,9 +8,9 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     password: String,
-    phone: {
-    type: String
-    },
+    // phone: {
+    // type: String
+    // },
     gender: {
       type: String
     },

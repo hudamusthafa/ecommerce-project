@@ -41,7 +41,7 @@ exports.updateBlockStatus = async (userId, status) => {
 };
 
 // ADD USER
-exports.createUser = async ({ name, email, password, phone, status }) => {
+exports.createUser = async ({ name, email, password, status }) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) throw new Error("User already exists");
@@ -52,7 +52,7 @@ exports.createUser = async ({ name, email, password, phone, status }) => {
     name,
     email,
     password: hashed,
-    phone,
+   // phone,
     isBlocked: status === "blocked"
   });
 };
@@ -67,7 +67,7 @@ exports.updateUser = async (userId, data) => {
   let updateData = {
     name: data.name,
     email: data.email,
-    phone: data.phone,
+    //phone: data.phone,
     isBlocked: data.status === "blocked"
   };
 
