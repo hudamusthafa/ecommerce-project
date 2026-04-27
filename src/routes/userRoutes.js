@@ -28,7 +28,7 @@ router.post(
 );
 
 router.post("/profile/password", isLoggedIn, userController.changePassword);
-
+router.post("/profile/set-password", isLoggedIn, userController.setPassword);
 // CHECKOUT
 router.get("/checkout", isLoggedIn, userController.getCheckout);
 

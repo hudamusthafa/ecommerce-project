@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 // GET USER BY ID
 exports.getUserById = async (userId) => {
@@ -41,4 +42,23 @@ exports.updateAddress = async (userId, addressId, data) => {
 // UPDATE USER PROFILE
 exports.updateUser = async (userId, updates) => {
   return await User.findByIdAndUpdate(userId, updates,{ returnDocument: "after" });
+};
+
+//set paswrd
+
+exports.setPassword = async (userId, newPassword) => {
+  const user = await User.findById(userId);
+
+  if (!user) throw new Error("User not found");
+
+  if (user.password) {
+    throw new Error("Password already exists");
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashed;
+  await user.save();
+
+  return user;
 };

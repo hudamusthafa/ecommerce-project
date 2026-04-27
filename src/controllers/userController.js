@@ -108,6 +108,47 @@ exports.changePassword = async (req, res) => {
   }
 };
 
+//set paswrd for googlesignin users
+exports.setPassword = async (req, res) => {
+  try {
+    const { newPassword, confirmPassword } = req.body;
+
+    if (!newPassword || !confirmPassword) {
+      return res.render("user/profile", {
+        user: req.user,
+        message: "All fields are required"
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.render("user/profile", {
+        user: req.user,
+        message: "Passwords do not match"
+      });
+    }
+
+    // prevent overwrite
+    if (req.user.password) {
+      return res.render("user/profile", {
+        user: req.user,
+        message: "Password already exists"
+      });
+    }
+
+    await userService.setPassword(req.user._id, newPassword);
+
+    res.render("user/profile", {
+      user: { ...req.user, password: true }, // update UI immediately
+      message: "Password set successfully"
+    });
+
+  } catch (err) {
+    res.render("user/profile", {
+      user: req.user,
+      message: err.message
+    });
+  }
+};
 // CHECKOUT
 exports.getCheckout = async (req, res) => {
   const user = await userService.getUserById(req.user._id);

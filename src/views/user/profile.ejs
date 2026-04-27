@@ -85,28 +85,52 @@ id="profilePreview"
   <!-- CHANGE PASSWORD -->
   <div class="password-section">
 
+<% if (user.password === "google-auth") { %>
+
+    <h3>Set Password</h3>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+      
+      <p style="color: green; margin-bottom: 10px;"><%= message %></p>
+    <% } %>
+
+    <form action="/profile/set-password" method="POST">
+
+      <input type="password" name="newPassword" placeholder="New Password" required>
+
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+
+      <button type="submit" class="password-btn">
+        Set Password
+      </button>
+
+    </form>
+
+  <% } else { %>
+
     <h3>Change Password</h3>
 
-     <% if (typeof message !== 'undefined' && message) { %>
-    <p style="color: green; margin-bottom: 10px;"><%= message %></p>
-  <% } %>
+    <% if (typeof message !== 'undefined' && message) { %>
+      <p style="color: green; margin-bottom: 10px;"><%= message %></p>
+    <% } %>
 
     <form action="/profile/password" method="POST">
 
-      <input type="password" name="currentPassword" placeholder="Current Password">
+      <input type="password" name="currentPassword" placeholder="Current Password" required>
 
-      <input type="password" name="newPassword" placeholder="New Password">
+      <input type="password" name="newPassword" placeholder="New Password" required>
 
-      <input type="password" name="confirmPassword" placeholder="Confirm Password">
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
 
+      <button type="submit" class="password-btn">
+        Change Password
+      </button>
 
-    <button type="submit" class="password-btn">
-  Change Password
-</button>
     </form>
 
-  </div>
+  <% } %>
 
+</div>
 </div>
 
 <!-- FOOTER -->
