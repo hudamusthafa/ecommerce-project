@@ -28,7 +28,17 @@ router.post("/edit-user/:id", adminController.postEditUser);
 //delete user
 router.post("/delete-user/:id", adminController.deleteUser);
 
+//logout
+router.get("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) return next(err);
 
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid"); 
+      res.redirect("/admin/login");
+    });
+  });
+});
 
 
 module.exports = router;

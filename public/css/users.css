@@ -525,3 +525,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+.sidebar a {
+  text-decoration: none;   /* remove underline */
+  color: inherit;          /* use normal text color */
+}
