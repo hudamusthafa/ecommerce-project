@@ -27,6 +27,14 @@
       <% if (typeof message !== 'undefined') { %>
           <p class="error"><%= message %></p>
       <% } %>
+    
+      <div class="social">
+  <button type="button" onclick="window.location.href='/api/auth/google'">
+    Sign in with Google
+  </button>
+</div>
+
+<div class="or">— OR —</div>
 
       <!--  FORM -->
      <form method="POST" action="/api/auth/login" onsubmit="return validateLogin()" novalidate>
