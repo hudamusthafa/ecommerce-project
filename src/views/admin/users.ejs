@@ -8,36 +8,12 @@
 </head>
 
 <body>
-
+<%- include('../partials/admin-header') %>
 <div class="dashboard">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
-
-    <h3>MENU</h3>
-    <ul>
-      <li><a href="/admin/dashboard">Dashboard</a></li>
-      <li>Products</li>
-      <li>Category</li>
-      <li>Orders</li>
-      <li>Coupon</li>
-      <li>Transaction</li>
-    </ul>
-
-    <ul class="section">
-      <li class="section-title active-section">User Management</li>
-      <li>Customers</li>
-    </ul>
-
-    <ul class="section">
-      <li class="section-title">Others</li>
-      <li>Settings</li>
-      <li>Help</li>
-      <a href="/admin/logout">Logout</a>
-    </ul>
-
-  </div>
-
+  
+<%- include('../partials/admin-sidebar') %>
   <!-- MAIN -->
   <div class="main">
 
@@ -246,6 +222,6 @@
   }
 
 </script>
-
+<%- include('../partials/admin-footer') %>
 </body>
 </html>

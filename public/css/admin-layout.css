@@ -1,0 +1,15 @@
+.dashboard {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  min-width: 220px;   /*  prevents shrinking */
+  background: #fff;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.main {
+  flex: 1;
+}

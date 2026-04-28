@@ -14,7 +14,7 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 230px;
-  background: #f7f7f7;
+  background:  #ffffff; 
   padding: 30px 20px;
   height: 100vh;
   border-right: 1px solid #eee;
@@ -528,4 +528,35 @@ body {
 .sidebar a {
   text-decoration: none;   /* remove underline */
   color: inherit;          /* use normal text color */
+}
+
+/* SIDEBAR TEXT SIZE */
+.sidebar li {
+  font-size: 16px;        /* bigger text */
+  margin: 14px 0;         /* more space between items */
+}
+
+/* LINKS */
+.sidebar li a {
+  display: block;
+  padding: 6px 0;         /* vertical spacing */
+}
+
+/* MENU HEADINGS */
+.sidebar h3 {
+  font-size: 18px;        /* MENU */
+  margin-bottom: 20px;
+}
+
+.sidebar h4 {
+  font-size: 16px;        /* section titles */
+  margin: 25px 0 12px;
+}
+
+/* EXTRA SPACE BETWEEN SECTIONS */
+.sidebar ul {
+  line-height: 1.6;       /* spacing between lines */
+}
+.sidebar {
+  padding: 35px 25px;   /* more breathing space */
 }
