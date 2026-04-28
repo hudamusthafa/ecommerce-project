@@ -11,8 +11,20 @@ const {
 } = require("../controllers/authController");
 
 const passport = require("passport");
+const authController = require("../controllers/authController");
 
 // AUTH ROUTES 
+
+
+// PAGES
+router.get("/register", (req, res) => res.render("user/register"));
+router.get("/login", authController.getLogin);
+router.get("/otp", (req, res) => res.render("user/otp"));
+router.get("/success", (req, res) => res.render("user/success"));
+router.get("/forgot-password", (req, res) => res.render("user/forgot-password"));
+router.get("/reset-password", (req, res) => res.render("user/reset-password"));
+
+
 router.post("/register", register);
 router.post("/login", login);
 

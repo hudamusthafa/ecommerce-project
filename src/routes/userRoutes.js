@@ -8,13 +8,6 @@ const upload = require("../middleware/upload");
 
 //router.use(isLoggedIn, checkBlockedUser);
 
-// PAGES
-router.get("/register", (req, res) => res.render("user/register"));
-router.get("/otp", (req, res) => res.render("user/otp"));
-router.get("/success", (req, res) => res.render("user/success"));
-router.get("/forgot-password", (req, res) => res.render("user/forgot-password"));
-router.get("/reset-password", (req, res) => res.render("user/reset-password"));
-router.get("/login", authController.getLogin);
 
 router.get("/home", (req, res) => {
   res.render("user/home", { user: req.user || null });
@@ -51,6 +44,7 @@ router.get("/logout", (req, res, next) => {
   req.logout(function(err) {
     if (err) return next(err);
     req.session.destroy(() => {
+      res.clearCookie("connect.sid");
       res.redirect("/login");
     });
   });

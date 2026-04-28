@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/", authRoutes);
 app.use("/", userRoutes);   //  All page routes here
 app.use("/admin", adminRoutes);
 
