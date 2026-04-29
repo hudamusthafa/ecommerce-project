@@ -110,9 +110,13 @@ id="profilePreview"
 
     <h3>Change Password</h3>
 
-    <% if (typeof message !== 'undefined' && message) { %>
-      <p style="color: green; margin-bottom: 10px;"><%= message %></p>
-    <% } %>
+   <% if (error) { %>
+  <p style="color:red; margin-bottom: 10px;"><%= error %></p>
+<% } %>
+
+<% if (success) { %>
+  <p style="color:green; margin-bottom: 10px;"><%= success %></p>
+<% } %>
 
     <form action="/profile/password" method="POST">
 

@@ -55,8 +55,7 @@ exports.getEditAddress = async (req, res) => {
 
 // PROFILE PAGE
 exports.getProfile = (req, res) => {
-  res.render("user/profile", { user: req.user,message:null });
-};
+res.render("user/profile", { user: req.user, error: null, success: null });};
 
 // UPDATE PROFILE 
 exports.updateProfile = async (req, res) => {
@@ -88,11 +87,19 @@ exports.changePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      return res.send("All fields required");
+      return res.render("user/profile", {
+        user: req.user,
+        error: "All fields required",
+        success: null
+      });
     }
 
     if (newPassword !== confirmPassword) {
-      return res.send("Passwords do not match");
+      return res.render("user/profile", {
+        user: req.user,
+        error: "Passwords do not match",
+        success: null
+      });
     }
 
     await changePasswordService(
@@ -101,13 +108,20 @@ exports.changePassword = async (req, res) => {
       newPassword
     );
 
-    res.redirect("/profile");
+    return res.render("user/profile", {
+      user: req.user,
+      error: null,
+      success: "Password updated successfully"
+    });
 
   } catch (err) {
-    res.send(err.message);
+    return res.render("user/profile", {
+      user: req.user,
+      error: err.message,
+      success: null
+    });
   }
 };
-
 //set paswrd for googlesignin users
 exports.setPassword = async (req, res) => {
   try {

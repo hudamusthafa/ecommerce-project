@@ -167,15 +167,27 @@
   }
 
   function confirmDelete() {
-    fetch(`/address/delete/${selectedAddressId}`, {
-      method: "POST"
-    })
-    .then(() => {
-      closeModal();
-      location.reload(); // reload same checkout page
-    })
-    .catch(err => console.log(err));
-  }
+  fetch(`/address/delete/${selectedAddressId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "same-origin"   // 
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("Delete failed");
+    }
+
+    closeModal();
+    location.reload(); // refresh UI
+
+  })
+  .catch(err => {
+    console.log(err);
+    alert("Something went wrong while deleting");
+  });
+}
 </script>
 </body>
 </html>
