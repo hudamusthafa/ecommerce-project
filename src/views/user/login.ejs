@@ -26,7 +26,7 @@
      
     
       <div class="social">
-  <button type="button" onclick="window.location.href='/api/auth/google'">
+  <button type="button" onclick="window.location.href='/google'">
     Sign in with Google
   </button>
 </div>
@@ -39,7 +39,7 @@
       <% } %>
 
       <!--  FORM -->
-     <form method="POST" action="/api/auth/login" onsubmit="return validateLogin()" novalidate>
+     <form method="POST" action="/login" onsubmit="return validateLogin()" novalidate>
 
         <input type="text" name="email" id="email" placeholder="Email">
         <p class="error" id="emailError"></p>

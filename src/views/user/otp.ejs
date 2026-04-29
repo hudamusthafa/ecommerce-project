@@ -154,7 +154,7 @@ async function verifyOtp() {
       bodyData = { email, otp, name, password };
     }
 
-    const res = await fetch("/api/auth/verify-otp", {
+    const res = await fetch("/verify-otp", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(bodyData)
@@ -208,7 +208,7 @@ async function resendOtp() {
   try {
     document.getElementById("otpError").innerText = "";
 
-    await fetch("/api/auth/send-otp", {
+    await fetch("/send-otp", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ email, name, password })

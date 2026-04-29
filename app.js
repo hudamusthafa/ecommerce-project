@@ -31,7 +31,7 @@ app.set("views", path.join(__dirname, "src/views"));
 app.use(session({
   secret: "secretkey",
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
 }));
 
 // Passport middleware

@@ -7,7 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback"
+      callbackURL: "http://localhost:3000/google/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -15,6 +15,7 @@ passport.use(
 
         let user = await User.findOne({ email });
 
+        //  create user if not exists
         if (!user) {
           user = await User.create({
             name: profile.displayName,
@@ -24,6 +25,7 @@ passport.use(
         }
 
         return done(null, user);
+
       } catch (err) {
         return done(err, null);
       }
@@ -31,15 +33,18 @@ passport.use(
   )
 );
 
+// session store
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
+// session fetch
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
 
-    if (!user || user.isBlocked) {
+    // security check
+    if (!user || user.isBlocked || user.isDeleted) {
       return done(null, false);
     }
 
