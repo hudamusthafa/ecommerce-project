@@ -19,6 +19,7 @@ exports.registerService = async (name, email, password) => {
     name,
     email: emailLower,
     password: hashedPassword,
+     provider: "local"
   });
 
   return user;
@@ -40,6 +41,10 @@ exports.loginService = async (email, password) => {
     throw new Error("Your account has been blocked by admin");
   }
 
+   if (user.provider === "google") {
+    throw new Error("Please login using Google");
+  }
+  
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {

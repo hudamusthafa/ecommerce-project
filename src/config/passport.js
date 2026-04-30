@@ -20,7 +20,7 @@ passport.use(
           user = await User.create({
             name: profile.displayName,
             email,
-            password: "google-auth"
+            password: "google"
           });
         }
 

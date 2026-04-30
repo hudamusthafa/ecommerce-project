@@ -43,7 +43,12 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
-
+app.get("/", (req, res) => {
+  if (req.user) {
+    return res.redirect("/home");
+  }
+  res.redirect("/login");
+});
 // Routes
 app.use("/", authRoutes);
 app.use("/", userRoutes);   //  All page routes here

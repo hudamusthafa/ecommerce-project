@@ -15,30 +15,3 @@ exports.isLoggedIn = (req, res, next) => {
 };
 
 
-//==========block user check===============
-
-// exports.checkBlockedUser = async (req, res, next) => {
-//   try {
-//     if (req.isAuthenticated()) {
-
-//       const user = req.user;
-
-//       if (user.isBlocked) {
-//         // logout user immediately
-//         req.logout(() => {
-//           req.session.destroy(() => {
-//             return res.redirect("/login");
-//           });
-//         });
-//       } else {
-//         return next();
-//       }
-
-//     } else {
-//       return res.redirect("/login");
-//     }
-
-//   } catch (err) {
-//     return res.redirect("/login");
-//   }
-// };
