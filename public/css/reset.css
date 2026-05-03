@@ -67,3 +67,14 @@ input {
   font-weight: 600;
   margin-top: 10px;
 }
+.password-box {
+  position: relative;
+}
+
+.password-box i {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+  color: gray;
+}

@@ -19,6 +19,16 @@
 
   <div class="profile-card">
 
+<!-- erro msg -->
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<% if (success) { %>
+  <p style="color:green;"><%= success %></p>
+<% } %>
+
+
 <form action="/profile/update" method="POST" enctype="multipart/form-data">
     <!-- PROFILE IMAGE -->
 <img 
@@ -85,7 +95,7 @@ id="profilePreview"
   <!-- CHANGE PASSWORD -->
   <div class="password-section">
 
-<% if (user.password === "google-auth") { %>
+<% if (user.password === "google") { %>
 
     <h3>Set Password</h3>
 
@@ -96,9 +106,15 @@ id="profilePreview"
 
     <form action="/profile/set-password" method="POST">
 
-      <input type="password" name="newPassword" placeholder="New Password" required>
+      <div class="password-box">
+        <input type="password" name="newPassword" id="setNewPassword" placeholder="New Password" required>
+        <i class="fas fa-eye" onclick="togglePassword('setNewPassword', this)"></i>
+      </div>
 
-      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+      <div class="password-box">
+        <input type="password" name="confirmPassword" id="setConfirmPassword" placeholder="Confirm Password" required>
+        <i class="fas fa-eye" onclick="togglePassword('setConfirmPassword', this)"></i>
+      </div>
 
       <button type="submit" class="password-btn">
         Set Password
@@ -110,21 +126,24 @@ id="profilePreview"
 
     <h3>Change Password</h3>
 
-   <% if (error) { %>
-  <p style="color:red; margin-bottom: 10px;"><%= error %></p>
-<% } %>
-
-<% if (success) { %>
-  <p style="color:green; margin-bottom: 10px;"><%= success %></p>
-<% } %>
+  
 
     <form action="/profile/password" method="POST">
 
-      <input type="password" name="currentPassword" placeholder="Current Password" required>
+      <div class="password-box">
+  <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
+  <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)"></i>
+</div>
 
-      <input type="password" name="newPassword" placeholder="New Password" required>
+<div class="password-box">
+  <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
+  <i class="fas fa-eye" onclick="togglePassword('newPassword', this)"></i>
+</div>
 
-      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+<div class="password-box">
+  <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+  <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
+</div>
 
       <button type="submit" class="password-btn">
         Change Password
@@ -158,6 +177,19 @@ imageInput.addEventListener("change", function () {
     reader.readAsDataURL(file);
   }
 });
+
+function togglePassword(id, icon) {
+  const input = document.getElementById(id);
+
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  }
+}
+
 </script>
 
 </body>

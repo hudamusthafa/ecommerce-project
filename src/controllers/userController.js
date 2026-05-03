@@ -60,10 +60,20 @@ res.render("user/profile", { user: req.user, error: null, success: null });};
 // UPDATE PROFILE 
 exports.updateProfile = async (req, res) => {
   try {
+    //  Prevent email change for Google users
+if (
+  (req.user.provider === "google" || req.user.password === "google-auth") &&
+  req.body.email !== req.user.email
+) {      return res.render("user/profile", {
+        user: req.user,
+        error: "Google users cannot change email",
+        success: null
+      });
+    }
+
     const updates = {
       name: req.body.name,
       email: req.body.email,
-      phone: req.body.phone,
       gender: req.body.gender
     };
 
@@ -71,13 +81,20 @@ exports.updateProfile = async (req, res) => {
       updates.profileImage = "/uploads/" + req.file.filename;
     }
 
-    await userService.updateUser(req.user._id, updates);  // 
-console.log(req.file);
-    res.redirect("/profile");
+    await userService.updateUser(req.user._id, updates);
+
+    return res.render("user/profile", {
+      user: { ...req.user, ...updates },
+      error: null,
+      success: "Profile updated successfully"
+    });
 
   } catch (err) {
-    console.log(err);
-    res.send("Error updating profile");
+    return res.render("user/profile", {
+      user: req.user,
+      error: "Error updating profile",
+      success: null
+    });
   }
 };
 

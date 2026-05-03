@@ -220,3 +220,14 @@ copyright {
 .upload-btn:hover {
   background: #cfc5be;
 }
+.password-box {
+  position: relative;
+}
+
+.password-box i {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+  color: gray;
+}
