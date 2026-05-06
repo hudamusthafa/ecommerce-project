@@ -3,158 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <title>My Profile</title>
-  
-  <link rel="stylesheet" href="/css/profile.css">
+
   <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/profile.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
-<!-- header-->
 <%- include('../partials/header') %>
 
-<div class="profile-page">
+<div class="profile-container">
 
-  <h2>My Profile</h2>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>My Account</h3>
 
-  <div class="profile-card">
+    <ul>
+      <li class="active">
+        <a href="/profile"><i class="fas fa-user"></i> Personal Information</a>
+      </li>
 
-<!-- erro msg -->
-<% if (error) { %>
-  <p style="color:red;"><%= error %></p>
-<% } %>
+      <li>
+        <a href="/orders"><i class="fas fa-box"></i> Orders</a>
+      </li>
 
-<% if (success) { %>
-  <p style="color:green;"><%= success %></p>
-<% } %>
+      <li>
+        <a href="#"><i class="fas fa-star"></i> My Reviews</a>
+      </li>
 
+      <li>
+        <a href="/address"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+      </li>
 
-<form action="/profile/update" method="POST" enctype="multipart/form-data">
-    <!-- PROFILE IMAGE -->
-<img 
-id="profilePreview"
-  src="<%= user.profileImage && user.profileImage !== '' 
-          ? user.profileImage 
-          : '/images/default-avatar.png' %>" 
-  class="profile-img"
->
+      <li>
+        <a href="#"><i class="fas fa-lock"></i> Security</a>
+      </li>
 
-<br><br>
+      <li>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </li>
+    </ul>
+  </aside>
 
-<label for="imageUpload" class="upload-btn">Add Profile</label>
-<input type="file" id="imageUpload" name="image" accept="image/*" hidden>
+  <!-- MAIN CONTENT -->
+  <main class="profile-content">
 
-    
+    <h2 class="page-title">My Profile</h2>
 
-    <!-- NAME -->
-    <label>Name</label>
-    <input type="text" name="name" value="<%= user.name %>" required>
+    <!-- 🔥 NEW GRID WRAPPER -->
+    <div class="profile-grid">
 
-    <!-- EMAIL -->
-    <label>Email</label>
-    <input type="email" name="email" value="<%= user.email %>" required>
+      <!-- LEFT: PROFILE -->
+      <div class="profile-card">
 
-    <!-- PHONE -->
-    <!-- <label>Phone Number</label>
-    <input type="text" name="phone" value="<%= user.phone || '' %>" placeholder="+91xxxxxxxxxx"> -->
+        <% if (error) { %>
+          <p class="error-msg"><%= error %></p>
+        <% } %>
 
-    <!-- GENDER -->
-    <label>Gender</label>
-    <div class="gender-box">
-      <label>
-        <input type="radio" name="gender" value="female"
-          <%= user.gender === 'female' ? 'checked' : '' %> > Female
-      </label>
+        <% if (success) { %>
+          <p class="success-msg"><%= success %></p>
+        <% } %>
 
-      <label>
-        <input type="radio" name="gender" value="male"
-          <%= user.gender === 'male' ? 'checked' : '' %> > Male
-      </label>
+        <form action="/profile/update" method="POST" enctype="multipart/form-data">
+
+          <img 
+            id="profilePreview"
+            src="<%= user.profileImage && user.profileImage !== '' 
+                    ? user.profileImage 
+                    : '/images/default-avatar.png' %>" 
+            class="profile-img"
+          >
+
+          <label for="imageUpload" class="upload-btn">Add Profile</label>
+          <input type="file" id="imageUpload" name="image" accept="image/*" hidden>
+
+          <label>Name</label>
+          <input type="text" name="name" value="<%= user.name %>" required>
+
+          <label>Email</label>
+          <input type="email" name="email" value="<%= user.email %>" required>
+
+          <label>Gender</label>
+          <div class="gender-box">
+            <label>
+              <input type="radio" name="gender" value="female"
+                <%= user.gender === 'female' ? 'checked' : '' %> > Female
+            </label>
+
+            <label>
+              <input type="radio" name="gender" value="male"
+                <%= user.gender === 'male' ? 'checked' : '' %> > Male
+            </label>
+          </div>
+
+          <button type="submit" class="save-btn">Save Changes</button>
+
+        </form>
+
+        <div class="profile-actions">
+          <a href="/address" class="address-btn">Manage Address</a>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: PASSWORD -->
+      <div class="password-section">
+
+        <% if (user.provider === "google" && user.password === "google") { %>
+
+          <h3>Set Password</h3>
+
+          <% if (typeof message !== 'undefined' && message) { %>
+            <p class="success-msg"><%= message %></p>
+          <% } %>
+
+          <form action="/profile/set-password" method="POST">
+
+            <div class="password-box">
+              <input type="password" name="newPassword" id="setNewPassword" placeholder="New Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('setNewPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="confirmPassword" id="setConfirmPassword" placeholder="Confirm Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('setConfirmPassword', this)"></i>
+            </div>
+
+            <button type="submit" class="password-btn">Set Password</button>
+
+          </form>
+
+        <% } else { %>
+
+          <h3>Change Password</h3>
+
+          <form action="/profile/password" method="POST">
+
+            <div class="password-box">
+              <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('newPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
+            </div>
+
+            <button type="submit" class="password-btn">Change Password</button>
+
+          </form>
+
+        <% } %>
+
+      </div>
+
     </div>
 
-    <!-- SAVE BUTTON -->
-    <button type="submit" class="save-btn">Save Changes</button>
-
-  </form>
-
-  </form>
-
-<div class="profile-actions">
-<a href="/address" class="address-btn">Manage Address</a></div>
-
+  </main>
 </div>
 
-  <!-- EDIT PROFILE -->
-  <div class="edit-section">
-
-    
-
-  </div>
-
-  <!-- CHANGE PASSWORD -->
-  <div class="password-section">
-
-<% if (user.provider === "google" && user.password === "google") { %>
-    <h3>Set Password</h3>
-
-    <% if (typeof message !== 'undefined' && message) { %>
-      
-      <p style="color: green; margin-bottom: 10px;"><%= message %></p>
-    <% } %>
-
-    <form action="/profile/set-password" method="POST">
-
-      <div class="password-box">
-        <input type="password" name="newPassword" id="setNewPassword" placeholder="New Password" required>
-        <i class="fas fa-eye" onclick="togglePassword('setNewPassword', this)"></i>
-      </div>
-
-      <div class="password-box">
-        <input type="password" name="confirmPassword" id="setConfirmPassword" placeholder="Confirm Password" required>
-        <i class="fas fa-eye" onclick="togglePassword('setConfirmPassword', this)"></i>
-      </div>
-
-      <button type="submit" class="password-btn">
-        Set Password
-      </button>
-
-    </form>
-
-  <% } else { %>
-
-    <h3>Change Password</h3>
-
-  
-
-    <form action="/profile/password" method="POST">
-
-      <div class="password-box">
-  <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
-  <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)"></i>
-</div>
-
-<div class="password-box">
-  <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
-  <i class="fas fa-eye" onclick="togglePassword('newPassword', this)"></i>
-</div>
-
-<div class="password-box">
-  <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
-  <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
-</div>
-
-      <button type="submit" class="password-btn">
-        Change Password
-      </button>
-
-    </form>
-
-  <% } %>
-
-</div>
-</div>
-
-<!-- FOOTER -->
 <%- include('../partials/footer') %>
 
 <script>
@@ -163,22 +176,15 @@ const preview = document.getElementById("profilePreview");
 
 imageInput.addEventListener("change", function () {
   const file = this.files[0];
-
   if (file) {
     const reader = new FileReader();
-
-    reader.onload = function (e) {
-      preview.src = e.target.result; 
-      
-    };
-
+    reader.onload = e => preview.src = e.target.result;
     reader.readAsDataURL(file);
   }
 });
 
 function togglePassword(id, icon) {
   const input = document.getElementById(id);
-
   if (input.type === "password") {
     input.type = "text";
     icon.classList.replace("fa-eye", "fa-eye-slash");
@@ -187,7 +193,6 @@ function togglePassword(id, icon) {
     icon.classList.replace("fa-eye-slash", "fa-eye");
   }
 }
-
 </script>
 
 </body>
