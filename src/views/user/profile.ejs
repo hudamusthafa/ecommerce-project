@@ -80,8 +80,7 @@ id="profilePreview"
   </form>
 
 <div class="profile-actions">
-  <a href="/checkout" class="address-btn">Manage Address</a>
-</div>
+<a href="/address" class="address-btn">Manage Address</a></div>
 
 </div>
 
@@ -95,8 +94,7 @@ id="profilePreview"
   <!-- CHANGE PASSWORD -->
   <div class="password-section">
 
-<% if (user.password === "google") { %>
-
+<% if (user.provider === "google" && user.password === "google") { %>
     <h3>Set Password</h3>
 
     <% if (typeof message !== 'undefined' && message) { %>

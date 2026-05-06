@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Address</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <%- include('../partials/header') %>
+
+  
+  <main class="page-content">
+
+    <h2 style="text-align:center;">My Address</h2>
+
+    <div class="checkout-container">
+
+      <!-- LEFT SIDE -->
+      <div class="left-section">
+
+        <h3>Your Addresses</h3>
+
+        <!-- FORM -->
+        <form action="/address/set-default" method="POST">
+
+          <div class="address-list">
+
+            <% if (user.address && user.address.length > 0) { %>
+
+              <% user.address.forEach((addr, index) => { %>
+
+                <div class="address-block">
+
+                  <!-- RADIO -->
+                  <label class="address-title">
+                    <input 
+                      type="radio" 
+                      name="selectedAddress" 
+                      value="<%= addr._id %>"
+                      <%= addr.isDefault ? "checked" : "" %>
+                    >
+                    Address <%= index + 1 %>
+
+                    <% if (addr.isDefault) { %>
+                      <span style="color:green; font-size:12px;">(Default)</span>
+                    <% } %>
+                  </label>
+
+                  <!-- CARD -->
+                  <div class="address-card">
+
+                    <p><strong><%= addr.fullName %></strong></p>
+                    <p><%= addr.house %></p>
+                    <p><%= addr.area %></p>
+                    <p><%= addr.city %>, <%= addr.pincode %></p>
+                    <p><%= addr.state %>, India</p>
+                    <p>Ph: <%= addr.phone %></p>
+
+                    <div class="address-actions">
+
+                      <a href="/address/edit/<%= addr._id %>" class="btn">Edit</a>
+
+                      <button type="button" class="btn" onclick="openDeleteModal('<%= addr._id %>')">
+                        Delete
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              <% }) %>
+
+            <% } else { %>
+
+              <p>No address found</p>
+
+            <% } %>
+
+          </div>
+
+          <!-- SET DEFAULT BUTTON -->
+          <% if (user.address && user.address.length > 0) { %>
+            <button type="submit" class="btn" style="margin-top:15px;">
+              Set as Default
+            </button>
+          <% } %>
+
+        </form>
+
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="right-section" style="text-align:center;">
+        <a href="/address/new" class="add-new">+ Add New Address</a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <%- include('../partials/footer') %>
+
+</div>
+
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <p>Delete this address?</p>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="confirm-btn" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedAddressId = null;
+
+  function openDeleteModal(id) {
+    selectedAddressId = id;
+    document.getElementById("deleteModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+  }
+
+  function confirmDelete() {
+    fetch(`/address/delete/${selectedAddressId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin"
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Delete failed");
+
+      closeModal();
+      location.reload();
+    })
+    .catch(() => {
+      alert("Something went wrong");
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -29,6 +29,7 @@ router.post("/profile/set-password", isLoggedIn, userController.setPassword);
 router.get("/checkout", isLoggedIn, userController.getCheckout);
 
 // ADDRESS
+router.get("/address",  isLoggedIn, userController.getAddressPage);
 router.post("/address/add", isLoggedIn, userController.addAddress);
 router.post("/address/delete/:id", isLoggedIn, userController.deleteAddress);
 router.post("/address/update/:id", isLoggedIn, userController.updateAddress);

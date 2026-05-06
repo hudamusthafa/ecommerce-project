@@ -178,3 +178,40 @@
   color: #e0e0e0;
   line-height: 1.8; 
 }  
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-container {
+  flex: 1;   /* pushes footer down */
+}
+.left-section {
+  width: 70%;
+}
+
+.right-section {
+  width: 30%;
+}
+.checkout-container {
+  padding-bottom: 40px;
+}
+html, body {
+  height: 100%;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}

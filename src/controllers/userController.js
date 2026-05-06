@@ -2,10 +2,19 @@ const userService = require("../services/userService");
 const { changePasswordService } = require("../services/authService");
 
 // ADD ADDRESS
+
+
+
+exports.getAddressPage = async (req, res) => {
+  const user = await userService.getUserById(req.user._id);
+
+  res.render("user/address", { user });
+};
+
 exports.addAddress = async (req, res) => {
   try {
     await userService.addAddress(req.user._id, req.body);
-    res.redirect("/checkout");   
+    res.redirect("/address");   
   } catch (err) {
     res.send("Error adding address");
   }
@@ -15,7 +24,7 @@ exports.addAddress = async (req, res) => {
 exports.deleteAddress = async (req, res) => {
   try {
     await userService.deleteAddress(req.user._id, req.params.id);
-    res.redirect("/checkout");   
+    res.redirect("/address");   
   } catch (err) {
     res.send("Error deleting address");
   }
@@ -25,7 +34,7 @@ exports.deleteAddress = async (req, res) => {
 exports.updateAddress = async (req, res) => {
   try {
     await userService.updateAddress(req.user._id, req.params.id, req.body);
-    res.redirect("/checkout");   
+    res.redirect("/address");   
   } catch (err) {
     res.send("Error updating address");
   }
@@ -62,9 +71,10 @@ exports.updateProfile = async (req, res) => {
   try {
     //  Prevent email change for Google users
 if (
-  (req.user.provider === "google" || req.user.password === "google-auth") &&
-  req.body.email !== req.user.email
-) {      return res.render("user/profile", {
+      req.user.provider === "google" &&
+      req.body.email !== req.user.email
+) {     
+     return res.render("user/profile", {
         user: req.user,
         error: "Google users cannot change email",
         success: null
@@ -142,6 +152,15 @@ exports.changePassword = async (req, res) => {
 //set paswrd for googlesignin users
 exports.setPassword = async (req, res) => {
   try {
+
+     if (req.user.provider !== "google") {
+     return res.render("user/profile", {
+        user: req.user,
+        message: "Invalid request"
+  });
+}
+
+
     const { newPassword, confirmPassword } = req.body;
 
     if (!newPassword || !confirmPassword) {
@@ -159,7 +178,7 @@ exports.setPassword = async (req, res) => {
     }
 
     // prevent overwrite
-    if (req.user.password) {
+if (req.user.password && req.user.password !== "google" && req.user.password !== "google-auth") {
       return res.render("user/profile", {
         user: req.user,
         message: "Password already exists"
@@ -169,9 +188,11 @@ exports.setPassword = async (req, res) => {
     await userService.setPassword(req.user._id, newPassword);
 
     res.render("user/profile", {
-      user: { ...req.user, password: true }, // update UI immediately
+      user: { ...req.user, provider: "local" },
       message: "Password set successfully"
     });
+
+  
 
   } catch (err) {
     res.render("user/profile", {
@@ -180,6 +201,15 @@ exports.setPassword = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+
+
+
 // CHECKOUT
 exports.getCheckout = async (req, res) => {
   const user = await userService.getUserById(req.user._id);

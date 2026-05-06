@@ -51,7 +51,7 @@ exports.setPassword = async (userId, newPassword) => {
 
   if (!user) throw new Error("User not found");
 
-  if (user.password) {
+  if (user.provider !== "google") {
     throw new Error("Password already exists");
   }
 
