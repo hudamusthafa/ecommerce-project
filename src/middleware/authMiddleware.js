@@ -2,13 +2,18 @@
 //user auth
 
 exports.isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated()&& req.user) {
 
 
 // check if blocked
     if (req.user.isBlocked) {
-      return res.redirect("/login?blocked=1");
-    }
+    req.logout(() => {
+      req.session.destroy(() => {
+        return res.redirect("/login?blocked=1");
+      });
+    });
+    return;
+  }
 
     return next(); // user logged in
   }

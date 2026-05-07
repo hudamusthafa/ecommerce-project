@@ -48,7 +48,7 @@ passport.use(
 
 //  STORE USER ID IN SESSION
 passport.serializeUser((user, done) => {
-  done(null, user._id);
+  done(null,  user._id);
 });
 
 
@@ -58,7 +58,10 @@ passport.deserializeUser(async (id, done) => {
     const user = await User.findById(id);
 
     //  Security check
-    if (!user || user.isBlocked || user.isDeleted) {
+    if (!user ||  user.isDeleted) {
+      return done(null, false);
+    }
+     if (!user.isAdmin && user.isBlocked) {
       return done(null, false);
     }
 
