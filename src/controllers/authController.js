@@ -13,6 +13,9 @@ const sendEmail = require("../helpers/sendEmail");
 
 
 // ------------------------REGISTER-------------
+exports.getRegister = (req, res) => {
+  res.render("user/register");
+};
 
 exports.register = async (req, res) => {
   try {

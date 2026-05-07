@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { isLoggedOut } = require("../middleware/authMiddleware");
+const cacheMiddleware = require("../middleware/cacheMiddleware");
 
 const {
   register,
@@ -17,8 +19,8 @@ const authController = require("../controllers/authController");
 
 
 // PAGES
-router.get("/register", (req, res) => res.render("user/register"));
-router.get("/login", authController.getLogin);
+router.get("/register", cacheMiddleware.noCache,  isLoggedOut, authController.getRegister);
+router.get("/login",cacheMiddleware.noCache,  isLoggedOut, authController.getLogin);
 router.get("/otp", (req, res) => res.render("user/otp"));
 router.get("/success", (req, res) => res.render("user/success"));
 router.get("/forgot-password", (req, res) => res.render("user/forgot-password"));

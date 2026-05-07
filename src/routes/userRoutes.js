@@ -3,18 +3,19 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 
 const { isLoggedIn } = require("../middleware/authMiddleware");
+const cacheMiddleware = require("../middleware/cacheMiddleware");
 const userController = require("../controllers/userController");
 const upload = require("../middleware/upload");
 
 //router.use(isLoggedIn, checkBlockedUser);
 
 
-router.get("/home", (req, res) => {
+router.get("/home",  isLoggedIn,(req, res) => {
   res.render("user/home", { user: req.user || null });
 });
 
 // PROFILE
-router.get("/profile", isLoggedIn, userController.getProfile);
+router.get("/profile",cacheMiddleware.noCache, isLoggedIn, userController.getProfile);
 
 router.post(
   "/profile/update",
@@ -26,10 +27,10 @@ router.post(
 router.post("/profile/password", isLoggedIn, userController.changePassword);
 router.post("/profile/set-password", isLoggedIn, userController.setPassword);
 // CHECKOUT
-router.get("/checkout", isLoggedIn, userController.getCheckout);
+router.get("/checkout",  cacheMiddleware.noCache, isLoggedIn, userController.getCheckout);
 
 // ADDRESS
-router.get("/address",  isLoggedIn, userController.getAddressPage);
+router.get("/address",   cacheMiddleware.noCache, isLoggedIn, userController.getAddressPage);
 router.post("/address/add", isLoggedIn, userController.addAddress);
 router.post("/address/delete/:id", isLoggedIn, userController.deleteAddress);
 router.post("/address/update/:id", isLoggedIn, userController.updateAddress);

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
-
+const cacheMiddleware = require("../middleware/cacheMiddleware");
 // GET login page
 router.get("/login", adminController.getLogin);
 
@@ -9,7 +9,7 @@ router.get("/login", adminController.getLogin);
 router.post("/login", adminController.postLogin);
 
 // dashboard 
-router.get("/dashboard", adminController.getDashboard);
+router.get("/dashboard",   cacheMiddleware.noCache,adminController.getDashboard);
 
 //usermanagemnt
 router.get("/users", adminController.getUsers);

@@ -65,5 +65,21 @@
 
 </div>
 
+<script>
+  // Fix back button (bfcache)
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+
+  // Force redirect if session gone
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.location.href = "/login";
+    };
+  }
+</script>
 </body>
 </html>
