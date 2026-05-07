@@ -1,23 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
-const cacheMiddleware = require("../middleware/cacheMiddleware");
+const { isAdminLoggedIn ,isAdminLoggedOut } = require("../middleware/authMiddleware");
+const { noCache } = require("../middleware/cacheMiddleware");
+
+
 // GET login page
-router.get("/login", adminController.getLogin);
+router.get("/login",noCache, isAdminLoggedOut, adminController.getLogin);
 
 // POST login
 router.post("/login", adminController.postLogin);
 
 // dashboard 
-router.get("/dashboard",   cacheMiddleware.noCache,adminController.getDashboard);
+router.get("/dashboard",  noCache, isAdminLoggedIn,adminController.getDashboard);
 
 //usermanagemnt
-router.get("/users", adminController.getUsers);
+router.get("/users", noCache, isAdminLoggedIn,adminController.getUsers);
 router.post("/block-user/:id", adminController.blockUser);
 router.post("/unblock-user/:id", adminController.unblockUser);
 
 //add user
-router.get("/add-user", adminController.getAddUser);
+router.get("/add-user",noCache, isAdminLoggedIn, adminController.getAddUser);
 router.post("/add-user", adminController.postAddUser);
 
 //edit user

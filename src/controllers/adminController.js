@@ -3,6 +3,10 @@ const adminService = require("../services/adminService");
 /* ================= ADMIN LOGIN ================= */
 
 exports.getLogin = (req, res) => {
+if (req.isAuthenticated() && req.user && req.user.isAdmin) {
+    return res.redirect("/admin/dashboard");  //  block access
+  }
+
   res.render("admin/login", { error: null });
 };
 
@@ -18,9 +22,15 @@ exports.postLogin = async (req, res) => {
       return res.render("admin/login", { error: "Password must be at least 6 characters" });
     }
 
-    await adminService.adminLogin(email, password);
+    const admin = await adminService.adminLogin(email, password);
 
-    res.redirect("/admin/dashboard");
+    req.login(admin, (err) => {
+      if (err) {
+        return res.render("admin/login", { error: "Login failed" });
+      }
+
+      return res.redirect("/admin/dashboard");
+    });
 
   } catch (err) {
     res.render("admin/login", { error: err.message });

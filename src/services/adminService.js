@@ -3,13 +3,23 @@ const bcrypt = require("bcryptjs");
 
 // LOGIN
 exports.adminLogin = async (email, password) => {
-  const admin = await User.findOne({ email: email.toLowerCase(), isAdmin: true });
 
-  if (!admin) throw new Error("Invalid credentials");
+  const admin = await User.findOne({
+    email: email.toLowerCase(),
+    isAdmin: true
+  });
+
+  if (!admin) {
+    throw new Error("Invalid credentials");
+  }
 
   const isMatch = await bcrypt.compare(password, admin.password);
 
-  if (!isMatch) throw new Error("Invalid credentials");
+
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+
 
   return admin;
 };

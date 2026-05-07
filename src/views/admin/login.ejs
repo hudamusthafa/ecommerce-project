@@ -54,5 +54,13 @@
     }
   }
 </script>
+<script>
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.location.href = "/admin/dashboard";
+    };
+  }
+</script>
 </body>
 </html>
