@@ -11,17 +11,28 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const email = profile.emails[0].value;
+        //  Safe email extraction
+        const email = profile.emails?.[0]?.value;
+
+        if (!email) {
+          return done(new Error("No email found from Google"), null);
+        }
 
         let user = await User.findOne({ email });
 
-        //  create user if not exists
+        //  Restore soft-deleted user
+        if (user && user.isDeleted) {
+          user.isDeleted = false;
+          await user.save();
+        }
+
+        //  Create user if not exists
         if (!user) {
           user = await User.create({
             name: profile.displayName,
             email,
-            password: "google",
-             provider: "google" 
+            provider: "google",
+            password: null //  do NOT store "google"
           });
         }
 
@@ -34,17 +45,19 @@ passport.use(
   )
 );
 
-// session store
+
+//  STORE USER ID IN SESSION
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user._id);
 });
 
-// session fetch
+
+// FETCH USER FROM SESSION
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
 
-    // security check
+    //  Security check
     if (!user || user.isBlocked || user.isDeleted) {
       return done(null, false);
     }

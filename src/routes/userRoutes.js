@@ -10,7 +10,8 @@ const upload = require("../middleware/upload");
 //router.use(isLoggedIn, checkBlockedUser);
 
 
-router.get("/home",  isLoggedIn,(req, res) => {
+router.get("/home", (req, res) => {
+  
   res.render("user/home", { user: req.user || null });
 });
 

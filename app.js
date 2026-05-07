@@ -6,7 +6,8 @@ const session = require("express-session");
 dotenv.config();
 
 const connectDB = require("./src/config/db");
-const passport = require("./src/config/passport");
+const passport = require("passport");
+require("./src/config/passport");
 
 // Routes
 const authRoutes = require("./src/routes/authRoutes");
@@ -49,6 +50,10 @@ app.get("/", (req, res) => {
   }
   res.redirect("/login");
 });
+
+
+
+
 // Routes
 app.use("/", authRoutes);
 app.use("/", userRoutes);   //  All page routes here

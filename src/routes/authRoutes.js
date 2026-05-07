@@ -46,7 +46,13 @@ router.get("/google/callback",
     failureRedirect: "/login"
   }),
   (req, res) => {
-    res.redirect("/home");
+
+    req.login(req.user, (err) => {
+      if (err) return res.redirect("/login");
+
+      return res.redirect("/home");
+    });
+
   }
 );
 
