@@ -47,6 +47,20 @@ app.use(passport.session());
 
 // Global user middleware
 app.use((req, res, next) => {
+
+  //  If session exists but user is missing (blocked/deleted)
+  if (req.session.passport && !req.user) {
+    return req.logout(() => {
+      req.session.destroy(() => {
+        res.clearCookie("connect.sid");
+      return res.redirect(
+        "/login?message=" + encodeURIComponent("Your account has been blocked by admin")
+      );     
+     });
+    });
+  }
+
+  // normal flow
   res.locals.user = req.user || null;
   next();
 });

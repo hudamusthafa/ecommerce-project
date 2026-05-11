@@ -65,8 +65,7 @@
         <% } %>
 
         <!--  UPDATED (PUT) -->
-        <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data">
-
+        <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data" onsubmit="return validateProfile()" novalidate>
           <img 
             id="profilePreview"
             src="<%= user.profileImage && user.profileImage !== '' 
@@ -79,13 +78,16 @@
           <input type="file" id="imageUpload" name="image" accept="image/*" hidden>
 
           <label>Name</label>
-          <input type="text" name="name" value="<%= user.name %>" required>
+           <input type="text" name="name" value="<%= user.name %>">           <p class="error" id="nameError"></p>
+
 
           <label>Email</label>
-          <input type="email" name="email" value="<%= user.email %>" required>
+          <input type="text" id="email" name="email" value="<%= user.email %>">
+          <p class="error" id="emailError"></p>
 
           <label>Gender</label>
           <div class="gender-box">
+
             <label>
               <input type="radio" name="gender" value="female"
                 <%= user.gender === 'female' ? 'checked' : '' %> > Female
@@ -196,6 +198,54 @@ function togglePassword(id, icon) {
   }
 }
 </script>
+<script>
+function validateProfile() {
+  let isValid = true;
 
+  const nameInput = document.querySelector("input[name='name']");
+  const emailInput = document.getElementById("email");
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+
+  // clear old errors
+  nameError.innerText = "";
+  emailError.innerText = "";
+
+  // NAME VALIDATION
+  if (!name) {
+    nameError.innerText = "Name is required";
+    nameInput.focus();
+    isValid = false;
+  }
+
+  // EMAIL VALIDATION
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    emailError.innerText = "Email is required";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    emailError.innerText = "Enter a valid email";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  }
+
+  return isValid;
+}
+</script>
+<script>
+document.querySelector("input[name='name']").addEventListener("input", () => {
+  document.getElementById("nameError").innerText = "";
+});
+
+document.getElementById("email").addEventListener("input", () => {
+  document.getElementById("emailError").innerText = "";
+});
+</script>
 </body>
 </html>

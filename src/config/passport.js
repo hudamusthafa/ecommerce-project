@@ -20,6 +20,11 @@ passport.use(
 
         let user = await User.findOne({ email });
 
+        //  BLOCKED USER CHECK
+        if (user && user.isBlocked && !user.isAdmin) {
+          return done(null, false, { message: "Account has been blocked by admin" });
+        }
+
         //  Restore soft-deleted user
         if (user && user.isDeleted) {
           user.isDeleted = false;

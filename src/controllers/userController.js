@@ -69,12 +69,35 @@ res.render("user/profile", { user: req.user, error: null, success: null });};
 // UPDATE PROFILE 
 exports.updateProfile = async (req, res) => {
   try {
-    //  Prevent email change for Google users
-if (
+
+    const { name, email, gender } = req.body;
+
+    // NAME VALIDATION
+    if (!name || name.trim() === "") {
+      return res.render("user/profile", {
+        user: req.user,
+        error: "Name is required",
+        success: null
+      });
+    }
+
+    //  EMAIL VALIDATION
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || !emailRegex.test(email)) {
+      return res.render("user/profile", {
+        user: req.user,
+        error: "Enter a valid email",
+        success: null
+      });
+    }
+
+    //  GOOGLE USER EMAIL CHANGE BLOCK
+    if (
       req.user.provider === "google" &&
-      req.body.email !== req.user.email
-) {     
-     return res.render("user/profile", {
+      email !== req.user.email
+    ) {
+      return res.render("user/profile", {
         user: req.user,
         error: "Google users cannot change email",
         success: null
@@ -82,9 +105,9 @@ if (
     }
 
     const updates = {
-      name: req.body.name,
-      email: req.body.email,
-      gender: req.body.gender
+      name,
+      email,
+      gender
     };
 
     if (req.file) {
@@ -107,7 +130,6 @@ if (
     });
   }
 };
-
 // CHANGE PASSWORD (improved)
 exports.changePassword = async (req, res) => {
   try {

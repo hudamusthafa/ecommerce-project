@@ -41,19 +41,27 @@ router.get("/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-router.get("/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/login"
-  }),
-  (req, res) => {
+router.get("/google/callback", (req, res, next) => {
 
-    req.login(req.user, (err) => {
-      if (err) return res.redirect("/login");
+  passport.authenticate("google", (err, user, info) => {
 
+    if (err) return next(err);
+
+    //  BLOCKED USER OR FAILURE
+     if (!user) {
+      return res.redirect(
+        "/login?message=" + encodeURIComponent(info?.message || "Login failed")
+      );
+    }
+
+    //  SUCCESS LOGIN
+    req.login(user, (err) => {
+      if (err) return next(err);
       return res.redirect("/home");
     });
 
-  }
-);
+  })(req, res, next);
+
+});
 
 module.exports = router;
