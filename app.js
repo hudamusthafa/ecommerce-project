@@ -49,10 +49,12 @@ app.use(passport.session());
 app.use((req, res, next) => {
 
   //  If session exists but user is missing (blocked/deleted)
-  if (req.session.passport && !req.user) {
-    return req.logout(() => {
-      req.session.destroy(() => {
+if (req.session &&req.session.passport && !req.user && !req.originalUrl.startsWith("/admin")) {    
+  
+       return req.logout(() => {
+        req.session.destroy(() => {
         res.clearCookie("connect.sid");
+
       return res.redirect(
         "/login?message=" + encodeURIComponent("Your account has been blocked by admin")
       );     
@@ -64,6 +66,7 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
+
 app.get("/", (req, res) => {
   if (req.user) {
     return res.redirect("/home");

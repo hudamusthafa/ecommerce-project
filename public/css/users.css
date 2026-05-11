@@ -560,3 +560,9 @@ body {
 .sidebar {
   padding: 35px 25px;   /* more breathing space */
 }
+.error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}

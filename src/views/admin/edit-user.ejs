@@ -42,32 +42,33 @@
 
       <h2>Edit User</h2>
 
-       <% if (error) { %>
-          <p class="error-msg"><%= error %></p>
-        <% } %>
+      <% if (error) { %>
+        <p class="error-msg"><%= error %></p>
+      <% } %>
 
-        <% if (success) { %>
-          <p class="success-msg"><%= success %></p>
-        <% } %>
+      <% if (success) { %>
+        <p class="success-msg"><%= success %></p>
+      <% } %>
 
-       <form action="/admin/edit-user/<%= user._id %>?_method=PUT" method="POST">
+      <!-- FORM -->
+      <form action="/admin/edit-user/<%= user._id %>?_method=PUT"
+            method="POST"
+            onsubmit="return validateEditUser()"
+            novalidate>
+
         <!-- NAME -->
         <div class="form-group">
           <label>Username</label>
-          <input type="text" name="name" value="<%= user.name %>" required>
+          <input type="text" id="name" name="name" value="<%= user.name %>">
+          <p class="error" id="nameError"></p>
         </div>
 
         <!-- EMAIL -->
         <div class="form-group">
           <label>Email</label>
-          <input type="email" name="email" value="<%= user.email %>" required>
+          <input type="text" id="email" name="email" value="<%= user.email %>">
+          <p class="error" id="emailError"></p>
         </div>
-
-        <!-- PHONE -->
-        <!-- <div class="form-group">
-          <label>Phone</label>
-          <input type="text" name="phone" value="<%= user.phone || '' %>">
-        </div> -->
 
         <!-- STATUS -->
         <div class="form-group">
@@ -91,6 +92,57 @@
   </div>
 
 </div>
+
+<!-- JS VALIDATION -->
+<script>
+function validateEditUser() {
+  let isValid = true;
+
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+
+  // clear old errors
+  nameError.innerText = "";
+  emailError.innerText = "";
+
+  // NAME VALIDATION
+  if (!name) {
+    nameError.innerText = "Name is required";
+    nameInput.focus();
+    isValid = false;
+  }
+
+  // EMAIL VALIDATION
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    emailError.innerText = "Email is required";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    emailError.innerText = "Enter a valid email";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+// REAL-TIME CLEAR
+document.getElementById("name").addEventListener("input", () => {
+  document.getElementById("nameError").innerText = "";
+});
+
+document.getElementById("email").addEventListener("input", () => {
+  document.getElementById("emailError").innerText = "";
+});
+</script>
 
 </body>
 </html>
