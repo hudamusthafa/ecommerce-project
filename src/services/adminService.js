@@ -106,5 +106,5 @@ exports.updateUser = async (userId, data) => {
 
 // DELETE USER
 exports.deleteUser = async (userId) => {
-  return await User.findByIdAndUpdate(userId, { isDeleted: true });
+  return await User.findByIdAndUpdate(userId);
 };

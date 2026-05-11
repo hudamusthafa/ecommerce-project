@@ -51,7 +51,6 @@
 
     <h2 class="page-title">My Profile</h2>
 
-    <!-- 🔥 NEW GRID WRAPPER -->
     <div class="profile-grid">
 
       <!-- LEFT: PROFILE -->
@@ -65,7 +64,8 @@
           <p class="success-msg"><%= success %></p>
         <% } %>
 
-        <form action="/profile/update" method="POST" enctype="multipart/form-data">
+        <!--  UPDATED (PUT) -->
+        <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data">
 
           <img 
             id="profilePreview"
@@ -118,6 +118,7 @@
             <p class="success-msg"><%= message %></p>
           <% } %>
 
+          <!-- POST -->
           <form action="/profile/set-password" method="POST">
 
             <div class="password-box">
@@ -138,7 +139,8 @@
 
           <h3>Change Password</h3>
 
-          <form action="/profile/password" method="POST">
+          <!--  UPDATED (PUT) -->
+          <form action="/profile/password?_method=PUT" method="POST">
 
             <div class="password-box">
               <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
@@ -193,24 +195,7 @@ function togglePassword(id, icon) {
     icon.classList.replace("fa-eye-slash", "fa-eye");
   }
 }
-
-
 </script>
-<script>
-  // Fix back button cache
-  window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-      window.location.reload();
-    }
-  });
 
-  // Prevent back navigation
-  if (window.history && window.history.pushState) {
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function () {
-      window.location.href = "/login";
-    };
-  }
-</script>
 </body>
 </html>
