@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
 const session = require("express-session");
+const methodOverride = require("method-override");
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(session({
   }
 }));
 
+app.use(methodOverride("_method"));
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());

@@ -74,6 +74,19 @@ exports.getUserById = async (id) => {
 
 // UPDATE USER
 exports.updateUser = async (userId, data) => {
+ 
+
+  // CHECK DUPLICATE EMAIL (exclude current user)
+  const existingUser = await User.findOne({
+    email: data.email,
+    _id: { $ne: userId }
+  });
+
+  if (existingUser) {
+    throw new Error("Email already exists");
+  }
+
+
   let updateData = {
     name: data.name,
     email: data.email,
@@ -81,6 +94,8 @@ exports.updateUser = async (userId, data) => {
     isBlocked: data.status === "blocked"
   };
 
+
+  //  update password only if provided
   if (data.password && data.password.trim() !== "") {
     const hashed = await bcrypt.hash(data.password, 10);
     updateData.password = hashed;

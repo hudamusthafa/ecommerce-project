@@ -50,7 +50,7 @@ exports.getUsers = async (req, res) => {
     const search = req.query.search || "";
     const filter = req.query.filter || "";
     const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const limit = 10;
 
     const { users, totalUsers } = await adminService.getUsers({
       search,
@@ -139,7 +139,7 @@ exports.postEditUser = async (req, res) => {
   try {
     const { phone } = req.body;
 
-    // simple validation
+    // Phone validation
     if (phone && !/^[0-9]{10}$/.test(phone)) {
       const user = await adminService.getUserById(req.params.id);
       return res.render("admin/edit-user", {
@@ -154,7 +154,15 @@ exports.postEditUser = async (req, res) => {
     res.redirect("/admin/users");
 
   } catch (err) {
-    res.send(err.message);
+
+     //  Update user
+    const user = await adminService.getUserById(req.params.id);
+
+    return res.render("admin/edit-user", {
+      user,
+      error: err.message,   //  shows "Email already exists"
+      success: null
+    });
   }
 };
 

@@ -181,7 +181,7 @@
 
   function confirmDelete() {
     const form = document.getElementById("deleteForm");
-    form.action = "/admin/delete-user/" + deleteId;
+    form.action = "/admin/delete-user/" + deleteId + "?_method=DELETE";    
     form.submit();
   }
 
@@ -202,7 +202,7 @@
 
   function confirmBlock() {
     const form = document.getElementById("blockForm");
-    form.action = "/admin/block-user/" + blockId;
+    form.action = "/admin/block-user/" + blockId + "?_method=PATCH";  
     form.submit();
   }
 
@@ -217,7 +217,7 @@
 
   function confirmUnblock() {
     const form = document.getElementById("unblockForm");
-    form.action = "/admin/unblock-user/" + unblockId;
+    form.action = "/admin/unblock-user/" + unblockId + "?_method=PATCH";    
     form.submit();
   }
 

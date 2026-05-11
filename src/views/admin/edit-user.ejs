@@ -50,8 +50,7 @@
           <p class="success-msg"><%= success %></p>
         <% } %>
 
-      <form action="/admin/edit-user/<%= user._id %>" method="POST">
-
+       <form action="/admin/edit-user/<%= user._id %>?_method=PUT" method="POST">
         <!-- NAME -->
         <div class="form-group">
           <label>Username</label>

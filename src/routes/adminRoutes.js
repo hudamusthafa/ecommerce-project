@@ -16,8 +16,8 @@ router.get("/dashboard",  noCache, isAdminLoggedIn,adminController.getDashboard)
 
 //usermanagemnt
 router.get("/users", noCache, isAdminLoggedIn,adminController.getUsers);
-router.post("/block-user/:id", adminController.blockUser);
-router.post("/unblock-user/:id", adminController.unblockUser);
+router.patch("/block-user/:id", adminController.blockUser);
+router.patch("/unblock-user/:id", adminController.unblockUser);
 
 //add user
 router.get("/add-user",noCache, isAdminLoggedIn, adminController.getAddUser);
@@ -25,11 +25,11 @@ router.post("/add-user", adminController.postAddUser);
 
 //edit user
 router.get("/edit-user/:id", adminController.getEditUser);
-router.post("/edit-user/:id", adminController.postEditUser);
+router.put("/edit-user/:id", adminController.postEditUser);
 
 
 //delete user
-router.post("/delete-user/:id", adminController.deleteUser);
+router.delete("/delete-user/:id", adminController.deleteUser);
 
 //logout
 router.get("/logout", (req, res, next) => {
