@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+<div class="hero-container">
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+
+    <!-- LEFT -->
+    <div class="logo">JEWELLERY & CO.</div>
+
+    <!-- CENTER -->
+    <div class="nav-links">
+      <a href="#">Collection</a>
+      <a href="#">About</a>
+      <a href="#">Stores</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+
+      <% if (user) { %>
+        <a href="/profile" class="profile-link">Profile</a>
+        <a href="/logout" class="logout">Logout</a>
+
+      <% } else { %>
+
+        <a href="/login" class="login-btn">Login</a>
+        <a href="/register" class="signup-btn">Sign Up</a>
+
+      <% } %>
+
+    </div>
+
+  </div>
+
+  <!-- WELCOME TEXT -->
+ <% if (user) { %>
+  <h2 class="welcome-text">Welcome <%= user.name %></h2>
+<% } %>
+
+  <!-- HERO SECTION -->
+  <div class="hero-content">
+
+    <!-- LEFT IMAGE -->
+    <div class="hero-image">
+      <img src="/images/hero.png">
+    </div>
+
+    <!-- RIGHT TEXT -->
+    <div class="hero-text">
+      <h1>Elegant & Luxury</h1>
+      <p>Remarkable Jewellery for the modern women</p>
+      <button>SHOP COLLECTION</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Fix back button (bfcache)
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+
+  // Force redirect if session gone
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.location.href = "/login";
+    };
+  }
+</script>
+</body>
+</html>

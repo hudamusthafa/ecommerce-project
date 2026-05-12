@@ -1,0 +1,90 @@
+/* PAGE */
+.address-page {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* TITLE */
+.address-page h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* TOP BAR */
+.top-bar {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+/* ADD BUTTON */
+.add-btn {
+  background: #8b5e3c;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  color: gray;
+}
+
+/* LIST */
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* CARD */
+.address-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* INFO */
+.address-info h4 {
+  margin-bottom: 5px;
+}
+
+/* BADGE */
+.badge {
+  background: green;
+  color: white;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  margin-left: 8px;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* BUTTONS */
+.edit {
+  background: #3b82f6;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.delete {
+  background: red;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

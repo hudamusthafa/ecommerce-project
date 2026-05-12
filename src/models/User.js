@@ -8,12 +8,50 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     password: String,
-    isBlocked: {
-      type: Boolean,
-      default: false,
+    // phone: {
+    // type: String
+    // },
+    gender: {
+      type: String
     },
+     profileImage: {
+      type: String,
+      default: "/images/default-avatar.png",
+    },
+     isAdmin: {
+    type: Boolean,
+    default: false
   },
-  { timestamps: true }
+    
+    provider: {
+      type: String,
+      default: "local" // or "google"
+    },
+     address: [
+      {
+        fullName: String,
+        phone: String,
+        pincode: String,
+        city: String,
+        state: String,
+        house: String,
+        area: String,
+      }
+    ],
+     isBlocked: {
+        type: Boolean,
+        default: false
+    },
+    isDeleted: {
+  type: Boolean,
+  default: false
+},
+
+
+  },
+ 
+  { timestamps: true },
+  
 );
 
 module.exports = mongoose.model("User", userSchema);

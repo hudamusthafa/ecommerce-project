@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+<div class="login-container">
+
+  <!-- LEFT IMAGE -->
+  <div class="left">
+<img src="/images/login-banner.png" alt="jewellery">  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="card">
+      <h2>Sign-in</h2>
+
+   <% if (typeof error !== 'undefined' && error) { %>
+  <p class="error-msg"><%= error %></p>
+<% } %>
+
+
+      <form action="/admin/login" method="POST"novalidate>
+
+        <input type="email" name="email" placeholder="Email" required>
+
+        <div class="password-field">
+          <input type="password" name="password" id="password" placeholder="Password" required>
+          <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+        </div>
+        <button type="submit">Login</button>
+
+      </form>
+
+      <p class="forgot">
+        Don’t have an account? <a href="#">Signup Here</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+<script>
+  function togglePassword() {
+    const input = document.getElementById("password");
+
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+</script>
+<script>
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.location.href = "/admin/dashboard";
+    };
+  }
+</script>
+</body>
+</html>

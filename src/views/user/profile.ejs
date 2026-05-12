@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<%- include('../partials/header') %>
+
+<div class="profile-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>My Account</h3>
+
+    <ul>
+      <li class="active">
+        <a href="/profile"><i class="fas fa-user"></i> Personal Information</a>
+      </li>
+
+      <li>
+        <a href="/orders"><i class="fas fa-box"></i> Orders</a>
+      </li>
+
+      <li>
+        <a href="#"><i class="fas fa-star"></i> My Reviews</a>
+      </li>
+
+      <li>
+        <a href="/address"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+      </li>
+
+      <li>
+        <a href="#"><i class="fas fa-lock"></i> Security</a>
+      </li>
+
+      <li>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="profile-content">
+
+    <h2 class="page-title">My Profile</h2>
+
+    <div class="profile-grid">
+
+      <!-- LEFT: PROFILE -->
+      <div class="profile-card">
+
+        <% if (error) { %>
+          <p class="error-msg"><%= error %></p>
+        <% } %>
+
+        <% if (success) { %>
+          <p class="success-msg"><%= success %></p>
+        <% } %>
+
+        <!--  UPDATED (PUT) -->
+        <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data" onsubmit="return validateProfile()" novalidate>
+          <img 
+            id="profilePreview"
+            src="<%= user.profileImage && user.profileImage !== '' 
+                    ? user.profileImage 
+                    : '/images/default-avatar.png' %>" 
+            class="profile-img"
+          >
+
+          <label for="imageUpload" class="upload-btn">Add Profile</label>
+          <input type="file" id="imageUpload" name="image" accept="image/*" hidden>
+
+          <label>Name</label>
+           <input type="text" name="name" value="<%= user.name %>">           <p class="error" id="nameError"></p>
+
+
+          <label>Email</label>
+          <input type="text" id="email" name="email" value="<%= user.email %>">
+          <p class="error" id="emailError"></p>
+
+          <label>Gender</label>
+          <div class="gender-box">
+
+            <label>
+              <input type="radio" name="gender" value="female"
+                <%= user.gender === 'female' ? 'checked' : '' %> > Female
+            </label>
+
+            <label>
+              <input type="radio" name="gender" value="male"
+                <%= user.gender === 'male' ? 'checked' : '' %> > Male
+            </label>
+          </div>
+
+          <button type="submit" class="save-btn">Save Changes</button>
+
+        </form>
+
+        <div class="profile-actions">
+          <a href="/address" class="address-btn">Manage Address</a>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: PASSWORD -->
+      <div class="password-section">
+
+        <% if (user.provider === "google" && user.password === "google") { %>
+
+          <h3>Set Password</h3>
+
+          <% if (typeof message !== 'undefined' && message) { %>
+            <p class="success-msg"><%= message %></p>
+          <% } %>
+
+          <!-- POST -->
+          <form action="/profile/set-password" method="POST">
+
+            <div class="password-box">
+              <input type="password" name="newPassword" id="setNewPassword" placeholder="New Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('setNewPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="confirmPassword" id="setConfirmPassword" placeholder="Confirm Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('setConfirmPassword', this)"></i>
+            </div>
+
+            <button type="submit" class="password-btn">Set Password</button>
+
+          </form>
+
+        <% } else { %>
+
+          <h3>Change Password</h3>
+
+          <!--  UPDATED (PUT) -->
+          <form action="/profile/password?_method=PUT" method="POST">
+
+            <div class="password-box">
+              <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('newPassword', this)"></i>
+            </div>
+
+            <div class="password-box">
+              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+              <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
+            </div>
+
+            <button type="submit" class="password-btn">Change Password</button>
+
+          </form>
+
+        <% } %>
+
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+const imageInput = document.getElementById("imageUpload");
+const preview = document.getElementById("profilePreview");
+
+imageInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => preview.src = e.target.result;
+    reader.readAsDataURL(file);
+  }
+});
+
+function togglePassword(id, icon) {
+  const input = document.getElementById(id);
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  }
+}
+</script>
+<script>
+function validateProfile() {
+  let isValid = true;
+
+  const nameInput = document.querySelector("input[name='name']");
+  const emailInput = document.getElementById("email");
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+
+  // clear old errors
+  nameError.innerText = "";
+  emailError.innerText = "";
+
+  // NAME VALIDATION
+  if (!name) {
+    nameError.innerText = "Name is required";
+    nameInput.focus();
+    isValid = false;
+  }
+
+  // EMAIL VALIDATION
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    emailError.innerText = "Email is required";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    emailError.innerText = "Enter a valid email";
+    if (isValid) emailInput.focus();
+    isValid = false;
+  }
+
+  return isValid;
+}
+</script>
+<script>
+document.querySelector("input[name='name']").addEventListener("input", () => {
+  document.getElementById("nameError").innerText = "";
+});
+
+document.getElementById("email").addEventListener("input", () => {
+  document.getElementById("emailError").innerText = "";
+});
+</script>
+</body>
+</html>

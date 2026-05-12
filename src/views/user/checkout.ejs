@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<%- include('../partials/header') %>
+
+<h2 style="text-align:center;">Check Out</h2>
+
+<div class="checkout-container">
+
+  <!-- LEFT SIDE -->
+  <div class="left-section">
+
+    <!-- ADDRESS -->
+    <h3>Select Delivery Address</h3>
+
+    <div class="address-list">
+
+      <% if (user.address && user.address.length > 0) { %>
+
+        <% user.address.forEach((addr, index) => { %>
+
+          <div class="address-block">
+
+            <!-- RADIO + TITLE -->
+            <label class="address-title">
+              <input type="radio" name="selectedAddress" value="<%= addr._id %>">
+              Address <%= index + 1 %>
+            </label>
+
+            <!-- ADDRESS CARD -->
+            <div class="address-card">
+              <p><%= addr.fullName %></p>
+              <p><%= addr.house %></p>
+              <p><%= addr.area %></p>
+              <p><%= addr.city %>, <%= addr.pincode %></p>
+              <p><%= addr.state %>, India</p>
+              <p>Ph: <%= addr.phone %></p>
+
+         <div class="address-actions">
+
+  <!-- EDIT BUTTON -->
+  <a href="/address/edit/<%= addr._id %>" class="btn">Edit</a>
+
+  <!-- DELETE BUTTON -->
+  <button class="btn" onclick="openDeleteModal('<%= addr._id %>')">
+    Delete
+  </button>
+
+</div>
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      <% } else { %>
+
+        <p>No address found</p>
+
+      <% } %>
+
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="payment-section">
+
+      <h3>Payment Methods</h3>
+
+      <div class="payment-row">
+        <input type="radio" name="payment">
+        <span>Bank</span>
+
+        <div class="payment-icons">
+          <img src="https://img.icons8.com/color/48/visa.png">
+          <img src="https://img.icons8.com/color/48/mastercard.png">
+          <img src="https://img.icons8.com/color/48/amex.png">
+        </div>
+      </div>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Cash on delivery
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Google Pay
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Razor Pay
+      </label>
+
+      <label class="payment-option">
+        <input type="radio" name="payment"> Wallet
+      </label>
+
+      <!-- COUPON -->
+      <div class="coupon">
+        <input type="text" placeholder="Coupon Code">
+        <button class="btn">Apply</button>
+      </div>
+
+      <button class="btn" style="margin-top:10px;">View all coupons</button>
+
+    </div>
+
+  </div>
+
+  <!-- CENTER ADD ADDRESS -->
+  <div class="center-add-address">
+    <a href="/address/new" class="add-new">Add new Address</a>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-section">
+
+    <h4>Order Summary</h4>
+
+    <p>Items $1457</p>
+    <p>Delivery $0</p>
+    <p>Total $1457</p>
+
+    <h5 style="margin-top:10px;">Order Total $1457</h5>
+
+    <button class="btn" style="margin-top:10px;">Pay now</button>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<%- include('../partials/footer') %>
+
+
+ <div id="deleteModal" class="modal">
+
+  <div class="modal-content">
+    <p> Delete this address ?</p>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="confirm-btn" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+
+</div>
+<script>
+  let selectedAddressId = null;
+
+  function openDeleteModal(id) {
+    selectedAddressId = id;
+    document.getElementById("deleteModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+  }
+
+  function confirmDelete() {
+  fetch(`/address/delete/${selectedAddressId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "same-origin"   // 
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("Delete failed");
+    }
+
+    closeModal();
+    location.reload(); // refresh UI
+
+  })
+  .catch(err => {
+    console.log(err);
+    alert("Something went wrong while deleting");
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
+<body>
+
+<%- include('../partials/admin-header') %>
+
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  
+<%- include('../partials/admin-sidebar') %>
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- CARDS -->
+<div class="cards">
+
+  <!-- USERS -->
+  <div class="card user-card">
+    <div class="card-left">
+      <h4>Users Count</h4>
+      <h2>20390</h2>
+      <p>Total users signed up</p>
+    </div>
+
+    <div class="card-right">
+      <img src="/images/orange-graph.png" alt="orange graph">
+    </div>
+  </div>
+
+  <!-- REVENUE -->
+  <div class="card user-card">
+    <div class="card-left">
+      <h4>Today's Revenue</h4>
+      <h2>₹30,000</h2>
+      <p>Profit made today</p>
+    </div>
+
+    <div class="card-right">
+      <img src="/images/green-graph.png" alt="green graph">
+    </div>
+  </div>
+
+  <!-- SALES -->
+  <div class="card user-card">
+    <div class="card-left">
+      <h4>Today's Sales</h4>
+      <h2>₹100,999</h2>
+      <p>123 items sold</p>
+    </div>
+
+    <div class="card-right">
+      <img src="/images/blue-graph.png" alt="blue graph">
+    </div>
+  </div>
+
+</div>
+    <!-- REVENUE -->
+    <div class="revenue">
+  
+  <div class="revenue-header">
+    <div>
+      <h3>Total Revenue</h3>
+      <h2>₹5,023,780</h2>
+      <p class="growth">↑ 5% than last month</p>
+    </div>
+
+    <div class="legend">
+      <span class="dot profit"></span> Profit
+      <span class="dot loss"></span> Loss
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart">
+
+    <!-- Each month -->
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Jan</span>
+
+</div>
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>feb</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Mar</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Apr</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>May</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Jun</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Jul</span>
+
+</div>
+
+   <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Aug</span>
+
+</div>
+
+    <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Sep</span>
+
+</div>
+  <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Oct</span>
+
+</div>
+  <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Nov</span>
+
+</div>
+  <div class="bar-group">
+
+  <div class="bar-pair">
+    <div class="bar profit" style="height:100px;"></div>
+    <div class="bar loss" style="height:70px;"></div>
+  </div>
+
+  <span>Dec</span>
+
+</div>
+  </div>
+
+</div>
+
+    <!-- STOCK -->
+    <div class="stock">
+      <h3>Low On Stock</h3>
+     <table>
+  <tr>
+    <th>Product</th>
+    <th>Variant</th>
+    <th>Price</th>
+    <th>Category</th>
+    <th>Stock</th>
+    <th>Status</th>
+  </tr>
+
+  <tr>
+    <td class="product-cell">
+      <img src="/images/necklace.png" alt="necklace">
+      Necklace
+    </td>
+    <td>silver</td>
+    <td>$1299</td>
+    <td>Laptop</td>
+    <td>1 pcs</td>
+    <td class="low">
+      <span class="dot yellow"></span> Low On Stock
+    </td>
+  </tr>
+
+  <tr>
+    <td class="product-cell">
+      <img src="/images/bangle.png" alt="bangle">
+      Bangle
+    </td>
+    <td>silver</td>
+    <td>$449</td>
+    <td>Smart Watch</td>
+    <td>0 pcs</td>
+    <td class="out">
+      <span class="dot red"></span> Out of Stock
+    </td>
+  </tr>
+
+  <tr>
+    <td class="product-cell">
+      <img src="/images/earring.png" alt="earring">
+      Earing
+    </td>
+    <td>silver</td>
+    <td>$1999</td>
+    <td>Gaming</td>
+    <td>3 pcs</td>
+    <td class="low">
+      <span class="dot yellow"></span> Low On Stock
+    </td>
+  </tr>
+</table>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('../partials/admin-footer') %>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+
+  <link rel="stylesheet" href="/css/users.css">
+</head>
+
+<body>
+<%- include('../partials/admin-header') %>
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  
+<%- include('../partials/admin-sidebar') %>
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="users-container">
+
+      <h2 class="title">Users</h2>
+
+      <!-- TOP BAR -->
+      <div class="top-bar">
+
+        <div class="tabs">
+          <a href="/admin/users" class="<%= !filter ? 'active-tab' : '' %>">All</a>
+          <a href="/admin/users?filter=active" class="<%= filter==='active' ? 'active-tab' : '' %>">Active</a>
+          <a href="/admin/users?filter=blocked" class="<%= filter==='blocked' ? 'active-tab' : '' %>">Blocked</a>
+        </div>
+
+        <div class="right-actions">
+          <form method="GET" action="/admin/users" class="search-form">
+            <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+            <button type="submit">Search</button>
+
+            <% if (search) { %>
+              <a href="/admin/users" class="clear-btn">Clear</a>
+            <% } %>
+          </form>
+
+              <a href="/admin/add-user">
+                <button class="new-btn">Add User</button>
+              </a>        
+            
+            </div>
+
+      </div>
+
+      <p>Total Users: <%= totalUsers %></p>
+
+      <!-- TABLE -->
+      <div class="table-box">
+
+        <table class="users-table">
+
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% users.forEach(user => { %>
+              <tr>
+
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.phone || '-' %></td>
+
+                <td class="<%= user.isBlocked ? 'blocked' : 'active' %>">
+                  <%= user.isBlocked ? "Blocked" : "Active" %>
+                </td>
+
+                <td class="action-btns">
+
+                    <!-- BLOCK -->
+                    <% if(!user.isBlocked) { %>
+                      <button type="button" onclick="openBlockModal('<%= user._id %>')">🚫</button>
+                    <% } %>
+
+                    <!-- UNBLOCK -->
+                    <% if(user.isBlocked) { %>
+                      <button type="button" onclick="openUnblockModal('<%= user._id %>')">🔓</button>
+                    <% } %>
+
+                    <!-- EDIT -->
+                    <a href="/admin/edit-user/<%= user._id %>">
+                      <button type="button">✏️</button>
+                    </a>
+
+                    <!-- DELETE -->
+                    <button type="button" onclick="openModal('<%= user._id %>')">🗑️</button>
+
+</td>
+
+<form id="blockForm" method="POST"></form>
+<form id="unblockForm" method="POST"></form>
+
+<div id="blockModal" class="modal">
+  <div class="modal-box">
+    <p>Block this user?</p>
+
+    <button class="confirm-btn" onclick="confirmBlock()">Yes</button>
+    <button class="cancel-btn" onclick="closeBlockModal()">Cancel</button>
+  </div>
+</div>
+
+<div id="unblockModal" class="modal">
+  <div class="modal-box">
+    <p>Unblock this user?</p>
+
+    <button class="confirm-btn" onclick="confirmUnblock()">Yes</button>
+    <button class="cancel-btn" onclick="closeUnblockModal()">Cancel</button>
+  </div>
+</div>
+
+              </tr>
+            <% }) %>
+          </tbody>
+
+        </table>
+
+        <div class="pagination">
+
+  <% if(currentPage > 1) { %>
+    <a href="/admin/users?page=<%= currentPage - 1 %>&search=<%= search %>&filter=<%= filter %>">Prev</a>
+  <% } %>
+
+  <% for(let i = 1; i <= totalPages; i++) { %>
+    <a href="/admin/users?page=<%= i %>&search=<%= search %>&filter=<%= filter %>" 
+       class="<%= currentPage === i ? 'active-page' : '' %>">
+      <%= i %>
+    </a>
+  <% } %>
+
+  <% if(currentPage < totalPages) { %>
+    <a href="/admin/users?page=<%= currentPage + 1 %>&search=<%= search %>&filter=<%= filter %>">Next</a>
+  <% } %>
+
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DELETE FORM -->
+<form id="deleteForm" method="POST"></form>
+
+<!-- MODAL -->
+<div id="deleteModal" class="modal">
+  <div class="modal-box">
+    <p>Delete this user?</p>
+
+    <button class="confirm-btn" onclick="confirmDelete()">Yes</button>
+    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  let deleteId = "";
+
+  function openModal(id) {
+    deleteId = id;
+    document.getElementById("deleteModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+  }
+
+  function confirmDelete() {
+    const form = document.getElementById("deleteForm");
+    form.action = "/admin/delete-user/" + deleteId + "?_method=DELETE";    
+    form.submit();
+  }
+
+  //---block/unblock-------//
+
+  
+  let blockId = "";
+  let unblockId = "";
+
+  function openBlockModal(id) {
+    blockId = id;
+    document.getElementById("blockModal").style.display = "flex";
+  }
+
+  function closeBlockModal() {
+    document.getElementById("blockModal").style.display = "none";
+  }
+
+  function confirmBlock() {
+    const form = document.getElementById("blockForm");
+    form.action = "/admin/block-user/" + blockId + "?_method=PATCH";  
+    form.submit();
+  }
+
+  function openUnblockModal(id) {
+    unblockId = id;
+    document.getElementById("unblockModal").style.display = "flex";
+  }
+
+  function closeUnblockModal() {
+    document.getElementById("unblockModal").style.display = "none";
+  }
+
+  function confirmUnblock() {
+    const form = document.getElementById("unblockForm");
+    form.action = "/admin/unblock-user/" + unblockId + "?_method=PATCH";    
+    form.submit();
+  }
+
+</script>
+<%- include('../partials/admin-footer') %>
+</body>
+</html>

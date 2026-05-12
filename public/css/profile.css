@@ -1,0 +1,137 @@
+/* ===== PROFILE STYLING ONLY ===== */
+
+/* PROFILE CARD */
+.profile-card {
+  background: #fff;
+  width: 320px;              /* fixed clean size */
+  margin-top: 20px;          /* spacing from title */
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* PROFILE IMAGE */
+.profile-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 15px;
+}
+
+/* LABELS */
+.profile-card label {
+  font-size: 14px;
+  margin-top: 10px;
+  display: block;
+  text-align: left;
+}
+
+/* INPUT FIELDS */
+.profile-card input {
+  width: 100%;
+  padding: 9px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* GENDER */
+.gender-box {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+/* BUTTONS */
+.save-btn,
+.password-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background: #6b4f3b;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover,
+.password-btn:hover {
+  background: #5a3f2d;
+}
+
+/* ADDRESS BUTTON */
+.profile-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.address-btn {
+  display: inline-block;
+  background: #7a563f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.address-btn:hover {
+  background: #5a3f2d;
+}
+
+/* UPLOAD BUTTON */
+.upload-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #eae2db;
+  color: #222;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.upload-btn:hover {
+  background: #cfc5be;
+}
+
+/* PASSWORD SECTION (same style as card) */
+.password-section {
+  width: 320px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* PASSWORD INPUT WITH ICON */
+.password-box {
+  position: relative;
+  margin-top: 10px;
+}
+
+.password-box input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 35px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.password-box i {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+  color: gray;
+}
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 500;
+}

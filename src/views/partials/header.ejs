@@ -1,0 +1,35 @@
+
+
+<nav class="navbar">
+
+  <!-- LEFT -->
+  <div class="logo">Aura</div>
+
+  <!-- CENTER -->
+  <div class="nav-links">
+    <a href="/home">Home</a>
+    <a href="#">Shop</a>
+    <a href="#">Collections</a>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="nav-right">
+
+  <% if (user) { %>
+
+    <span class="welcome">Welcome <%= user.name %></span>
+
+    <i class="fa-solid fa-cart-shopping icon"></i>
+    <i class="fa-regular fa-heart icon"></i>
+
+    <!-- <a href="/logout" class="logout">Log Out</a> -->
+
+  <% } else { %>
+
+    <a href="/login" class="login-btn">Login</a>
+    <a href="/register" class="signup-btn">Sign Up</a>
+
+  <% } %>
+
+</div>
+</nav>

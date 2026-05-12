@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Verification</title>
+  <link rel="stylesheet" href="/css/otp.css">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="card">
+
+    <h2>Verify Your Email</h2>
+    <p class="sub-text">
+      Enter the 6-digit code sent to your email to verify your account
+    </p>
+
+    <p id="userEmail"></p>
+
+    <!-- OTP INPUT -->
+    <div class="otp-box">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      <input class="otp-input" maxlength="1">
+      
+    </div>
+
+    <p class="error" id="otpError"></p>
+
+    <!-- BUTTON -->
+    <button class="verify-btn" onclick="verifyOtp()">Verify</button>
+
+    <!-- TIMER -->
+    <p class="timer" id="timer">Resend code in 0:45</p>
+
+    <p class="resend-text">
+      Didn’t receive the code?
+      <span id="resend" onclick="resendOtp()">Resend OTP ></span>
+    </p>
+
+    <!-- NOTICE BOX -->
+    <div class="notice">
+      <p>⚠ The 6-digit code will expire in 10 minutes for your security.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const emailCheck = localStorage.getItem("email");
+const typeCheck = localStorage.getItem("type");
+
+if (!emailCheck) {
+  window.location.href = "/register";
+}
+
+//  forgot flow safety
+if (typeCheck === "forgot" && !emailCheck) {
+  window.location.href = "/forgot-password";
+}
+
+const inputs = document.querySelectorAll(".otp-box input");
+
+inputs.forEach((input, index) => {
+
+  // FORWARD + CLEAR ERROR
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/[^0-9]/g, "");
+    document.getElementById("otpError").innerText = "";
+
+    if (input.value && index < inputs.length - 1) {
+      inputs[index + 1].focus();
+    }
+  });
+
+  // BACKSPACE MOVE
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && index > 0) {
+      inputs[index - 1].focus();
+    }
+  });
+
+});
+inputs[0].focus();
+
+const email = localStorage.getItem("email");
+document.getElementById("userEmail").innerText = email || "No email found";
+
+// TIMER
+let time = 45;
+const timerEl = document.getElementById("timer");
+const resendEl = document.getElementById("resend");
+
+resendEl.style.display = "none";
+
+let interval = setInterval(() => {
+  time--;
+  timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
+
+  if (time <= 0) {
+    clearInterval(interval);
+    timerEl.style.display = "none";
+    resendEl.style.display = "inline";
+  }
+}, 1000);
+
+
+// VERIFY OTP
+async function verifyOtp() {
+  let otp = "";
+  inputs.forEach(i => otp += i.value.trim());
+
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+  const password = localStorage.getItem("password");
+  const type = localStorage.getItem("type");
+
+  //  check based on type
+  if (!email) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => window.location.href = "/register", 2000);
+    return;
+  }
+
+  if (type !== "forgot" && (!name || !password)) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => window.location.href = "/register", 2000);
+    return;
+  }
+
+  if (otp.length !== 6) {
+    document.getElementById("otpError").innerText = "Enter valid OTP";
+    return;
+  }
+
+  const btn = document.querySelector(".verify-btn");
+  btn.disabled = true;
+  btn.innerText = "Verifying...";
+
+  try {
+    document.getElementById("otpError").innerText = "";
+
+    //  send different body for forgot/signup
+    let bodyData;
+
+    if (type === "forgot") {
+      bodyData = { email, otp };
+    } else {
+      bodyData = { email, otp, name, password };
+    }
+
+    const res = await fetch("/verify-otp", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(bodyData)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      btn.disabled = false;
+      btn.innerText = "Verify";
+
+      //  store type BEFORE clearing
+      const flowType = type;
+
+      if (flowType !== "forgot") {
+  localStorage.clear(); // only for signup
+}
+
+      if (flowType === "forgot") {
+        window.location.href = "/reset-password";
+      } else {
+        window.location.href = "/success";
+      }
+
+    } else {
+      document.getElementById("otpError").innerText = data.message;
+      btn.disabled = false;
+      btn.innerText = "Verify";
+    }
+
+  } catch (err) {
+    document.getElementById("otpError").innerText = "Network error";
+    btn.disabled = false;
+    btn.innerText = "Verify";
+  }
+}
+//RESEND OTP
+async function resendOtp() {
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+  const password = localStorage.getItem("password");
+
+  if (!email || !name || !password) {
+    document.getElementById("otpError").innerText = "Session expired. Redirecting...";
+    setTimeout(() => {
+      window.location.href = "/register";
+    }, 2000);
+    return;
+  }
+
+  try {
+    document.getElementById("otpError").innerText = "";
+
+    await fetch("/send-otp", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ email, name, password })
+    });
+
+    document.getElementById("otpError").innerText = "OTP sent successfully. Please check your email.";
+
+// CLEAR OTP INPUT BOXES
+inputs.forEach(input => input.value = "");
+inputs[0].focus();
+
+  } catch (err) {
+    document.getElementById("otpError").innerText = "Failed to resend OTP";
+  }
+
+  // RESET TIMER
+  time = 45;
+  timerEl.style.display = "block";
+  resendEl.style.display = "none";
+
+  clearInterval(interval);
+
+  interval = setInterval(() => {
+    time--;
+    timerEl.innerText = `Resend code in 0:${time < 10 ? "0" + time : time}`;
+
+    if (time <= 0) {
+      clearInterval(interval);
+      timerEl.style.display = "none";
+      resendEl.style.display = "inline";
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>

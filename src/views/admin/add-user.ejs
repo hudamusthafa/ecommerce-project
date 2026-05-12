@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add User</title>
+  <link rel="stylesheet" href="/css/users.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>MENU</h3>
+    <ul>
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li>Products</li>
+      <li>Category</li>
+      <li>Orders</li>
+      <li>Coupon</li>
+      <li>Transaction</li>
+    </ul>
+
+    <ul class="section">
+      <li class="section-title active-section">User Management</li>
+      <li><a href="/admin/users">Customers</a></li>
+    </ul>
+
+    <ul class="section">
+      <li class="section-title">Others</li>
+      <li>Settings</li>
+      <li>Help</li>
+      <li>Logout</li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="form-container">
+
+      <h2>Add User</h2>
+
+      <% if (error) { %>
+        <p class="error-msg"><%= error %></p>
+      <% } %>
+
+      <form action="/admin/add-user"
+            method="POST"
+            onsubmit="return validateAddUser()"
+            novalidate>
+
+        <!-- NAME -->
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="name" name="name" placeholder="Enter name" value="<%= formData?.name || '' %>">
+          <p class="error" id="nameError"></p>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="email" name="email" placeholder="Enter email" value="<%= formData?.email || '' %>">
+          <p class="error" id="emailError"></p>
+        </div>
+
+        <!-- STATUS -->
+        <div class="form-group">
+          <label>Status</label>
+          <select name="status">
+            <option value="active" <%= formData?.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="blocked" <%= formData?.status === 'blocked' ? 'selected' : '' %>>Blocked</option>
+          </select>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" name="password">
+          <p class="error" id="passwordError"></p>
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword">
+          <p class="error" id="confirmPasswordError"></p>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="form-actions">
+          <a href="/admin/users" class="cancel-btn">Cancel</a>
+          <button type="submit" class="add-btn">Add User</button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- JS VALIDATION -->
+<script>
+function validateAddUser() {
+  let isValid = true;
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  // error elements
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  const passwordError = document.getElementById("passwordError");
+  const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+  // clear old errors
+  nameError.innerText = "";
+  emailError.innerText = "";
+  passwordError.innerText = "";
+  confirmPasswordError.innerText = "";
+
+  // NAME
+  if (!name) {
+    nameError.innerText = "Name is required";
+    isValid = false;
+  }
+
+  // EMAIL
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    emailError.innerText = "Email is required";
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    emailError.innerText = "Enter a valid email";
+    isValid = false;
+  }
+
+  // PASSWORD
+  if (!password) {
+    passwordError.innerText = "Password is required";
+    isValid = false;
+  } else if (password.length < 6) {
+    passwordError.innerText = "Password must be at least 6 characters";
+    isValid = false;
+  }
+
+  // CONFIRM PASSWORD
+  if (!confirmPassword) {
+    confirmPasswordError.innerText = "Confirm password is required";
+    isValid = false;
+  } else if (password !== confirmPassword) {
+    confirmPasswordError.innerText = "Passwords do not match";
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+// REAL-TIME CLEAR
+document.getElementById("name").addEventListener("input", () => {
+  document.getElementById("nameError").innerText = "";
+});
+
+document.getElementById("email").addEventListener("input", () => {
+  document.getElementById("emailError").innerText = "";
+});
+
+document.getElementById("password").addEventListener("input", () => {
+  document.getElementById("passwordError").innerText = "";
+});
+
+document.getElementById("confirmPassword").addEventListener("input", () => {
+  document.getElementById("confirmPasswordError").innerText = "";
+});
+</script>
+
+</body>
+</html>
