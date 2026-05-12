@@ -44,4 +44,18 @@ router.get("/logout", (req, res, next) => {
 });
 
 
+
+
+
+//===========week2===============
+// CATEGORY
+router.get("/categories", adminController.getCategories);
+router.get("/add-category", adminController.getAddCategory);
+router.post("/add-category", adminController.postAddCategory);
+
+router.get("/edit-category/:id", adminController.getEditCategory);
+router.post("/edit-category/:id", adminController.postEditCategory);
+
+router.post("/delete-category/:id", adminController.deleteCategory);
+
 module.exports = router;

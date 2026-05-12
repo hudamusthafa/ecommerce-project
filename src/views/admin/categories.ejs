@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Category Management</title>
+
+  <link rel="stylesheet" href="/css/category.css">
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  
+<%- include('../partials/admin-header') %>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <h3>MENU</h3>
+
+    <ul>
+
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Category</a></li>
+      <li><a href="#">Orders</a></li>
+      <li><a href="#">Coupon</a></li>
+      <li><a href="#">Transaction</a></li>
+      <li><a href="#">Offer</a></li>
+
+      <h4>User Management</h4>
+
+      <li><a href="#">Manage Admins</a></li>
+      <li><a href="/admin/users">Customers</a></li>
+
+      <h4>Others</h4>
+
+      <li><a href="#">Settings</a></li>
+      <li><a href="#">Help</a></li>
+      <li><a href="/admin/logout">Logout</a></li>
+
+    </ul>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <div class="category-page">
+
+      
+
+      <!-- TOP -->
+      <div class="top-section">
+
+        <h1>Categories</h1>
+
+        <form action="/admin/categories" method="GET" class="search-box">
+
+          <div class="search-input">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              type="text"
+              name="search"
+              placeholder="Search Bar"
+              value="<%= search || '' %>"
+            >
+
+            <% if(search){ %>
+
+              <a href="/admin/categories" class="clear-search">
+                <i class="fa-solid fa-xmark"></i>
+              </a>
+
+            <% } else { %>
+
+              <i class="fa-solid fa-xmark dummy-x"></i>
+
+            <% } %>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary-card">
+
+        <div class="summary-left">
+
+          <div class="summary-item">
+            Total Categories:
+            <strong><%= total %></strong>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="summary-item">
+            Listed:
+            <strong><%= categories.filter(c => !c.isDeleted).length %></strong>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="summary-item">
+            Archived (Soft Deleted):
+            <strong><%= categories.filter(c => c.isDeleted).length %></strong>
+          </div>
+
+        </div>
+
+        <a href="/admin/add-category" class="add-btn">
+
+          <i class="fa-solid fa-plus"></i>
+
+          Add Category
+
+        </a>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Category Name</th>
+              <th>Sold</th>
+              <th>Stock</th>
+              <th class="highlight-column">Added ↓</th>
+              <th>Status</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+          <% if(categories.length > 0){ %>
+
+            <% categories.forEach((category)=>{ %>
+
+              <tr>
+
+                <!-- CATEGORY -->
+                <td>
+
+                  <div class="category-info">
+
+                    <div class="category-image">
+
+                      <i class="fa-regular fa-image"></i>
+
+                    </div>
+
+                    <span><%= category.name %></span>
+
+                  </div>
+
+                </td>
+
+                <!-- SOLD -->
+                <td class="bold-cell">
+                  10
+                </td>
+
+                <!-- STOCK -->
+                <td class="bold-cell">
+                  500
+                </td>
+
+                <!-- DATE -->
+                <td class="highlight-column">
+
+                  <%= new Date(category.createdAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                  }) %>
+
+                </td>
+
+                <!-- STATUS -->
+                <td>
+
+                  <% if(category.isDeleted){ %>
+
+                    <span class="status archived">
+                      archived
+                    </span>
+
+                  <% } else { %>
+
+                    <span class="status listed">
+                      listed
+                    </span>
+
+                  <% } %>
+
+                </td>
+
+                <!-- ACTION -->
+                <td>
+
+                  <div class="actions">
+
+                    <a
+                      href="/admin/edit-category/<%= category._id %>"
+                      class="icon-btn"
+                    >
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="icon-btn">
+                      <i class="fa-regular fa-eye"></i>
+                    </a>
+
+                    <form
+                      action="/admin/delete-category/<%= category._id %>"
+                      method="POST"
+                      onsubmit="return confirmDelete()"
+                    >
+
+                      <button type="submit" class="icon-btn delete-btn">
+
+                        <i class="fa-regular fa-trash-can"></i>
+
+                      </button>
+
+                    </form>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          <% } else { %>
+
+            <tr>
+
+              <td colspan="6" class="empty-msg">
+                No categories found
+              </td>
+
+            </tr>
+
+          <% } %>
+
+          </tbody>
+
+        </table>
+
+        <!-- PAGINATION -->
+     <!-- PAGINATION -->
+
+<div class="pagination">
+
+  <% if(currentPage > 1) { %>
+
+    <a
+      href="/admin/categories?page=<%= currentPage - 1 %>&search=<%= search %>"
+    >
+      Prev
+    </a>
+
+  <% } %>
+
+  <% for(let i = 1; i <= totalPages; i++) { %>
+
+    <a
+      href="/admin/categories?page=<%= i %>&search=<%= search %>"
+      class="<%= currentPage === i ? 'active-page' : '' %>"
+    >
+      <%= i %>
+    </a>
+
+  <% } %>
+
+  <% if(currentPage < totalPages) { %>
+
+    <a
+      href="/admin/categories?page=<%= currentPage + 1 %>&search=<%= search %>"
+    >
+      Next
+    </a>
+
+  <% } %>
+
+</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function confirmDelete(){
+
+  return confirm(
+    "Are you sure you want to archive this category?"
+  );
+
+}
+
+</script>
+<%- include('../partials/admin-footer') %>
+</body>
+</html>

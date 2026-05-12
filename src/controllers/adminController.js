@@ -173,3 +173,76 @@ exports.deleteUser = async (req, res) => {
   res.redirect("/admin/users");
 };
 
+//=================WEEK 2============
+
+const categoryService = require("../services/categoryService");
+
+// LIST PAGE
+exports.getCategories = async (req, res) => {
+  try {
+    const { search = "", page = 1 } = req.query;
+
+    const result = await categoryService.getCategories({
+      search,
+      page: parseInt(page)
+    });
+
+    res.render("admin/categories", {
+      ...result,
+      search
+    });
+
+  } catch (err) {
+    res.send("Error loading categories");
+  }
+};
+
+// ADD PAGE
+exports.getAddCategory = (req, res) => {
+  res.render("admin/add-category", { error: null });
+};
+
+// ADD CATEGORY
+exports.postAddCategory = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.render("admin/add-category", {
+        error: "Category name is required"
+      });
+    }
+
+    await categoryService.addCategory({ name, description });
+
+    res.redirect("/admin/categories");
+
+  } catch (err) {
+    res.render("admin/add-category", {
+      error: "Category already exists"
+    });
+  }
+};
+
+// EDIT PAGE
+exports.getEditCategory = async (req, res) => {
+  const category = await categoryService.getCategoryById(req.params.id);
+
+  res.render("admin/edit-category", { category, error: null });
+};
+
+// UPDATE
+exports.postEditCategory = async (req, res) => {
+  try {
+    await categoryService.updateCategory(req.params.id, req.body);
+    res.redirect("/admin/categories");
+  } catch (err) {
+    res.send("Error updating category");
+  }
+};
+
+// DELETE (SOFT DELETE)
+exports.deleteCategory = async (req, res) => {
+  await categoryService.deleteCategory(req.params.id);
+  res.redirect("/admin/categories");
+};6
