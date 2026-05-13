@@ -4,67 +4,6 @@
   display: flex;
 }
 
-/* ===== SIDEBAR ===== */
-
-.sidebar {
-  width: 230px;
-  background: #ffffff;
-  padding: 35px 25px;
-  min-height: 100vh;
-  border-right: 1px solid #eee;
-  box-sizing: border-box;
-}
-
-/* REMOVE BULLETS */
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  line-height: 1.6;
-}
-
-/* MENU TITLE */
-
-.sidebar h3 {
-  font-size: 18px;
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: #000;
-}
-
-/* SECTION TITLES */
-
-.sidebar h4 {
-  font-size: 16px;
-  margin: 25px 0 12px;
-  font-weight: 600;
-  color: #777;
-}
-
-/* MENU ITEMS */
-
-.sidebar li {
-  font-size: 16px;
-  margin: 14px 0;
-  color: #333;
-  font-weight: 400;
-}
-
-/* LINKS */
-
-.sidebar li a {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  padding: 6px 0;
-}
-
-/* HOVER */
-
-.sidebar li a:hover {
-  color: #ff6b4a;
-}
 
 /* ===== MAIN ===== */
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require("../controllers/adminController");
 const { isAdminLoggedIn ,isAdminLoggedOut } = require("../middleware/authMiddleware");
 const { noCache } = require("../middleware/cacheMiddleware");
-
+const categoryController = require("../controllers/categoryController");
 
 // GET login page
 router.get("/login",noCache, isAdminLoggedOut, adminController.getLogin);
@@ -48,14 +48,40 @@ router.get("/logout", (req, res, next) => {
 
 
 //===========week2===============
-// CATEGORY
-router.get("/categories", adminController.getCategories);
-router.get("/add-category", adminController.getAddCategory);
-router.post("/add-category", adminController.postAddCategory);
 
-router.get("/edit-category/:id", adminController.getEditCategory);
-router.post("/edit-category/:id", adminController.postEditCategory);
+// CATEGORY MANAGEMENT
 
-router.post("/delete-category/:id", adminController.deleteCategory);
+// LIST PAGE
+router.get("/categories",categoryController.getCategories);
+
+// ADD CATEGORY PAGE
+router.get(
+  "/add-category",
+  categoryController.getAddCategory
+);
+
+// ADD CATEGORY
+router.post(
+  "/add-category",
+  categoryController.addCategory
+);
+
+// EDIT CATEGORY PAGE
+router.get(
+  "/edit-category/:id",
+  categoryController.getEditCategory
+);
+
+// UPDATE CATEGORY
+router.put(
+  "/edit-category/:id",
+  categoryController.updateCategory
+);
+
+// SOFT DELETE CATEGORY
+router.delete(
+  "/delete-category/:id",
+  categoryController.deleteCategory
+);
 
 module.exports = router;

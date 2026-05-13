@@ -1,0 +1,190 @@
+/* ===== PAGE ===== */
+
+body{
+  margin: 0;
+  background: #f7f7f7;
+  font-family: Arial, sans-serif;
+}
+
+/* ===== HEADER / FOOTER ===== */
+
+.top-bar,
+.bottom-bar{
+  height: 60px;
+  background: #d9c3a3;
+}
+
+/* ===== LAYOUT ===== */
+
+.page-layout{
+  display: flex;
+  min-height: calc(100vh - 120px);
+}
+
+/* ===== MAIN CONTENT ===== */
+
+.main-content{
+  flex: 1;
+  background: #f7f7f7;
+  padding: 60px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ===== FORM CONTAINER ===== */
+
+.form-container{
+  width: 650px;
+}
+
+.form-container h2{
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 70px;
+}
+
+/* ===== FORM ===== */
+
+.form-group{
+  display: flex;
+  align-items: flex-start;
+  gap: 45px;
+  margin-bottom: 35px;
+}
+
+.form-group label{
+  width: 140px;
+  padding-top: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ===== INPUTS ===== */
+
+.form-group input,
+.form-group textarea{
+  flex: 1;
+  padding: 16px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  background: #f1f1f1;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.form-group input{
+  height: 56px;
+}
+
+.form-group textarea{
+  min-height: 120px;
+  resize: none;
+}
+
+/* ===== UPLOAD ===== */
+
+.upload-box{
+  display: flex;
+  gap: 45px;
+  margin-top: 10px;
+}
+
+.upload-box p{
+  width: 140px;
+  margin: 0;
+  padding-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.upload-area{
+  width: 250px;
+  height: 190px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-icon{
+  font-size: 30px;
+}
+
+.upload-area span{
+  width: 170px;
+  text-align: center;
+  line-height: 1.5;
+  font-size: 11px;
+  color: #999;
+}
+
+.upload-btn{
+  border: none;
+  border-radius: 5px;
+  padding: 7px 14px;
+  background: #f0e4f5;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ===== BUTTONS ===== */
+
+.form-actions{
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 55px;
+}
+
+.cancel-btn,
+.add-btn{
+  height: 42px;
+  border-radius: 5px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CANCEL */
+
+.cancel-btn{
+  width: 90px;
+  background: #9b7626;
+  color: white;
+  text-decoration: none;
+}
+
+/* ADD */
+
+.add-btn{
+  width: 120px;
+  border: none;
+  background: #f3703a;
+  color: white;
+  cursor: pointer;
+}
+
+.add-btn:hover{
+  background: #df5f2c;
+}
+
+/* ===== ERROR ===== */
+
+.error-msg{
+  text-align: center;
+  color: red;
+  font-size: 14px;
+  margin-bottom: 20px;
+}

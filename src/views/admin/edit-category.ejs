@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Edit Category</title>
+
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/addCategory.css">
+
+</head>
+
+<body>
+
+<div class="top-bar"></div>
+
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <h3>MENU</h3>
+
+    <ul>
+
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="/admin/categories">Category</a></li>
+      <li><a href="#">Orders</a></li>
+      <li><a href="#">Coupon</a></li>
+      <li><a href="#">Transaction</a></li>
+      <li><a href="#">Offer</a></li>
+
+      <h4>User Management</h4>
+
+      <li><a href="#">Manage Admins</a></li>
+      <li><a href="/admin/users">Customers</a></li>
+
+      <h4>Others</h4>
+
+      <li><a href="#">Settings</a></li>
+      <li><a href="#">Help</a></li>
+      <li><a href="/admin/logout">Logout</a></li>
+
+    </ul>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <div class="form-container">
+
+      <h2>Edit Category</h2>
+
+      <% if(error){ %>
+
+        <p class="error-msg">
+          <%= error %>
+        </p>
+
+      <% } %>
+
+      <form
+        action="/admin/edit-category/<%= category._id %>?_method=PUT"
+        method="POST"
+      >
+
+        <!-- CATEGORY NAME -->
+        <div class="form-group">
+
+          <label>
+            Category Name
+          </label>
+
+          <input
+            type="text"
+            name="name"
+            value="<%= category.name %>"
+            required
+          >
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            name="description"
+            placeholder="Enter category description"
+          ><%= category.description %></textarea>
+
+        </div>
+
+        <!-- IMAGE PLACEHOLDER -->
+        <div class="upload-box">
+
+          <p>Add image</p>
+
+          <div class="upload-area">
+
+            <div class="upload-icon">
+              🖼️
+            </div>
+
+            <span>
+              Drag and drop image here,
+              or click add image
+            </span>
+
+            <button
+              type="button"
+              class="upload-btn"
+            >
+              Change Image
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="form-actions">
+
+          <a
+            href="/admin/categories"
+            class="cancel-btn"
+          >
+            cancel
+          </a>
+
+          <button
+            type="submit"
+            class="add-btn"
+          >
+            Update Category
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="bottom-bar"></div>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Category Management</title>
-
+<link rel="stylesheet" href="/css/adminSidebar.css">
   <link rel="stylesheet" href="/css/category.css">
 
   <link rel="stylesheet"
@@ -137,8 +137,7 @@
             <tr>
 
               <th>Category Name</th>
-              <th>Sold</th>
-              <th>Stock</th>
+             
               <th class="highlight-column">Added ↓</th>
               <th>Status</th>
               <th>Action</th>
@@ -155,110 +154,97 @@
 
               <tr>
 
-                <!-- CATEGORY -->
-                <td>
+              <tr>
 
-                  <div class="category-info">
+              <!-- CATEGORY -->
+              <td>
 
-                    <div class="category-image">
+                <div class="category-info">
 
-                      <i class="fa-regular fa-image"></i>
-
-                    </div>
-
-                    <span><%= category.name %></span>
-
+                  <div class="category-image">
+                    <i class="fa-regular fa-image"></i>
                   </div>
 
-                </td>
+                  <span><%= category.name %></span>
 
-                <!-- SOLD -->
-                <td class="bold-cell">
-                  10
-                </td>
+                </div>
 
-                <!-- STOCK -->
-                <td class="bold-cell">
-                  500
-                </td>
+              </td>
 
-                <!-- DATE -->
-                <td class="highlight-column">
+              <!-- DATE -->
+              <td class="highlight-column">
 
-                  <%= new Date(category.createdAt).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                  }) %>
+                <%= new Date(category.createdAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric"
+                }) %>
 
-                </td>
+              </td>
 
-                <!-- STATUS -->
-                <td>
+              <!-- STATUS -->
+              <td>
 
-                  <% if(category.isDeleted){ %>
+                <% if(category.isDeleted){ %>
 
-                    <span class="status archived">
-                      archived
-                    </span>
+                  <span class="status archived">
+                    archived
+                  </span>
 
-                  <% } else { %>
+                <% } else { %>
 
-                    <span class="status listed">
-                      listed
-                    </span>
+                  <span class="status listed">
+                    listed
+                  </span>
 
-                  <% } %>
+                <% } %>
 
-                </td>
+              </td>
 
-                <!-- ACTION -->
-                <td>
+              <!-- ACTION -->
+              <td>
 
-                  <div class="actions">
+                <div class="actions">
 
-                    <a
-                      href="/admin/edit-category/<%= category._id %>"
-                      class="icon-btn"
-                    >
-                      <i class="fa-solid fa-pen"></i>
-                    </a>
+                  <a
+                    href="/admin/edit-category/<%= category._id %>"
+                    class="icon-btn"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
 
-                    <a href="#" class="icon-btn">
-                      <i class="fa-regular fa-eye"></i>
-                    </a>
+                  <a href="#" class="icon-btn">
+                    <i class="fa-regular fa-eye"></i>
+                  </a>
 
-                    <form
-                      action="/admin/delete-category/<%= category._id %>"
-                      method="POST"
-                      onsubmit="return confirmDelete()"
-                    >
+                  <form
+                    action="/admin/delete-category/<%= category._id %>?_method=DELETE"
+                    method="POST"
+                    onsubmit="return confirmDelete()"
+                  >
 
-                      <button type="submit" class="icon-btn delete-btn">
+                    <button type="submit" class="icon-btn delete-btn">
+                      <i class="fa-regular fa-trash-can"></i>
+                    </button>
 
-                        <i class="fa-regular fa-trash-can"></i>
+                  </form>
 
-                      </button>
+                </div>
 
-                    </form>
-
-                  </div>
-
-                </td>
-
-              </tr>
-
-            <% }) %>
-
-          <% } else { %>
-
-            <tr>
-
-              <td colspan="6" class="empty-msg">
-                No categories found
               </td>
 
             </tr>
+                        <% }) %>
+
+                      <% } else { %>
+
+                        <tr>
+
+                          <td colspan="6" class="empty-msg">
+                            No categories found
+                          </td>
+
+                        </tr>
 
           <% } %>
 
@@ -266,7 +252,7 @@
 
         </table>
 
-        <!-- PAGINATION -->
+        
      <!-- PAGINATION -->
 
 <div class="pagination">
