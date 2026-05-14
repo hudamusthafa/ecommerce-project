@@ -8,12 +8,10 @@ exports.getCategories = async (search, page, limit) => {
 
   // SEARCH
   if (search) {
-
     query.name = {
       $regex: search,
       $options: "i"
     };
-
   }
 
   // PAGINATION
@@ -24,20 +22,14 @@ exports.getCategories = async (search, page, limit) => {
 
   // CATEGORY DATA
   const categories = await Category.find(query)
-
-    // LATEST FIRST
     .sort({ createdAt: -1 })
-
-    // PAGINATION
     .skip(skip)
     .limit(limit);
 
   return {
-
     categories,
     total,
     totalPages: Math.ceil(total / limit)
-
   };
 
 };
@@ -45,16 +37,24 @@ exports.getCategories = async (search, page, limit) => {
 
 // ADD CATEGORY
 exports.addCategory = async (data) => {
-
   return await Category.create(data);
-
 };
 
 
 // GET CATEGORY BY ID
 exports.getCategoryById = async (id) => {
-
   return await Category.findById(id);
+};
+
+
+// CHECK CATEGORY BY NAME
+exports.getCategoryByName = async (name) => {
+
+  return await Category.findOne({
+    name: {
+      $regex: new RegExp("^" + name + "$", "i")
+    }
+  });
 
 };
 
@@ -63,11 +63,9 @@ exports.getCategoryById = async (id) => {
 exports.updateCategory = async (id, data) => {
 
   return await Category.findByIdAndUpdate(
-
     id,
     data,
-   { returnDocument: "after" }
-
+    { returnDocument: "after" }
   );
 
 };
@@ -77,17 +75,9 @@ exports.updateCategory = async (id, data) => {
 exports.softDeleteCategory = async (id) => {
 
   return await Category.findByIdAndUpdate(
-
     id,
-
-    {
-      isDeleted: true
-    },
-
-    {
-      returnDocument: "after"
-    }
-
+    { isDeleted: true },
+    { returnDocument: "after" }
   );
 
 };

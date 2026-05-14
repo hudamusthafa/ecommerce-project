@@ -64,6 +64,17 @@ exports.addCategory = async (req, res) => {
           });
 
         }
+        const existingCategory =
+            await categoryService.getCategoryByName(name);
+
+          if (existingCategory) {
+
+            return res.render("admin/add-category", {
+              error: "Category already exists"
+            });
+
+          }
+
 
         // SAVE
         await categoryService.addCategory({
@@ -131,6 +142,29 @@ exports.updateCategory = async (req, res) => {
           });
 
         }
+          // CHECK DUPLICATE CATEGORY
+          const existingCategory =
+            await categoryService.getCategoryByName(name);
+
+          if (
+            existingCategory &&
+            existingCategory._id.toString() !== req.params.id
+          ) {
+
+            const category =
+              await categoryService.getCategoryById(
+                req.params.id
+              );
+
+            return res.render("admin/edit-category", {
+
+              category,
+              error: "Category already exists"
+
+            });
+
+          }
+
         // UPDATE
         await categoryService.updateCategory(
           req.params.id,
