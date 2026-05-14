@@ -66,7 +66,7 @@ exports.updateCategory = async (id, data) => {
 
     id,
     data,
-    { new: true }
+   { returnDocument: "after" }
 
   );
 
@@ -85,7 +85,7 @@ exports.softDeleteCategory = async (id) => {
     },
 
     {
-      new: true
+      returnDocument: "after"
     }
 
   );

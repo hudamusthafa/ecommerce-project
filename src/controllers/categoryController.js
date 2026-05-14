@@ -6,43 +6,33 @@ exports.getCategories = async (req, res) => {
 
   try {
 
-    // SEARCH
-    const search = req.query.search || "";
+        // SEARCH
+        const search = req.query.search || "";
 
-    // PAGINATION
-    const page = parseInt(req.query.page) || 1;
+        // PAGINATION
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
 
-    const limit = 5;
+        // SERVICE
+        const result = await categoryService.getCategories(
+          search,
+          page,
+          limit
+        );
 
-    // SERVICE
-    const result = await categoryService.getCategories(
-
-      search,
-      page,
-      limit
-
-    );
-
-    // RENDER
-    res.render("admin/categories", {
-
-      categories: result.categories,
-
-      total: result.total,
-
-      totalPages: result.totalPages,
-
-      currentPage: page,
-
-      search
-
-    });
+        // RENDER
+        res.render("admin/categories", {
+          categories: result.categories,
+          total: result.total,
+          totalPages: result.totalPages,
+          currentPage: page,
+          search
+        });
 
   } catch (error) {
 
-    console.log(error);
-
-    res.redirect("/admin/dashboard");
+        console.log(error);
+        res.redirect("/admin/dashboard");
 
   }
 
@@ -52,11 +42,9 @@ exports.getCategories = async (req, res) => {
 // GET ADD CATEGORY PAGE
 exports.getAddCategory = (req, res) => {
 
-  res.render("admin/add-category", {
-
-    error: null
-
-  });
+      res.render("admin/add-category", {
+        error: null
+      });
 
 };
 
@@ -66,34 +54,29 @@ exports.addCategory = async (req, res) => {
 
   try {
 
-    const { name, description } = req.body;
+        const { name, description } = req.body;
 
-    // VALIDATION
-    if (!name || name.trim() === "") {
+        // VALIDATION
+        if (!name || name.trim() === "") {
 
-      return res.render("admin/add-category", {
+          return res.render("admin/add-category", {
+            error: "Category name is required"
+          });
 
-        error: "Category name is required"
+        }
 
-      });
+        // SAVE
+        await categoryService.addCategory({
+          name,
+          description
+        });
 
-    }
-
-    // SAVE
-    await categoryService.addCategory({
-
-      name,
-      description
-
-    });
-
-    res.redirect("/admin/categories");
+        res.redirect("/admin/categories");
 
   } catch (error) {
 
-    console.log(error);
-
-    res.redirect("/admin/categories");
+        console.log(error);
+        res.redirect("/admin/categories");
 
   }
 
@@ -105,30 +88,23 @@ exports.getEditCategory = async (req, res) => {
 
   try {
 
-    const category = await categoryService.getCategoryById(
+      const category = await categoryService.getCategoryById(
+        req.params.id
+      );
 
-      req.params.id
+      if (!category) {
+        return res.redirect("/admin/categories");
+      }
 
-    );
-
-    if (!category) {
-
-      return res.redirect("/admin/categories");
-
-    }
-
-    res.render("admin/edit-category", {
-
-      category,
-      error: null
-
-    });
+      res.render("admin/edit-category", {
+        category,
+        error: null
+      });
 
   } catch (error) {
 
-    console.log(error);
-
-    res.redirect("/admin/categories");
+      console.log(error);
+      res.redirect("/admin/categories");
 
   }
 
@@ -140,46 +116,35 @@ exports.updateCategory = async (req, res) => {
 
   try {
 
-    const { name, description } = req.body;
+        const { name, description } = req.body;
 
-    // VALIDATION
-    if (!name || name.trim() === "") {
+        // VALIDATION
+        if (!name || name.trim() === "") {
 
-      const category = await categoryService.getCategoryById(
+          const category = await categoryService.getCategoryById(
+            req.params.id
+          );
 
-        req.params.id
+          return res.render("admin/edit-category", {
+            category,
+            error: "Category name is required"
+          });
 
-      );
-
-      return res.render("admin/edit-category", {
-
-        category,
-
-        error: "Category name is required"
-
-      });
-
-    }
-
-    // UPDATE
-    await categoryService.updateCategory(
-
-      req.params.id,
-
-      {
-        name,
-        description
-      }
-
-    );
-
-    res.redirect("/admin/categories");
+        }
+        // UPDATE
+        await categoryService.updateCategory(
+          req.params.id,
+          {
+            name,
+            description
+          }
+        );
+        res.redirect("/admin/categories");
 
   } catch (error) {
 
-    console.log(error);
-
-    res.redirect("/admin/categories");
+        console.log(error);
+        res.redirect("/admin/categories");
 
   }
 
@@ -191,19 +156,16 @@ exports.deleteCategory = async (req, res) => {
 
   try {
 
-    await categoryService.softDeleteCategory(
+        await categoryService.softDeleteCategory(
+          req.params.id
+        );
 
-      req.params.id
-
-    );
-
-    res.redirect("/admin/categories");
+        res.redirect("/admin/categories");
 
   } catch (error) {
 
-    console.log(error);
-
-    res.redirect("/admin/categories");
+        console.log(error);
+        res.redirect("/admin/categories");
 
   }
 

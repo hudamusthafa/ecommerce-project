@@ -154,7 +154,7 @@
 
               <tr>
 
-              <tr>
+             
 
               <!-- CATEGORY -->
               <td>
@@ -213,9 +213,23 @@
                     <i class="fa-solid fa-pen"></i>
                   </a>
 
-                  <a href="#" class="icon-btn">
-                    <i class="fa-regular fa-eye"></i>
-                  </a>
+                 <button
+                  type="button"
+                  class="icon-btn"
+                  onclick="openViewModal(
+                    '<%= category.name %>',
+                    `<%= category.description || "No description" %>`,
+                    '<%= new Date(category.createdAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric"
+                    }) %>',
+                    '<%= category.isDeleted ? "Archived" : "Listed" %>'
+                  )"
+                >
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+
 
                   <form
                     action="/admin/delete-category/<%= category._id %>?_method=DELETE"
@@ -223,10 +237,13 @@
                     onsubmit="return confirmDelete()"
                   >
 
-                    <button type="submit" class="icon-btn delete-btn">
-                      <i class="fa-regular fa-trash-can"></i>
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      onclick="openDeleteModal('<%= category._id %>')"
+                    >
+                      🗑️
                     </button>
-
                   </form>
 
                 </div>
@@ -296,16 +313,144 @@
   </div>
 
 </div>
+<!-- DELETE FORM -->
+<form id="deleteForm" method="POST"></form>
+
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal">
+
+  <div class="modal-box">
+
+    <p>Archive this category?</p>
+
+    <button
+      class="confirm-btn"
+      onclick="confirmDelete()"
+    >
+      Yes
+    </button>
+
+    <button
+      class="cancel-btn"
+      onclick="closeDeleteModal()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+
+<div id="viewModal" class="modal">
+
+  <div class="modal-box view-box">
+
+    <h3 id="viewTitle"></h3>
+
+    <p>
+      <strong>Description:</strong>
+    </p>
+
+    <p id="viewDescription"></p>
+
+    <p>
+      <strong>Created:</strong>
+      <span id="viewDate"></span>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <span id="viewStatus"></span>
+    </p>
+
+    <button
+      class="cancel-btn"
+      onclick="closeViewModal()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
 
 <script>
 
-function confirmDelete(){
+  let deleteId = "";
 
-  return confirm(
-    "Are you sure you want to archive this category?"
-  );
+  function openDeleteModal(id) {
 
-}
+    deleteId = id;
+
+    document.getElementById(
+      "deleteModal"
+    ).style.display = "flex";
+
+  }
+
+  function closeDeleteModal() {
+
+    document.getElementById(
+      "deleteModal"
+    ).style.display = "none";
+
+  }
+
+  function confirmDelete() {
+
+    const form =
+      document.getElementById("deleteForm");
+
+    form.action =
+      "/admin/delete-category/" +
+      deleteId +
+      "?_method=DELETE";
+
+    form.submit();
+
+  }
+
+</script>
+<script>
+
+  function openViewModal(
+    name,
+    description,
+    date,
+    status
+  ) {
+
+    document.getElementById(
+      "viewTitle"
+    ).innerText = name;
+
+    document.getElementById(
+      "viewDescription"
+    ).innerText = description;
+
+    document.getElementById(
+      "viewDate"
+    ).innerText = date;
+
+    document.getElementById(
+      "viewStatus"
+    ).innerText = status;
+
+    document.getElementById(
+      "viewModal"
+    ).style.display = "flex";
+
+  }
+
+  function closeViewModal() {
+
+    document.getElementById(
+      "viewModal"
+    ).style.display = "none";
+
+  }
 
 </script>
 <%- include('../partials/admin-footer') %>
