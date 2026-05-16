@@ -33,6 +33,7 @@ exports.getProducts = async (req, res) => {
   } catch (error) {
 
     console.log(error);
+
     res.redirect("/admin/dashboard");
 
   }
@@ -45,15 +46,23 @@ exports.getAddProduct = async (req, res) => {
 
   try {
 
-    const categories = await categoryService.getActiveCategories();
+    const categories =
+      await categoryService.getActiveCategories();
+
+    const error =
+      req.session.error;
+
+    req.session.error = null;
+
     res.render("admin/add-product", {
-      categories: categories,
-      error: null
+      categories,
+      error
     });
 
   } catch (error) {
 
     console.log(error);
+
     res.redirect("/admin/products");
 
   }
@@ -75,35 +84,56 @@ exports.addProduct = async (req, res) => {
     } = req.body;
 
     // VALIDATION
-    if (
+    if(
       !name ||
+      !description ||
       !price ||
       !stock ||
       !category
-    ) {
+    ){
 
-      const categories = await categoryService.getActiveCategories();
+      req.session.error =
+        "All fields are required";
 
-      return res.render("admin/add-product", {
-        categories: categories,
-        error: "All fields are required"
-      });
-
-    }
-    const imageFiles = req.files || [];
-
-      const images = imageFiles.map(
-        file => file.filename
+      return res.redirect(
+        "/admin/add-product"
       );
 
-    // SAVE
+    }
+
+    const imageFiles =
+      req.files || [];
+
+    // MINIMUM 3 IMAGES
+    if(imageFiles.length < 3){
+
+      req.session.error =
+        "Minimum 3 images required";
+
+      return res.redirect(
+        "/admin/add-product"
+      );
+
+    }
+
+    // IMAGE ARRAY
+    const images =
+      imageFiles.map(function(file){
+
+        return file.filename;
+
+      });
+
+    // SAVE PRODUCT
     await productService.addProduct({
+
       name,
       description,
       price,
       stock,
       category,
       images
+
     });
 
     res.redirect("/admin/products");
@@ -111,6 +141,7 @@ exports.addProduct = async (req, res) => {
   } catch (error) {
 
     console.log(error);
+
     res.redirect("/admin/products");
 
   }
@@ -118,24 +149,40 @@ exports.addProduct = async (req, res) => {
 };
 
 
-
-
 // GET EDIT PRODUCT PAGE
 exports.getEditProduct = async (req, res) => {
+
   try {
-    const product = await productService.getProductById(req.params.id);
-    const categories = await categoryService.getActiveCategories();
+
+    const product =
+      await productService.getProductById(
+        req.params.id
+      );
+
+    const categories =
+      await categoryService.getActiveCategories();
+
+    const error =
+      req.session.error;
+
+    req.session.error = null;
 
     res.render("admin/edit-product", {
+
       product,
       categories,
-      error: null
+      error
+
     });
 
   } catch (error) {
+
     console.log(error);
+
     res.redirect("/admin/products");
+
   }
+
 };
 
 
@@ -143,18 +190,73 @@ exports.getEditProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
 
   try {
-    const {name,description,price,stock,category} = req.body;
-    const product = await productService.getProductById(req.params.id);
-    let images = product.images;
+
+    const {
+      name,
+      description,
+      price,
+      stock,
+      category
+    } = req.body;
+
+    // EMPTY VALIDATION
+    if(
+      !name ||
+      !description ||
+      !price ||
+      !stock ||
+      !category
+    ){
+
+      req.session.error =
+        "All fields are required";
+
+      return res.redirect(
+        "/admin/edit-product/" +
+        req.params.id
+      );
+
+    }
+
+    const product =
+      await productService.getProductById(
+        req.params.id
+      );
+
+    let images =
+      product.images;
 
     // NEW IMAGES
-    if(req.files && req.files.length > 0){
-      images = req.files.map(function(file){
-        return file.filename;
-      });
+    if(
+      req.files &&
+      req.files.length > 0
+    ){
+
+      // MINIMUM 3 IMAGES
+      if(req.files.length < 3){
+
+        req.session.error =
+          "Upload minimum 3 images";
+
+        return res.redirect(
+          "/admin/edit-product/" +
+          req.params.id
+        );
+
+      }
+
+      images =
+        req.files.map(function(file){
+
+          return file.filename;
+
+        });
+
     }
+
     // UPDATE PRODUCT
-    await productService.updateProduct(req.params.id,
+    await productService.updateProduct(
+      req.params.id,
       {
         name,
         description,
@@ -164,23 +266,37 @@ exports.updateProduct = async (req, res) => {
         images
       }
     );
+
     res.redirect("/admin/products");
 
   } catch (error) {
+
     console.log(error);
+
     res.redirect("/admin/products");
+
   }
+
 };
+
 
 // DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
 
   try {
-    await productService.softDeleteProduct(req.params.id);
+
+    await productService.softDeleteProduct(
+      req.params.id
+    );
+
     res.redirect("/admin/products");
 
   } catch (error) {
+
     console.log(error);
+
     res.redirect("/admin/products");
+
   }
+
 };
