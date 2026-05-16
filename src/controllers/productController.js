@@ -171,3 +171,16 @@ exports.updateProduct = async (req, res) => {
     res.redirect("/admin/products");
   }
 };
+
+// DELETE PRODUCT
+exports.deleteProduct = async (req, res) => {
+
+  try {
+    await productService.softDeleteProduct(req.params.id);
+    res.redirect("/admin/products");
+
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/products");
+  }
+};

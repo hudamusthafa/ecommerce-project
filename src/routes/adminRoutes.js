@@ -94,6 +94,7 @@ router.put("/edit-product/:id",
   productController.updateProduct
 );
 
-
+// DELETE PRODUCT
+router.delete("/delete-product/:id",productController.deleteProduct);
 
 module.exports = router;
