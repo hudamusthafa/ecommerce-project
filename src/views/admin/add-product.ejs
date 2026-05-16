@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Add Product</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/addProduct.css">
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<%- include("../partials/admin-header") %>
+
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <%- include("../partials/admin-sidebar") %>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <div class="form-container">
+
+      <h2>Add Product</h2>
+
+      <!-- ERROR -->
+      <% if(error){ %>
+
+        <p class="error-msg">
+          <%= error %>
+        </p>
+
+      <% } %>
+
+      <!-- FORM -->
+      <form
+        action="/admin/add-product"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+
+        <!-- PRODUCT NAME -->
+        <div class="form-group">
+
+          <label>
+            Product Name
+          </label>
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter product name"
+            required
+          >
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            name="description"
+            placeholder="Enter description"
+          ></textarea>
+
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="form-group">
+
+          <label>
+            Category
+          </label>
+
+          <select
+            name="category"
+            required
+          >
+
+            <option value="">
+              Select Category
+            </option>
+
+            <% categories.forEach(category => { %>
+
+              <option value="<%= category._id %>">
+                <%= category.name %>
+              </option>
+
+            <% }) %>
+
+          </select>
+
+        </div>
+
+        <!-- PRICE -->
+        <div class="form-group">
+
+          <label>
+            Price
+          </label>
+
+          <input
+            type="number"
+            name="price"
+            placeholder="Enter price"
+            required
+          >
+
+        </div>
+
+        <!-- STOCK -->
+        <div class="form-group">
+
+          <label>
+            Stock
+          </label>
+
+          <input
+            type="number"
+            name="stock"
+            placeholder="Enter stock"
+            required
+          >
+
+        </div>
+
+        <!-- IMAGES -->
+        <div class="form-group">
+
+          <label>
+            Product Images (Minimum 3)
+          </label>
+
+          <input
+            type="file"
+            name="images"
+            id="imageInput"
+            multiple
+            accept="image/*"
+            required
+          >
+
+        </div>
+
+        <!-- IMAGE PREVIEW -->
+        <div
+          class="preview-container"
+          id="previewContainer"
+        ></div>
+
+        <!-- BUTTONS -->
+        <div class="form-actions">
+
+          <a
+            href="/admin/products"
+            class="cancel-btn"
+          >
+            Cancel
+          </a>
+
+          <button
+            type="submit"
+            class="add-btn"
+          >
+            Add Product
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- IMAGE PREVIEW SCRIPT -->
+<script>
+
+const imageInput =
+  document.getElementById("imageInput");
+
+const previewContainer =
+  document.getElementById("previewContainer");
+
+imageInput.addEventListener("change", function() {
+
+  previewContainer.innerHTML = "";
+
+  const files = this.files;
+
+  // MINIMUM 3 VALIDATION
+  if(files.length < 3){
+
+    alert("Minimum 3 images required");
+
+    imageInput.value = "";
+
+    return;
+
+  }
+
+  // PREVIEW IMAGES
+  Array.from(files).forEach(file => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+      const img =
+        document.createElement("img");
+
+      img.src = e.target.result;
+
+      img.classList.add("preview-image");
+
+      previewContainer.appendChild(img);
+
+    }
+
+    reader.readAsDataURL(file);
+
+  });
+
+});
+
+</script>
+
+<!-- FOOTER -->
+<%- include("../partials/admin-footer") %>
+
+</body>
+</html>

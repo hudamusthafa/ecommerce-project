@@ -4,6 +4,9 @@ const adminController = require("../controllers/adminController");
 const { isAdminLoggedIn ,isAdminLoggedOut } = require("../middleware/authMiddleware");
 const { noCache } = require("../middleware/cacheMiddleware");
 const categoryController = require("../controllers/categoryController");
+const productController = require("../controllers/productController");
+const upload = require("../config/multer");
+
 
 // GET login page
 router.get("/login",noCache, isAdminLoggedOut, adminController.getLogin);
@@ -55,33 +58,33 @@ router.get("/logout", (req, res, next) => {
 router.get("/categories",categoryController.getCategories);
 
 // ADD CATEGORY PAGE
-router.get(
-  "/add-category",
-  categoryController.getAddCategory
-);
+router.get("/add-category",categoryController.getAddCategory);
 
 // ADD CATEGORY
-router.post(
-  "/add-category",
-  categoryController.addCategory
-);
+router.post("/add-category",categoryController.addCategory);
 
 // EDIT CATEGORY PAGE
-router.get(
-  "/edit-category/:id",
-  categoryController.getEditCategory
-);
+router.get("/edit-category/:id",categoryController.getEditCategory);
 
 // UPDATE CATEGORY
-router.put(
-  "/edit-category/:id",
-  categoryController.updateCategory
-);
+router.put("/edit-category/:id",categoryController.updateCategory);
 
 // SOFT DELETE CATEGORY
-router.delete(
-  "/delete-category/:id",
-  categoryController.deleteCategory
-);
+router.delete("/delete-category/:id",categoryController.deleteCategory);
+
+
+
+// ===================== PRODUCT MANAGEMENT
+
+// LIST PAGE
+router.get("/products",productController.getProducts);
+
+// ADD PRODUCT PAGE
+router.get("/add-product",productController.getAddProduct);
+
+// ADD PRODUCT
+router.post( "/add-product",upload.array("images", 5),productController.addProduct);
+
+
 
 module.exports = router;

@@ -35,6 +35,14 @@ exports.getCategories = async (search, page, limit) => {
 };
 
 
+exports.getActiveCategories = async () => {
+
+  return await Category.find({
+    isDeleted: false
+  });
+
+};
+
 // ADD CATEGORY
 exports.addCategory = async (data) => {
   return await Category.create(data);
