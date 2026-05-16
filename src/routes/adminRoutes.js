@@ -81,9 +81,18 @@ router.get("/products",productController.getProducts);
 
 // ADD PRODUCT PAGE
 router.get("/add-product",productController.getAddProduct);
-
 // ADD PRODUCT
 router.post( "/add-product",upload.array("images", 5),productController.addProduct);
+
+
+// GET EDIT PRODUCT PAGE
+router.get("/edit-product/:id",productController.getEditProduct);
+
+// UPDATE PRODUCT
+router.put("/edit-product/:id",
+  upload.array("images", 5),
+  productController.updateProduct
+);
 
 
 

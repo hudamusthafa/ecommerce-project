@@ -116,3 +116,58 @@ exports.addProduct = async (req, res) => {
   }
 
 };
+
+
+
+
+// GET EDIT PRODUCT PAGE
+exports.getEditProduct = async (req, res) => {
+  try {
+    const product = await productService.getProductById(req.params.id);
+    const categories = await categoryService.getActiveCategories();
+
+    res.render("admin/edit-product", {
+      product,
+      categories,
+      error: null
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/products");
+  }
+};
+
+
+// UPDATE PRODUCT
+exports.updateProduct = async (req, res) => {
+
+  try {
+    const {name,description,price,stock,category} = req.body;
+    const product = await productService.getProductById(req.params.id);
+    let images = product.images;
+
+    // NEW IMAGES
+    if(req.files && req.files.length > 0){
+      images = req.files.map(function(file){
+        return file.filename;
+      });
+    }
+    // UPDATE PRODUCT
+    await productService.updateProduct(req.params.id,
+      {
+        name,
+        description,
+        price,
+        stock,
+        category,
+        images
+      }
+    );
+    res.redirect("/admin/products");
+
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/products");
+  }
+};

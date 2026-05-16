@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/addProduct.css">
+
+</head>
+
+<body>
+
+  <%- include('../partials/admin-header') %>
+
+  <div class="layout">
+
+    <%- include('../partials/admin-sidebar') %>
+
+    <div class="main-content">
+
+      <div class="form-container">
+
+        <h2>Edit Product</h2>
+
+        <% if(error){ %>
+
+          <p class="error-msg">
+            <%= error %>
+          </p>
+
+        <% } %>
+
+        <form
+          action="/admin/edit-product/<%= product._id %>?_method=PUT"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+
+          <!-- PRODUCT NAME -->
+          <div class="form-group">
+
+            <label>Product Name</label>
+
+            <input
+              type="text"
+              name="name"
+              value="<%= product.name %>"
+              required
+            >
+
+          </div>
+
+          <!-- DESCRIPTION -->
+          <div class="form-group">
+
+            <label>Description</label>
+
+            <textarea
+              name="description"
+            ><%= product.description %></textarea>
+
+          </div>
+
+          <!-- CATEGORY -->
+          <div class="form-group">
+
+            <label>Category</label>
+
+            <select
+              name="category"
+              required
+            >
+
+              <% categories.forEach(function(category){ %>
+
+                <option
+                  value="<%= category._id %>"
+
+                  <%= product.category._id.toString()
+                  === category._id.toString()
+                  ? "selected"
+                  : "" %>
+                >
+
+                  <%= category.name %>
+
+                </option>
+
+              <% }) %>
+
+            </select>
+
+          </div>
+
+          <!-- PRICE -->
+          <div class="form-group">
+
+            <label>Price</label>
+
+            <input
+              type="number"
+              name="price"
+              value="<%= product.price %>"
+              required
+            >
+
+          </div>
+
+          <!-- STOCK -->
+          <div class="form-group">
+
+            <label>Stock</label>
+
+            <input
+              type="number"
+              name="stock"
+              value="<%= product.stock %>"
+              required
+            >
+
+          </div>
+
+          <!-- OLD IMAGES -->
+          <div class="form-group">
+
+            <label>Current Images</label>
+
+            <div class="preview-container">
+
+              <% product.images.forEach(function(image){ %>
+
+                <img
+                  src="/images/<%= image %>"
+                  class="preview-image"
+                >
+
+              <% }) %>
+
+            </div>
+
+          </div>
+
+          <!-- NEW IMAGES -->
+          <div class="form-group">
+
+            <label>Replace Images</label>
+
+            <input
+              type="file"
+              name="images"
+              multiple
+              accept="image/*"
+            >
+
+          </div>
+
+          <!-- BUTTONS -->
+          <div class="form-actions">
+
+            <a
+              href="/admin/products"
+              class="cancel-btn"
+            >
+              Cancel
+            </a>
+
+            <button
+              type="submit"
+              class="add-btn"
+            >
+              Update Product
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <%- include('../partials/admin-footer') %>
+
+</body>
+</html>
