@@ -9,7 +9,10 @@
   <!-- CSS -->
   <link rel="stylesheet" href="/css/adminSidebar.css">
   <link rel="stylesheet" href="/css/addProduct.css">
-
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+/>
 </head>
 
 <body>
@@ -205,37 +208,6 @@ window.addEventListener(
 
 </div>
 
-<!-- IMAGE PREVIEW SCRIPT -->
-<script>
-
-const imageInput = document.getElementById("imageInput");
-const previewContainer = document.getElementById("previewContainer");
-imageInput.addEventListener("change", function(){
-  previewContainer.innerHTML = "";
-  const files = this.files;
-
-  // MINIMUM 3 VALIDATION
-  if(files.length < 3){
-    alert("Minimum 3 images required");
-    imageInput.value = "";
-    return;
-  }
-
-  // PREVIEW IMAGES
-  Array.from(files).forEach(function(file){
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-      const img = document.createElement("img");
-      img.src = e.target.result;
-      img.classList.add("preview-image");
-      previewContainer.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-</script>
 
 <script>
 
@@ -362,8 +334,170 @@ function validateProductForm(){
 }
 
 </script>
+<!-- CROPPER MODAL -->
+<div
+  id="cropModal"
+  class="crop-modal"
+>
+
+  <div class="crop-box">
+
+    <img id="cropImage">
+
+    <div class="crop-actions">
+
+      <button
+        type="button"
+        id="cropBtn"
+        class="add-btn"
+      >
+        Crop
+      </button>
+
+      <button
+        type="button"
+        onclick="closeCropModal()"
+        class="cancel-btn"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
 <!-- FOOTER -->
 <%- include("../partials/admin-footer") %>
+<!-- cropper CDN-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+<script>
+
+window.addEventListener("load", function(){
+
+  const imageInput =
+    document.getElementById("imageInput");
+
+  const previewContainer =
+    document.getElementById("previewContainer");
+
+  const cropModal =
+    document.getElementById("cropModal");
+
+  const cropImage =
+    document.getElementById("cropImage");
+
+  const cropBtn =
+    document.getElementById("cropBtn");
+
+  let cropper;
+
+  imageInput.addEventListener(
+    "change",
+    function(e){
+
+      const files = e.target.files;
+
+      // if(files.length < 3){
+
+      //   alert(
+      //     "Minimum 3 images required"
+      //   );
+
+      //   imageInput.value = "";
+
+      //   return;
+
+      // }
+
+      previewContainer.innerHTML = "";
+
+      const file = files[0];
+
+        const reader =
+          new FileReader();
+
+        reader.onload =
+          function(event){
+
+            cropModal.style.display =
+              "flex";
+
+            cropImage.src =
+              event.target.result;
+
+            // DESTROY OLD CROPPER
+            if(cropper){
+
+              cropper.destroy();
+
+            }
+
+            cropper =
+              new Cropper(
+                cropImage,
+                {
+                  aspectRatio:1,
+                  viewMode:1
+                }
+              );
+
+            cropBtn.onclick =
+              function(){
+
+                const canvas =
+                  cropper.getCroppedCanvas({
+                    width:500,
+                    height:500
+                  });
+
+                const img =
+                  document.createElement("img");
+
+                img.src =
+                  canvas.toDataURL();
+
+                img.classList.add(
+                  "preview-image"
+                );
+
+                previewContainer.appendChild(
+                  img
+                );
+
+                cropper.destroy();
+
+                cropModal.style.display =
+                  "none";
+
+              };
+
+          };
+
+        reader.readAsDataURL(file);
+
+      });
+
+
+  window.closeCropModal =
+    function(){
+
+      cropModal.style.display =
+        "none";
+
+      if(cropper){
+
+        cropper.destroy();
+
+      }
+
+    };
+
+});
+
+</script>
 
 </body>
 </html>

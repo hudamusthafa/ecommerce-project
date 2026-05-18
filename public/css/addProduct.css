@@ -175,3 +175,32 @@ body{
   }
 
 }
+/* CROPPER MODAL */
+.crop-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.crop-box{
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  width:500px;
+}
+
+#cropImage{
+  width:100%;
+  max-height:400px;
+}
+
+.crop-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:20px;
+}

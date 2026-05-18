@@ -8,7 +8,10 @@
 
   <link rel="stylesheet" href="/css/adminSidebar.css">
   <link rel="stylesheet" href="/css/addProduct.css">
-
+   <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+/>
 </head>
 
 <body>
@@ -232,21 +235,13 @@
   function validateProductForm(){
 
     const name = document.querySelector('input[name="name"]').value.trim();
-
     const description = document.querySelector('textarea[name="description"]').value.trim();
-
     const category = document.querySelector('select[name="category"]').value;
-
     const price = document.querySelector('input[name="price"]').value;
-
     const stock = document.querySelector('input[name="stock"]').value;
-
     const imageInput = document.querySelector('input[name="images"]');
-
     const images = imageInput.files;
-
     const error = document.getElementById("formError");
-
     error.innerText = "";
 
     // EMPTY NAME
@@ -336,8 +331,111 @@
 
   </script>
 
+  <!-- CROPPER MODAL -->
+<div
+  id="cropModal"
+  class="crop-modal"
+>
+
+  <div class="crop-box">
+
+    <img id="cropImage">
+
+    <div class="crop-actions">
+
+      <button
+        type="button"
+        id="cropBtn"
+        class="add-btn"
+      >
+        Crop
+      </button>
+
+      <button
+        type="button"
+        onclick="closeCropModal()"
+        class="cancel-btn"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const imageInput = document.querySelector('input[name="images"]');
+const previewContainer = document.querySelector(".preview-container");
+const cropModal = document.getElementById("cropModal");
+const cropImage = document.getElementById("cropImage");
+const cropBtn = document.getElementById("cropBtn");
+let cropper;
+
+imageInput.addEventListener("change", function(e){
+  const files = e.target.files;
+
+  // EDIT PAGE VALIDATION
+  if(files.length > 0 && files.length < 3){
+    alert("Minimum 3 images required");
+    imageInput.value = "";
+    return;
+  }
+
+  // REMOVE OLD PREVIEW
+  previewContainer.innerHTML = "";
+
+  Array.from(files).forEach(function(file){
+    const reader = new FileReader();
+    reader.onload = function(event){
+      cropModal.style.display = "flex";
+      cropImage.src = event.target.result;
+
+      // DESTROY OLD CROPPER
+      if(cropper){
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(cropImage, {
+
+        aspectRatio: 1,
+        viewMode: 1
+
+      });
+
+      cropBtn.onclick = function(){
+        const canvas = cropper.getCroppedCanvas({
+          width: 500,
+          height: 500
+        });
+
+        const img = document.createElement("img");
+        img.src = canvas.toDataURL();
+        img.classList.add("preview-image");
+        previewContainer.appendChild(img);
+        cropper.destroy();
+        cropModal.style.display = "none";
+      };
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+function closeCropModal(){
+  cropModal.style.display = "none";
+  if(cropper){
+    cropper.destroy();
+  }
+}
+
+</script>
+
   <!-- FOOTER -->
   <%- include("../partials/admin-footer") %>
 
+ <!--cropper cdn--> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 </body>
 </html>

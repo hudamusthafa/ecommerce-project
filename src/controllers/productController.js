@@ -1,6 +1,8 @@
 const productService = require("../services/productService");
 const categoryService = require("../services/categoryService");
-
+const sharp = require("sharp");
+const fs = require("fs");
+const path = require("path");
 
 // PRODUCT LIST PAGE
 exports.getProducts = async (req, res) => {
@@ -92,41 +94,48 @@ exports.addProduct = async (req, res) => {
       !category
     ){
 
-      req.session.error =
-        "All fields are required";
-
-      return res.redirect(
-        "/admin/add-product"
-      );
-
+      req.session.error =  "All fields are required";
+      return res.redirect("/admin/add-product");
     }
 
-    const imageFiles =
-      req.files || [];
+    const imageFiles = req.files || [];
 
     // MINIMUM 3 IMAGES
     if(imageFiles.length < 3){
 
-      req.session.error =
-        "Minimum 3 images required";
-
-      return res.redirect(
-        "/admin/add-product"
-      );
-
+      req.session.error = "Minimum 3 images required";
+      return res.redirect("/admin/add-product");
     }
 
     // IMAGE ARRAY
-    const images =
-      imageFiles.map(function(file){
+  
+const images = [];
 
-        return file.filename;
+for(const file of imageFiles){
 
-      });
+  const filename =
+    "product-" +
+    Date.now() +
+    path.extname(file.originalname);
 
+  await sharp(file.path)
+
+    .resize(500, 500)
+
+    .toFile(
+      path.join(
+        "public/images",
+        filename
+      )
+    );
+
+  images.push(filename);
+  // DELETE TEMP FILE
+  fs.unlinkSync(file.path);
+
+}
     // SAVE PRODUCT
     await productService.addProduct({
-
       name,
       description,
       price,
@@ -135,17 +144,12 @@ exports.addProduct = async (req, res) => {
       images
 
     });
-
     res.redirect("/admin/products");
 
   } catch (error) {
-
     console.log(error);
-
     res.redirect("/admin/products");
-
   }
-
 };
 
 
@@ -153,20 +157,10 @@ exports.addProduct = async (req, res) => {
 exports.getEditProduct = async (req, res) => {
 
   try {
-
-    const product =
-      await productService.getProductById(
-        req.params.id
-      );
-
-    const categories =
-      await categoryService.getActiveCategories();
-
-    const error =
-      req.session.error;
-
+    const product = await productService.getProductById(req.params.id);
+    const categories = await categoryService.getActiveCategories();
+    const error = req.session.error;
     req.session.error = null;
-
     res.render("admin/edit-product", {
 
       product,
@@ -176,13 +170,9 @@ exports.getEditProduct = async (req, res) => {
     });
 
   } catch (error) {
-
     console.log(error);
-
     res.redirect("/admin/products");
-
   }
-
 };
 
 
@@ -208,49 +198,51 @@ exports.updateProduct = async (req, res) => {
       !category
     ){
 
-      req.session.error =
-        "All fields are required";
-
-      return res.redirect(
-        "/admin/edit-product/" +
-        req.params.id
-      );
-
+      req.session.error =  "All fields are required";
+      return res.redirect( "/admin/edit-product/" + req.params.id);
     }
 
-    const product =
-      await productService.getProductById(
-        req.params.id
-      );
-
-    let images =
-      product.images;
+    const product = await productService.getProductById(  req.params.id );
+    let images = product.images;
+      
 
     // NEW IMAGES
-    if(
-      req.files &&
-      req.files.length > 0
-    ){
+    if(req.files &&req.files.length > 0){
 
       // MINIMUM 3 IMAGES
       if(req.files.length < 3){
 
-        req.session.error =
-          "Upload minimum 3 images";
-
-        return res.redirect(
-          "/admin/edit-product/" +
-          req.params.id
-        );
-
+        req.session.error =  "Upload minimum 3 images";
+        return res.redirect( "/admin/edit-product/" +req.params.id);
       }
 
-      images =
-        req.files.map(function(file){
+      //image array
+images = [];
 
-          return file.filename;
+for(const file of req.files){
 
-        });
+  const filename =
+    "product-" +
+    Date.now() +
+    path.extname(file.originalname);
+
+  await sharp(file.path)
+
+    .resize(500, 500)
+
+    .toFile(
+      path.join(
+        "public/images",
+        filename
+      )
+    );
+
+  images.push(filename);
+
+  // DELETE TEMP FILE
+  fs.unlinkSync(file.path);
+
+}
 
     }
 
@@ -270,9 +262,7 @@ exports.updateProduct = async (req, res) => {
     res.redirect("/admin/products");
 
   } catch (error) {
-
     console.log(error);
-
     res.redirect("/admin/products");
 
   }
@@ -285,18 +275,11 @@ exports.deleteProduct = async (req, res) => {
 
   try {
 
-    await productService.softDeleteProduct(
-      req.params.id
-    );
-
+    await productService.softDeleteProduct( req.params.id);
     res.redirect("/admin/products");
 
   } catch (error) {
-
     console.log(error);
-
     res.redirect("/admin/products");
-
   }
-
 };
