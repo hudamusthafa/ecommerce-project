@@ -198,51 +198,85 @@ exports.updateProduct = async (req, res) => {
       !category
     ){
 
-      req.session.error =  "All fields are required";
-      return res.redirect( "/admin/edit-product/" + req.params.id);
+      req.session.error =
+        "All fields are required";
+
+      return res.redirect(
+        "/admin/edit-product/" +
+        req.params.id
+      );
+
     }
 
-    const product = await productService.getProductById(  req.params.id );
-    let images = product.images;
-      
+    // EXISTING PRODUCT
+    const product =
+      await productService.getProductById(
+        req.params.id
+      );
+
+    // REMOVED IMAGES
+    let removedImages=[];
+
+    if(req.body.removedImages){
+
+      removedImages=
+        JSON.parse(
+          req.body.removedImages
+        );
+
+    }
+
+    // KEEP REMAINING OLD IMAGES
+    let images=
+      product.images.filter(
+        image=>
+          !removedImages.includes(
+            image
+          )
+      );
 
     // NEW IMAGES
-    if(req.files &&req.files.length > 0){
+    if(req.files && req.files.length>0){
 
-      // MINIMUM 3 IMAGES
-      if(req.files.length < 3){
+      for(const file of req.files){
 
-        req.session.error =  "Upload minimum 3 images";
-        return res.redirect( "/admin/edit-product/" +req.params.id);
+        const filename=
+          "product-"+
+          Date.now()+
+          path.extname(
+            file.originalname
+          );
+
+        await sharp(file.path)
+
+          .resize(500,500)
+
+          .toFile(
+            path.join(
+              "public/images",
+              filename
+            )
+          );
+
+        images.push(filename);
+
+        // DELETE TEMP FILE
+        fs.unlinkSync(file.path);
+
       }
 
-      //image array
-images = [];
+    }
 
-for(const file of req.files){
+    // FINAL IMAGE VALIDATION
+    if(images.length<3){
 
-  const filename =
-    "product-" +
-    Date.now() +
-    path.extname(file.originalname);
+      req.session.error=
+        "Minimum 3 images required";
 
-  await sharp(file.path)
-
-    .resize(500, 500)
-
-    .toFile(
-      path.join(
-        "public/images",
-        filename
-      )
-    );
-
-  images.push(filename);
-
-  // DELETE TEMP FILE
-  fs.unlinkSync(file.path);
-
-}
+      return res.redirect(
+        "/admin/edit-product/" +
+        req.params.id
+      );
 
     }
 
@@ -262,13 +296,14 @@ for(const file of req.files){
     res.redirect("/admin/products");
 
   } catch (error) {
+
     console.log(error);
+
     res.redirect("/admin/products");
 
   }
 
 };
-
 
 // DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
