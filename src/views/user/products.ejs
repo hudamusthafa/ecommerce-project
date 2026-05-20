@@ -44,8 +44,18 @@
 
           <li>
 
-            <a
+            <!-- <a
               href="/products?category=<%= categoryItem._id %>&search=<%= search %>&sort=<%= sort %>"
+            >
+              <%= categoryItem.name %>
+            </a> -->
+
+             <a
+              href="/products?category=<%= categoryItem._id %>&search=<%= search %>&sort=<%= sort %>"
+
+              class="<%= category == categoryItem._id.toString()
+              ? 'active-category'
+              : '' %>"
             >
               <%= categoryItem.name %>
             </a>
@@ -228,38 +238,47 @@
       </div>
 
       <!-- PRODUCTS GRID -->
+            <div class="products-grid">
 
-      <div class="products-grid">
+              <% if(products.length > 0){ %>
 
-        <% products.forEach(function(product){ %>
+                <% products.forEach(function(product){ %>
 
-          <div class="product-card">
+                  <div class="product-card">
 
-            <img
-              src="/images/<%= product.images[0] %>"
-            >
+                    <img
+                      src="/images/<%= product.images[0] %>"
+                    >
 
-            <h3>
-              <%= product.name %>
-            </h3>
+                    <h3>
+                      <%= product.name %>
+                    </h3>
 
-            <p>
-              ₹ <%= product.price %>
-            </p>
+                    <p>
+                      ₹ <%= product.price %>
+                    </p>
 
-            <button>
-              Add To Cart
-            </button>
+                    <button>
+                      Add To Cart
+                    </button>
 
-          </div>
+                  </div>
 
-        <% }) %>
+                <% }) %>
 
-      </div>
+              <% } else { %>
 
-    </div>
+                <h2 class="no-products">
+                  No products found
+                </h2>
 
-  </div>
+              <% } %>
+
+            </div>
+
+            </div>
+
+            </div>
 
   <!-- PAGINATION -->
 

@@ -242,3 +242,18 @@ body{
 .price-form button:hover{
   background:#6f472b;
 }
+
+/* hover filter category */
+.active-category{
+  color:#8b0000 !important;
+  font-weight:bold;
+}
+.no-products{
+  text-align:center;
+  margin-top:50px;
+  color:#7a563f;
+}
+
+.filter-section a{
+  text-transform: capitalize;
+}
