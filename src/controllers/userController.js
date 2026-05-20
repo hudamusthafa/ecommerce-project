@@ -1,6 +1,7 @@
 const userService = require("../services/userService");
 const { changePasswordService } = require("../services/authService");
-
+const Product=require("../models/Product");
+const Category=require("../models/Category");
 // ADD ADDRESS
 
 
@@ -224,14 +225,144 @@ if (req.user.password && req.user.password !== "google" && req.user.password !==
   }
 };
 
+//==============week 2===========
 
+exports.getProductsPage=async(req,res)=>{
 
+  try{
 
+    // SEARCH
+    const search=req.query.search || "";
 
+    // CATEGORY
+    const category=req.query.category || "";
 
+    // SORT
+    const sort=req.query.sort || "";
 
+    // PRICE FILTER
+    const minPrice=req.query.minPrice || "";
+    const maxPrice=req.query.maxPrice || "";
 
+    // PAGINATION
+    const page=parseInt(req.query.page) || 1;
+    const limit=4;
+    const skip=(page-1)*limit;
 
+    // FILTER OBJECT
+    let filter={
+
+      isDeleted:false,
+
+      name:{
+        $regex:search,
+        $options:"i"
+      }
+
+    };
+
+    // CATEGORY FILTER
+    if(category){
+
+      filter.category=category;
+
+    }
+
+    // PRICE FILTER
+    if(minPrice && maxPrice){
+
+      filter.price={
+
+        $gte:Number(minPrice),
+
+        $lte:Number(maxPrice)
+
+      };
+
+    }
+
+    // SORT OPTION
+    let sortOption={ createdAt:-1 };
+
+    if(sort==="lowToHigh"){
+
+      sortOption={ price:1 };
+
+    }
+
+    else if(sort==="highToLow"){
+
+      sortOption={ price:-1 };
+
+    }
+
+    else if(sort==="aToZ"){
+
+      sortOption={ name:1 };
+
+    }
+
+    else if(sort==="zToA"){
+
+      sortOption={ name:-1 };
+
+    }
+
+    // PRODUCTS
+    const products=await Product.find(filter)
+
+    .populate("category")
+    .sort(sortOption)
+    .skip(skip)
+    .limit(limit);
+
+    // TOTAL PRODUCTS
+    const totalProducts=await Product.countDocuments(filter);
+
+    // TOTAL PAGES
+    const totalPages=Math.ceil(totalProducts/limit);
+
+    // CATEGORIES
+    const categories=await Category.find({
+      isDeleted:false
+
+    });
+
+    res.render(
+
+      "user/products",
+
+      {
+
+        products,
+
+        categories,
+
+        search,
+
+        category,
+
+        sort,
+
+        minPrice,
+
+        maxPrice,
+        currentPage:page,
+        totalPages,
+        user:req.user || null
+
+      }
+
+    );
+
+  }
+
+  catch(error){
+    console.log(error);
+    res.redirect("/home");
+  }
+
+};
 // CHECKOUT
 exports.getCheckout = async (req, res) => {
   const user = await userService.getUserById(req.user._id);

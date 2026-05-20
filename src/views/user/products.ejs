@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Products</title>
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/products.css">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+</head>
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="products-page">
+
+  <%- include("../partials/user-sidebar") %>
+<!-- 
+  LEFT FILTER
+  <aside class="filter-section">
+
+    <h3>Categories</h3>
+
+    <ul>
+
+      <% categories.forEach(function(category){ %>
+
+        <li>
+          <a href="/products?category=<%= category._id %>">
+            <%= category.name %>
+          </a>
+        </li>
+
+      <% }) %>
+
+    </ul>
+
+  </aside> -->
+
+
+  
+
+  <!-- RIGHT PRODUCTS -->
+  <div class="products-section">
+
+    <h1 class="products-title"> Products </h1>
+
+</h1>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+
+      <!-- SEARCH -->
+      <form action="/products" method="GET">
+
+       <input
+        type="text"
+        name="search"
+        placeholder="Search products"
+        value="<%= search %>"
+      >
+
+        <button type="submit">Search</button>
+       
+      <% if(search){ %>
+
+    <a href="/products">
+
+      <button type="button" class="clear-btn">
+        Clear
+      </button>
+
+    </a>
+
+  <% } %>
+
+      </form>
+
+      <!-- SORT -->
+      <form action="/products" method="GET">
+
+        <select name="sort" onchange="this.form.submit()">
+
+          <option value="">
+            Sort
+          </option>
+
+          <option value="lowToHigh">
+            Price Low To High
+          </option>
+
+          <option value="highToLow">
+            Price High To Low
+          </option>
+
+          <option value="aToZ">
+            A-Z
+          </option>
+
+          <option value="zToA">
+            Z-A
+          </option>
+
+        </select>
+
+      </form>
+
+    </div>
+
+    <!-- PRODUCTS GRID -->
+    <div class="products-grid">
+
+      <% products.forEach(function(product){ %>
+
+        <div class="product-card">
+
+          <img
+            src="/images/<%= product.images[0] %>"
+          >
+
+          <h3>
+            <%= product.name %>
+          </h3>
+
+          <p>
+            ₹ <%= product.price %>
+          </p>
+
+          <button>
+            Add To Cart
+          </button>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- PAGINATION -->
+
+<div class="pagination">
+
+  <% if(currentPage > 1){ %>
+
+    <a
+      href="/products?page=<%= currentPage - 1 %>"
+    >
+      Prev
+    </a>
+
+  <% } %>
+
+  <% for(let i=1;i<=totalPages;i++){ %>
+
+    <a
+      href="/products?page=<%= i %>"
+
+      class="<%= currentPage === i ? 'active-page' : '' %>"
+    >
+      <%= i %>
+    </a>
+
+  <% } %>
+
+  <% if(currentPage < totalPages){ %>
+
+    <a
+      href="/products?page=<%= currentPage + 1 %>"
+    >
+      Next
+    </a>
+
+  <% } %>
+
+</div>
+
+<%- include("../partials/footer") %>
+
+</body>
+
+</html>

@@ -73,4 +73,19 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
+
+
+
+
+
+//============week 2================
+
+//==== products/collections============
+
+
+
+
+
+router.get("/products",isLoggedIn,userController.getProductsPage)
+
 module.exports = router;
