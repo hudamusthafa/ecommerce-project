@@ -48,7 +48,7 @@
 
     <h1 class="products-title"> Products </h1>
 
-</h1>
+
 
     <!-- TOP BAR -->
     <div class="top-bar">
@@ -77,37 +77,49 @@
 
   <% } %>
 
-      </form>
+  <!-- SORT -->
+          <form action="/products" method="GET">
 
-      <!-- SORT -->
-      <form action="/products" method="GET">
+            <select
+              name="sort"
+              onchange="this.form.submit()"
+            >
 
-        <select name="sort" onchange="this.form.submit()">
+              <option value="">
+                Sort
+              </option>
 
-          <option value="">
-            Sort
-          </option>
+              <option
+                value="lowToHigh"
+                <%= sort==="lowToHigh" ? "selected" : "" %>
+              >
+                Price Low To High
+              </option>
 
-          <option value="lowToHigh">
-            Price Low To High
-          </option>
+              <option
+                value="highToLow"
+                <%= sort==="highToLow" ? "selected" : "" %>
+              >
+                Price High To Low
+              </option>
 
-          <option value="highToLow">
-            Price High To Low
-          </option>
+              <option
+                value="aToZ"
+                <%= sort==="aToZ" ? "selected" : "" %>
+              >
+                A-Z
+              </option>
 
-          <option value="aToZ">
-            A-Z
-          </option>
+              <option
+                value="zToA"
+                <%= sort==="zToA" ? "selected" : "" %>
+              >
+                Z-A
+              </option>
 
-          <option value="zToA">
-            Z-A
-          </option>
+            </select>
 
-        </select>
-
-      </form>
-
+          </form>
     </div>
 
     <!-- PRODUCTS GRID -->
@@ -151,7 +163,7 @@
   <% if(currentPage > 1){ %>
 
     <a
-      href="/products?page=<%= currentPage - 1 %>"
+      href="/products?page=<%= currentPage - 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
     >
       Prev
     </a>
@@ -161,7 +173,7 @@
   <% for(let i=1;i<=totalPages;i++){ %>
 
     <a
-      href="/products?page=<%= i %>"
+      href="/products?page=<%= i %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
 
       class="<%= currentPage === i ? 'active-page' : '' %>"
     >
@@ -173,7 +185,7 @@
   <% if(currentPage < totalPages){ %>
 
     <a
-      href="/products?page=<%= currentPage + 1 %>"
+      href="/products?page=<%= currentPage + 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
     >
       Next
     </a>
