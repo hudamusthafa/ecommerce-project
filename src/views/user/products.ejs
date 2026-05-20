@@ -2,199 +2,304 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
+
   <title>Products</title>
+
   <link rel="stylesheet" href="/css/layout.css">
+
   <link rel="stylesheet" href="/css/products.css">
+
   <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
 </head>
+
 <body>
 
-<%- include("../partials/header") %>
+  <%- include("../partials/header",{ user:user }) %>
 
-<div class="products-page">
+  <div class="products-page">
 
-  <%- include("../partials/user-sidebar") %>
-<!-- 
-  LEFT FILTER
-  <aside class="filter-section">
+    <!-- LEFT FILTER -->
 
-    <h3>Categories</h3>
+    <aside class="filter-section">
 
-    <ul>
+      <h3>Categories</h3>
 
-      <% categories.forEach(function(category){ %>
+      <ul>
 
         <li>
-          <a href="/products?category=<%= category._id %>">
-            <%= category.name %>
+
+          <a href="/products">
+            All Products
           </a>
+
         </li>
 
-      <% }) %>
+        <% categories.forEach(function(categoryItem){ %>
 
-    </ul>
+          <li>
 
-  </aside> -->
+            <a
+              href="/products?category=<%= categoryItem._id %>&search=<%= search %>&sort=<%= sort %>"
+            >
+              <%= categoryItem.name %>
+            </a>
 
+          </li>
 
-  
+        <% }) %>
 
-  <!-- RIGHT PRODUCTS -->
-  <div class="products-section">
+      </ul>
 
-    <h1 class="products-title"> Products </h1>
+      <hr>
 
+      <h3>Price Filter</h3>
 
-
-    <!-- TOP BAR -->
-    <div class="top-bar">
-
-      <!-- SEARCH -->
-      <form action="/products" method="GET">
-
-       <input
-        type="text"
-        name="search"
-        placeholder="Search products"
-        value="<%= search %>"
+      <form
+        action="/products"
+        method="GET"
+        class="price-form"
       >
 
-        <button type="submit">Search</button>
-       
-      <% if(search){ %>
+        <input
+          type="number"
+          name="minPrice"
+          placeholder="Min Price"
+          value="<%= minPrice %>"
+        >
 
-    <a href="/products">
+        <input
+          type="number"
+          name="maxPrice"
+          placeholder="Max Price"
+          value="<%= maxPrice %>"
+        >
 
-      <button type="button" class="clear-btn">
-        Clear
-      </button>
+        <input
+          type="hidden"
+          name="search"
+          value="<%= search %>"
+        >
 
-    </a>
+        <input
+          type="hidden"
+          name="sort"
+          value="<%= sort %>"
+        >
 
-  <% } %>
+        <button type="submit">
+          Apply
+        </button>
 
-  <!-- SORT -->
-          <form action="/products" method="GET">
+      </form>
 
-            <select
-              name="sort"
-              onchange="this.form.submit()"
-            >
+    </aside>
 
-              <option value="">
-                Sort
-              </option>
+    <!-- RIGHT PRODUCTS -->
 
-              <option
-                value="lowToHigh"
-                <%= sort==="lowToHigh" ? "selected" : "" %>
-              >
-                Price Low To High
-              </option>
+    <div class="products-section">
 
-              <option
-                value="highToLow"
-                <%= sort==="highToLow" ? "selected" : "" %>
-              >
-                Price High To Low
-              </option>
+      <h1 class="products-title">
+        Products
+      </h1>
 
-              <option
-                value="aToZ"
-                <%= sort==="aToZ" ? "selected" : "" %>
-              >
-                A-Z
-              </option>
+      <!-- TOP BAR -->
 
-              <option
-                value="zToA"
-                <%= sort==="zToA" ? "selected" : "" %>
-              >
-                Z-A
-              </option>
+      <div class="top-bar">
 
-            </select>
+        <!-- SEARCH -->
 
-          </form>
-    </div>
+        <form
+          action="/products"
+          method="GET"
+          class="search-form"
+        >
 
-    <!-- PRODUCTS GRID -->
-    <div class="products-grid">
-
-      <% products.forEach(function(product){ %>
-
-        <div class="product-card">
-
-          <img
-            src="/images/<%= product.images[0] %>"
+          <input
+            type="text"
+            name="search"
+            placeholder="Search products"
+            value="<%= search %>"
           >
 
-          <h3>
-            <%= product.name %>
-          </h3>
+          <input
+            type="hidden"
+            name="category"
+            value="<%= category %>"
+          >
 
-          <p>
-            ₹ <%= product.price %>
-          </p>
+          <input
+            type="hidden"
+            name="sort"
+            value="<%= sort %>"
+          >
 
-          <button>
-            Add To Cart
+          <button type="submit">
+            Search
           </button>
 
-        </div>
+          <% if(search){ %>
 
-      <% }) %>
+            <a href="/products">
+
+              <button
+                type="button"
+                class="clear-btn"
+              >
+                Clear
+              </button>
+
+            </a>
+
+          <% } %>
+
+        </form>
+
+        <!-- SORT -->
+
+        <form action="/products" method="GET">
+
+          <input
+            type="hidden"
+            name="search"
+            value="<%= search %>"
+          >
+
+          <input
+            type="hidden"
+            name="category"
+            value="<%= category %>"
+          >
+
+          <select
+            name="sort"
+            onchange="this.form.submit()"
+          >
+
+            <option value="">
+              Sort
+            </option>
+
+            <option
+              value="lowToHigh"
+              <%= sort==="lowToHigh"
+              ? "selected"
+              : "" %>
+            >
+              Price Low To High
+            </option>
+
+            <option
+              value="highToLow"
+              <%= sort==="highToLow"
+              ? "selected"
+              : "" %>
+            >
+              Price High To Low
+            </option>
+
+            <option
+              value="aToZ"
+              <%= sort==="aToZ"
+              ? "selected"
+              : "" %>
+            >
+              A-Z
+            </option>
+
+            <option
+              value="zToA"
+              <%= sort==="zToA"
+              ? "selected"
+              : "" %>
+            >
+              Z-A
+            </option>
+
+          </select>
+
+        </form>
+
+      </div>
+
+      <!-- PRODUCTS GRID -->
+
+      <div class="products-grid">
+
+        <% products.forEach(function(product){ %>
+
+          <div class="product-card">
+
+            <img
+              src="/images/<%= product.images[0] %>"
+            >
+
+            <h3>
+              <%= product.name %>
+            </h3>
+
+            <p>
+              ₹ <%= product.price %>
+            </p>
+
+            <button>
+              Add To Cart
+            </button>
+
+          </div>
+
+        <% }) %>
+
+      </div>
 
     </div>
 
   </div>
 
-</div>
+  <!-- PAGINATION -->
 
+  <div class="pagination">
 
-<!-- PAGINATION -->
+    <% if(currentPage > 1){ %>
 
-<div class="pagination">
+      <a
+        href="/products?page=<%= currentPage - 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>"
+      >
+        Prev
+      </a>
 
-  <% if(currentPage > 1){ %>
+    <% } %>
 
-    <a
-      href="/products?page=<%= currentPage - 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
-    >
-      Prev
-    </a>
+    <% for(let i=1;i<=totalPages;i++){ %>
 
-  <% } %>
+      <a
+        href="/products?page=<%= i %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>"
 
-  <% for(let i=1;i<=totalPages;i++){ %>
+        class="<%= currentPage === i ? 'active-page' : '' %>"
+      >
+        <%= i %>
+      </a>
 
-    <a
-      href="/products?page=<%= i %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
+    <% } %>
 
-      class="<%= currentPage === i ? 'active-page' : '' %>"
-    >
-      <%= i %>
-    </a>
+    <% if(currentPage < totalPages){ %>
 
-  <% } %>
+      <a
+        href="/products?page=<%= currentPage + 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>"
+      >
+        Next
+      </a>
 
-  <% if(currentPage < totalPages){ %>
+    <% } %>
 
-    <a
-      href="/products?page=<%= currentPage + 1 %>&search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
-    >
-      Next
-    </a>
+  </div>
 
-  <% } %>
-
-</div>
-
-<%- include("../partials/footer") %>
+  <%- include("../partials/footer") %>
 
 </body>
 

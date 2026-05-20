@@ -182,3 +182,63 @@ body{
 .active-page{
   background:#8e1b10 !important;
 }
+
+
+/* FILTER SECTION */
+
+.filter-section{
+  width:220px;
+  background:#ead5c1;
+  padding:25px;
+  border-radius:12px;
+  height:fit-content;
+}
+
+.filter-section h3{
+  margin-bottom:20px;
+  color:#3d2413;
+}
+
+.filter-section ul{
+  list-style:none;
+}
+
+.filter-section ul li{
+  margin-bottom:15px;
+}
+
+.filter-section ul li a{
+  text-decoration:none;
+  color:#333;
+}
+
+.filter-section hr{
+  margin:20px 0;
+}
+
+/* PRICE FILTER */
+
+.price-form{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.price-form input{
+  padding:10px;
+  border:none;
+  border-radius:6px;
+}
+
+.price-form button{
+  background:#8b5e3c;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.price-form button:hover{
+  background:#6f472b;
+}
