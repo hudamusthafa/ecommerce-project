@@ -145,7 +145,7 @@ exports.getProductDetails=async(productId)=>{
     category:product.category._id,
     isDeleted:false
   })
-  .limit(4);
+  .limit(6);
 
   return{
     product,

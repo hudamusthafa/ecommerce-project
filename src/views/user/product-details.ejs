@@ -147,6 +147,32 @@
 
         </div>
 
+
+<!-- STOCK STATUS -->
+
+<div class="stock-info">
+
+  <% if(product.stock > 0){ %>
+
+    <span class="in-stock">
+
+      In Stock
+
+    </span>
+
+  <% } else { %>
+
+    <span class="out-stock">
+
+      Out Of Stock
+
+    </span>
+
+  <% } %>
+
+</div>
+
+
  <!-- DESCRIPTION -->
         <p class="description">
 
@@ -154,6 +180,36 @@
 
         </p>
 
+
+        <!-- PRODUCT HIGHLIGHTS -->
+
+<div class="product-highlights">
+
+  <h3>
+    Highlights
+  </h3>
+
+  <ul>
+
+    <li>
+      Premium Quality Finish
+    </li>
+
+    <li>
+      Skin Friendly Material
+    </li>
+
+    <li>
+      Lightweight Design
+    </li>
+
+    <li>
+      Anti Tarnish Coating
+    </li>
+
+  </ul>
+
+</div>
 
         <!-- STOCK -->
         <div class="details-buttons">
@@ -214,6 +270,7 @@
               <img
                 src="/images/<%= item.images[0] %>"
               >
+              
 
               <h4>
                 <%= item.name %>
@@ -232,6 +289,61 @@
       </div>
 
     </div>
+
+  </div>
+
+</div>
+
+
+<!-- REVIEWS SECTION -->
+
+<div class="reviews-section">
+
+  <h2>
+    Customer Reviews
+  </h2>
+
+  <div class="review-card">
+
+    <div class="review-stars">
+
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-regular fa-star"></i>
+
+    </div>
+
+    <h4>
+      Arya
+    </h4>
+
+    <p>
+      Beautiful quality product. Elegant finish and lightweight design.
+    </p>
+
+  </div>
+
+  <div class="review-card">
+
+    <div class="review-stars">
+
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+
+    </div>
+
+    <h4>
+      Aisha
+    </h4>
+
+    <p>
+      Worth the price. Looks premium and perfect for daily wear.
+    </p>
 
   </div>
 
