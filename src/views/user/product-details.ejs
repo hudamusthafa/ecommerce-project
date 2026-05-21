@@ -70,15 +70,33 @@
         <!-- THUMBNAILS -->
         <div class="thumbnail-images">
 
-          <% product.images.forEach(function(image){ %>
+         <%
+            const variantNames=[
+              "Gold Plated",
+              "Silver Plated",
+              "Rose Gold Plated"
+            ];
+          %>
 
-            <img
-              src="/images/<%= image %>"
+          <% product.images.forEach(function(image,index){ %>
 
-              onclick="
-                document.getElementById('mainProductImage').src=this.src
-              "
-            >
+            <div class="thumbnail-box">
+
+              <img
+                src="/images/<%= image %>"
+
+                onclick="
+                  document.getElementById('mainProductImage').src=this.src
+                "
+              >
+
+              <p class="variant-name">
+
+                <%= variantNames[index] || "Variant" %>
+
+              </p>
+
+            </div>
 
           <% }) %>
 
@@ -129,6 +147,14 @@
 
         </div>
 
+ <!-- DESCRIPTION -->
+        <p class="description">
+
+          <%= product.description %>
+
+        </p>
+
+
         <!-- STOCK -->
         <div class="details-buttons">
 
@@ -160,12 +186,7 @@
   <% } %>
 
 </div>
-        <!-- DESCRIPTION -->
-        <p class="description">
-
-          <%= product.description %>
-
-        </p>
+       
 
         
       </div>

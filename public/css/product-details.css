@@ -299,3 +299,13 @@
   color:#fff;
   cursor:not-allowed;
 }
+/* variants */
+.thumbnail-box{
+  text-align:center;
+}
+
+.variant-name{
+  font-size:12px;
+  margin-top:6px;
+  color:#555;
+}
