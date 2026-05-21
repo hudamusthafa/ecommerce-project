@@ -270,7 +270,7 @@ exports.getProductDetails=async(req,res)=>{
     // PRODUCT NOT FOUND
     if(!data){
 
-      return res.redirect("/products");
+      return res.redirect("/products?error=productUnavailable");
 
     }
 
@@ -295,7 +295,7 @@ exports.getProductDetails=async(req,res)=>{
   catch(error){
 
     console.log(error);
-    res.redirect("/products");
+    res.redirect("/products?error=productUnavailable");
 
   }
 
