@@ -257,3 +257,8 @@ body{
 .filter-section a{
   text-transform: capitalize;
 }
+
+.product-link{
+  text-decoration:none;
+  color:inherit;
+}

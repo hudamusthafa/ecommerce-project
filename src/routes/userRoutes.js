@@ -85,7 +85,11 @@ router.get("/logout", (req, res, next) => {
 
 
 
-
+//show all product
 router.get("/products",isLoggedIn,userController.getProductsPage)
+
+//show selected product
+router.get("/products/:id",isLoggedIn,userController.getProductDetails)
+
 
 module.exports = router;

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>
+    <%= product.name %>
+  </title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <link rel="stylesheet" href="/css/product-details.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+</head>
+
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="details-page">
+
+  <!-- LEFT SIDEBAR -->
+  <%- include("../partials/user-sidebar") %>
+
+  <!-- RIGHT CONTENT -->
+  <div class="details-content">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+
+      <a href="/products">
+        Products
+      </a>
+
+      <span>
+        /
+      </span>
+
+      <span>
+        <%= product.name %>
+      </span>
+
+    </div>
+
+    <!-- PRODUCT SECTION -->
+    <div class="product-details-container">
+
+      <!-- LEFT IMAGES -->
+      <div class="product-images">
+
+        <!-- MAIN IMAGE -->
+        <div class="main-image">
+
+          <img
+            id="mainProductImage"
+            src="/images/<%= product.images[0] %>"
+
+            onclick="openZoom(this.src)"
+          >
+
+        </div>
+
+        <!-- THUMBNAILS -->
+        <div class="thumbnail-images">
+
+          <% product.images.forEach(function(image){ %>
+
+            <img
+              src="/images/<%= image %>"
+
+              onclick="
+                document.getElementById('mainProductImage').src=this.src
+              "
+            >
+
+          <% }) %>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT DETAILS -->
+      <div class="product-info">
+
+        <h1>
+          <%= product.name %>
+        </h1>
+
+        <!-- RATING -->
+        <div class="rating">
+
+          <i class="fa-solid fa-star"></i>
+
+          <i class="fa-solid fa-star"></i>
+
+          <i class="fa-solid fa-star"></i>
+
+          <i class="fa-solid fa-star"></i>
+
+          <i class="fa-regular fa-star"></i>
+
+          <span>
+            (4.0)
+          </span>
+
+        </div>
+
+        <!-- PRICE -->
+        <div class="price-section">
+
+          <h2>
+            ₹ <%= product.price %>
+          </h2>
+
+          <!-- <span class="old-price">
+            ₹ <%= product.price + 500 %>
+          </span> -->
+
+          <span class="discount">
+            20% OFF
+          </span>
+
+        </div>
+
+        <!-- STOCK -->
+        <div class="details-buttons">
+
+  <% if(product.stock > 0){ %>
+
+    <button class="buy-btn">
+
+      Buy Now
+
+    </button>
+
+    <button class="cart-btn">
+
+      Add To Cart
+
+    </button>
+
+  <% } else { %>
+
+    <button
+      class="disabled-btn"
+      disabled
+    >
+
+      Out Of Stock
+
+    </button>
+
+  <% } %>
+
+</div>
+        <!-- DESCRIPTION -->
+        <p class="description">
+
+          <%= product.description %>
+
+        </p>
+
+        
+      </div>
+
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <div class="related-section">
+
+      <h2>
+        Related Products
+      </h2>
+
+      <div class="related-grid">
+
+        <% relatedProducts.forEach(function(item){ %>
+
+          <a
+            href="/products/<%= item._id %>"
+            class="related-link"
+          >
+
+            <div class="related-card">
+
+              <img
+                src="/images/<%= item.images[0] %>"
+              >
+
+              <h4>
+                <%= item.name %>
+              </h4>
+
+              <p>
+                ₹ <%= item.price %>
+              </p>
+
+            </div>
+
+          </a>
+
+        <% }) %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- IMAGE ZOOM MODAL -->
+
+        <div
+          id="zoomModal"
+          class="zoom-modal"
+        >
+
+          <span
+            class="close-zoom"
+            onclick="closeZoom()"
+          >
+            &times;
+          </span>
+
+          <img
+            id="zoomedImage"
+            class="zoomed-image"
+          >
+
+        </div>
+
+<%- include("../partials/footer") %>
+
+
+
+<script>
+
+  function openZoom(imageSrc){
+
+    document.getElementById("zoomModal").style.display="flex";
+
+    document.getElementById("zoomedImage").src=imageSrc;
+
+  }
+
+  function closeZoom(){
+
+    document.getElementById("zoomModal").style.display="none";
+
+  }
+
+</script>
+
+</body>
+
+</html>
