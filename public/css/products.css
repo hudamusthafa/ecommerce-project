@@ -262,3 +262,14 @@ body{
   text-decoration:none;
   color:inherit;
 }
+
+.cart-btn{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  background:#7a563f;
+  color:#fff;
+  border-radius:6px;
+  text-decoration:none;
+}

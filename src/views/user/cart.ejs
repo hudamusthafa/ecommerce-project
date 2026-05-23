@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>
+    Cart
+  </title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <link rel="stylesheet" href="/css/cart.css">
+
+</head>
+
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="cart-page">
+
+  <div class="cart-container">
+
+    <h2 class="cart-title">
+      Cart
+    </h2>
+
+    <% if(cart && cart.items.length > 0){ %>
+
+      <!-- TABLE HEADER -->
+
+      <div class="cart-header">
+
+        <span>Product</span>
+
+        <span>Price</span>
+
+        <span>Quantity</span>
+
+        <span>Subtotal</span>
+
+      </div>
+
+      <!-- CART ITEMS -->
+
+      <% cart.items.forEach(function(item){ %>
+
+        <div class="cart-row">
+
+          <!-- PRODUCT -->
+
+          <div class="cart-product">
+
+            <img
+              src="/images/<%= item.product.images[0] %>"
+            >
+
+            <div>
+
+              <h4>
+                <%= item.product.name %>
+              </h4>
+
+              <p>
+                High Quality Jewellery
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- PRICE -->
+
+          <div class="cart-price">
+
+            ₹ <%= item.product.price %>
+
+          </div>
+
+          <!-- QUANTITY -->
+
+          <div class="cart-quantity">
+
+            <button>-</button>
+
+            <span>
+              <%= item.quantity %>
+            </span>
+
+            <button>+</button>
+
+          </div>
+
+          <!-- SUBTOTAL -->
+
+          <div class="cart-subtotal">
+
+            ₹ <%= item.product.price * item.quantity %>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+      <!-- TOTAL -->
+
+      <div class="cart-total-box">
+
+        <h3>
+          Cart Totals
+        </h3>
+
+        <p>
+
+          Total :
+
+          ₹
+          <%= cart.items.reduce((total,item)=>
+
+            total + (item.product.price * item.quantity)
+
+          ,0) %>
+
+        </p>
+
+        <button class="checkout-btn">
+
+          Proceed To Checkout
+
+        </button>
+
+      </div>
+
+    <% } else { %>
+
+      <h2 class="empty-cart">
+
+        Cart is empty
+
+      </h2>
+
+    <% } %>
+
+  </div>
+
+</div>
+
+<!-- FEATURES -->
+
+<div class="cart-features">
+
+  <div class="feature-box">
+
+    <h4>
+      Free Delivery
+    </h4>
+
+    <p>
+      For all orders above ₹999
+    </p>
+
+  </div>
+
+  <div class="feature-box">
+
+    <h4>
+      7 Days Return
+    </h4>
+
+    <p>
+      Hassle free returns
+    </p>
+
+  </div>
+
+  <div class="feature-box">
+
+    <h4>
+      Secure Payment
+    </h4>
+
+    <p>
+      100% secure checkout
+    </p>
+
+  </div>
+
+</div>
+
+
+<%- include("../partials/footer") %>
+
+</body>
+</html>

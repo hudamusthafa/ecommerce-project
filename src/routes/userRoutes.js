@@ -91,5 +91,11 @@ router.get("/products",isLoggedIn,userController.getProductsPage)
 //show selected product
 router.get("/products/:id",isLoggedIn,userController.getProductDetails)
 
+//ADD TO  CART
+router.get("/cart/add/:productId", isLoggedIn, userController.addToCart);
+
+//SHOW CART
+router.get("/cart",isLoggedIn,userController.getCart);
+
 
 module.exports = router;

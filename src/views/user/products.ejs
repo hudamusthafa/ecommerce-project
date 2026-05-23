@@ -244,31 +244,35 @@
 
                 <% products.forEach(function(product){ %>
 
-                  <a
-                    href="/products/<%= product._id %>"
-                    class="product-link"
-                  >
+                 <div class="product-card">
 
-                    <div class="product-card">
-
-                    <img
-                      src="/images/<%= product.images[0] %>"
+                    <a
+                      href="/products/<%= product._id %>"
+                      class="product-link"
                     >
 
-                    <h3>
-                      <%= product.name %>
-                    </h3>
+                      <img
+                        src="/images/<%= product.images[0] %>"
+                      >
 
-                    <p>
-                      ₹ <%= product.price %>
-                    </p>
+                      <h3>
+                        <%= product.name %>
+                      </h3>
 
-                    <button>
+                      <p>
+                        ₹ <%= product.price %>
+                      </p>
+
+                    </a>
+
+                    <a
+                      href="/cart/add/<%= product._id %>"
+                      class="cart-btn"
+                    >
                       Add To Cart
-                    </button>
+                    </a>
 
                   </div>
-                  </a>
 
                 <% }) %>
 

@@ -3,6 +3,8 @@ const { changePasswordService } = require("../services/authService");
 const Product=require("../models/Product");
 const Category=require("../models/Category");
 const userProductService=require("../services/userProductService");
+const userCartService=require("../services/userCartService");
+
 
 // ADD ADDRESS
 
@@ -279,23 +281,63 @@ exports.getProductDetails=async(req,res)=>{
       "user/product-details",
 
       {
-
         product:data.product,
-
         relatedProducts:data.relatedProducts,
-
         user:req.user || null
-
       }
-
     );
-
   }
 
   catch(error){
-
     console.log(error);
     res.redirect("/products?error=productUnavailable");
+  }
+
+};
+
+
+// add to cart
+
+exports.addToCart=async(req,res)=>{
+
+  try{
+
+    await userCartService.addToCart(
+      req.user._id,
+      req.params.productId
+    );
+    res.redirect("/cart");
+  }
+
+  catch(error){
+    console.log(error);
+    res.redirect("/products");
+  }
+
+};
+
+//show cart page
+
+
+exports.getCart=async(req,res)=>{
+
+  try{
+    const cart=await userCartService.getCart(
+      req.user._id
+    );
+
+    res.render(
+      "user/cart",
+      {
+        cart,
+        user:req.user || null
+      }
+    );
+  }
+
+  catch(error){
+    console.log(error);
+    res.redirect("/products");
 
   }
 

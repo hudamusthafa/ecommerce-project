@@ -222,12 +222,13 @@
 
     </button>
 
-    <button class="cart-btn">
-
+    <a
+      href="/cart/add/<%= product._id %>"
+      class="cart-btn"
+    >
       Add To Cart
-
-    </button>
-
+    </a>
+    
   <% } else { %>
 
     <button

@@ -282,3 +282,9 @@ input {
   font-size: 14px;
   color: #ddd;
 }
+
+.cart-icon{
+  color:#000;
+  text-decoration:none;
+  font-size:20px;
+}
