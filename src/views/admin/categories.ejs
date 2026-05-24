@@ -19,34 +19,7 @@
 <div class="layout">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
-
-    <h3>MENU</h3>
-
-    <ul>
-
-      <li><a href="/admin/dashboard">Dashboard</a></li>
-      <li><a href="#">Products</a></li>
-      <li><a href="#">Category</a></li>
-      <li><a href="#">Orders</a></li>
-      <li><a href="#">Coupon</a></li>
-      <li><a href="#">Transaction</a></li>
-      <li><a href="#">Offer</a></li>
-
-      <h4>User Management</h4>
-
-      <li><a href="#">Manage Admins</a></li>
-      <li><a href="/admin/users">Customers</a></li>
-
-      <h4>Others</h4>
-
-      <li><a href="#">Settings</a></li>
-      <li><a href="#">Help</a></li>
-      <li><a href="/admin/logout">Logout</a></li>
-
-    </ul>
-
-  </div>
+<%- include("../partials/admin-sidebar") %>
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
@@ -161,9 +134,9 @@
 
                 <div class="category-info">
 
-                  <div class="category-image">
+                  <!-- <div class="category-image">
                     <i class="fa-regular fa-image"></i>
-                  </div>
+                  </div> -->
 
                   <span><%= category.name %></span>
 

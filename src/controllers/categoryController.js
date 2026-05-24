@@ -11,7 +11,7 @@ exports.getCategories = async (req, res) => {
 
         // PAGINATION
         const page = parseInt(req.query.page) || 1;
-        const limit = 5;
+        const limit = 4;
 
         // SERVICE
         const result = await categoryService.getCategories(
