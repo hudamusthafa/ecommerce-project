@@ -80,6 +80,16 @@
                 High Quality Jewellery
               </p>
 
+              <!-- out of stock -->
+              <% if(item.product.stock <= 0){ %>
+
+                <p class="out-stock-msg">
+                  Out Of Stock
+                </p>
+
+              <% } %>
+
+
                     <!-- REMOVE -->
           <a
             href="/cart/remove/<%= item.product._id %>"
@@ -173,11 +183,33 @@
 
         </p>
 
-        <button class="checkout-btn">
+<!-- restrict checkout for out of stock -->
 
-          Proceed To Checkout
+          <%
 
-        </button>
+    const hasOutOfStock=cart.items.some(
+
+      item => item.product.stock <= 0
+
+    );
+
+  %>
+
+  <button
+
+    class="checkout-btn"
+
+    <% if(hasOutOfStock){ %>
+
+      disabled
+
+    <% } %>
+
+  >
+
+    Proceed To Checkout
+
+  </button>
 
       </div>
 

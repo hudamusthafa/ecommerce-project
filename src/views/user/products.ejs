@@ -265,12 +265,29 @@
 
                     </a>
 
-                    <a
-                      href="/cart/add/<%= product._id %>"
-                      class="cart-btn"
-                    >
-                      Add To Cart
-                    </a>
+                   <% if(product.stock > 0){ %>
+
+                      <a
+                        href="/cart/add/<%= product._id %>"
+                        class="cart-btn"
+                      >
+
+                        Add To Cart
+
+                      </a>
+
+                    <% } else { %>
+
+                      <button
+                        class="out-stock-btn"
+                        disabled
+                      >
+
+                        Out Of Stock
+
+                      </button>
+
+                    <% } %>
 
                   </div>
 

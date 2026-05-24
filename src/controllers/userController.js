@@ -250,7 +250,7 @@ exports.getProductsPage=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error);
+   
     res.redirect("/home");
 
   }
@@ -289,7 +289,7 @@ exports.getProductDetails=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error);
+    
     res.redirect("/products?error=productUnavailable");
   }
 
@@ -310,7 +310,7 @@ exports.addToCart=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error);
+   
     res.redirect("/products");
   }
 
@@ -382,7 +382,7 @@ exports.removeCartProduct=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error);
+   
     res.redirect("/cart");
   }
 };

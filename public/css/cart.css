@@ -197,3 +197,24 @@ body{
   margin-top:8px;
   font-weight:600;
 }
+.out-stock-msg{
+  color:red;
+  font-size:14px;
+  font-weight:600;
+  margin-top:5px;
+}
+.checkout-btn:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+.out-stock-msg{
+  color:red;
+  font-size:13px;
+  font-weight:600;
+  margin-left:10px;
+}
+
+.cart-quantity button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}

@@ -273,3 +273,13 @@ body{
   border-radius:6px;
   text-decoration:none;
 }
+.out-stock-btn{
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  background:#999;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:not-allowed;
+}
