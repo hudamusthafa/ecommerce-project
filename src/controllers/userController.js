@@ -330,13 +330,15 @@ exports.getCart=async(req,res)=>{
       "user/cart",
       {
         cart,
-        user:req.user || null
+        user:req.user || null,
+         error:req.query.error,
+         productId:req.query.productId
       }
     );
   }
 
   catch(error){
-    console.log(error);
+  
     res.redirect("/products");
 
   }
@@ -358,8 +360,10 @@ exports.updateCartQuantity=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error);
-    res.redirect("/cart");
+    res.redirect("/cart?error=" + encodeURIComponent(error.message) 
+ + "&productId=" + req.params.productId
+  );
+
   }
 };
 

@@ -80,6 +80,14 @@
                 High Quality Jewellery
               </p>
 
+                    <!-- REMOVE -->
+          <a
+            href="/cart/remove/<%= item.product._id %>"
+            class="remove-btn"
+          >
+            Remove
+          </a>
+
             </div>
 
           </div>
@@ -92,6 +100,7 @@
 
           </div>
 
+        
           <!-- QUANTITY -->
 
           <div class="cart-quantity">
@@ -110,6 +119,24 @@
 
             </div>
 
+             <!-- error msg -->
+          <% if(
+
+              error &&
+
+              productId == item.product._id.toString()
+
+            ){ %>
+
+              <p class="item-error">
+
+                <%= error %>
+
+              </p>
+
+            <% } %>
+
+
           <!-- SUBTOTAL -->
 
           <div class="cart-subtotal">
@@ -118,14 +145,7 @@
 
           </div>
 
-         <!-- REMOVE -->
-          <a
-            href="/cart/remove/<%= item.product._id %>"
-            class="remove-btn"
-          >
-            Remove
-          </a>
-
+      
         </div>
 
       <% }) %>

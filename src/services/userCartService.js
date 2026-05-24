@@ -106,9 +106,14 @@ exports.updateQuantity=async(
     // STOCK VALIDATION
     if(item.quantity >= product.stock){
       throw new Error("Stock limit reached");
+}
+
+    // MAX LIMIT
+    if(item.quantity >= 5){
+      throw new Error("Maximum quantity reached");
     }
-    item.quantity += 1;
-  }
+        item.quantity += 1;
+      }
 
   // DECREMENT
   else if(action === "decrease"){

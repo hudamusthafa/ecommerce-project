@@ -186,3 +186,14 @@ body{
   font-size:14px;
   font-weight:600;
 }
+.cart-error{
+  color:red;
+  margin-bottom:20px;
+  font-weight:600;
+}
+.item-error{
+  color:red;
+  font-size:13px;
+  margin-top:8px;
+  font-weight:600;
+}
