@@ -53,15 +53,28 @@
 
           <div class="cart-product">
 
-            <img
-              src="/images/<%= item.product.images[0] %>"
+            <a
+              href="/products/<%= item.product._id %>"
             >
+
+              <img
+                src="/images/<%= item.product.images[0] %>"
+              >
+
+            </a>
 
             <div>
 
-              <h4>
-                <%= item.product.name %>
-              </h4>
+              <a
+                href="/products/<%= item.product._id %>"
+                class="cart-product-link"
+              >
+
+                <h4>
+                  <%= item.product.name %>
+                </h4>
+
+              </a>
 
               <p>
                 High Quality Jewellery
@@ -83,15 +96,19 @@
 
           <div class="cart-quantity">
 
-            <button>-</button>
+              <a href="/cart/update/<%= item.product._id %>?action=decrease" >
+                <button>-</button>
+              </a>
 
-            <span>
-              <%= item.quantity %>
-            </span>
+              <span><%= item.quantity %></span>
+                
+              
 
-            <button>+</button>
+              <a href="/cart/update/<%= item.product._id %>?action=increase" >
+                <button>+</button>
+              </a>
 
-          </div>
+            </div>
 
           <!-- SUBTOTAL -->
 
@@ -101,9 +118,19 @@
 
           </div>
 
+         <!-- REMOVE -->
+          <a
+            href="/cart/remove/<%= item.product._id %>"
+            class="remove-btn"
+          >
+            Remove
+          </a>
+
         </div>
 
       <% }) %>
+
+    
 
       <!-- TOTAL -->
 

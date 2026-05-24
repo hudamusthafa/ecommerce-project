@@ -74,3 +74,67 @@ exports.getCart=async(userId)=>{
   })
   .populate("items.product");
 };
+
+// UPDATE QUANTITY
+
+exports.updateQuantity=async(
+
+  userId,
+  productId,
+  action
+
+)=>{
+
+  const cart=await Cart.findOne({ user:userId});
+
+  if(!cart){
+    throw new Error("Cart not found");
+  }
+
+  const item=cart.items.find(
+    item => item.product.toString() === productId
+  );
+
+  if(!item){
+    throw new Error("Product not found");
+  }
+
+  const product=await Product.findById(productId);
+
+  // INCREMENT
+  if(action === "increase"){
+    // STOCK VALIDATION
+    if(item.quantity >= product.stock){
+      throw new Error("Stock limit reached");
+    }
+    item.quantity += 1;
+  }
+
+  // DECREMENT
+  else if(action === "decrease"){
+    if(item.quantity > 1){
+      item.quantity -= 1;
+    }
+  }
+  await cart.save();
+  return cart;
+};
+
+// REMOVE PRODUCT
+
+exports.removeCartProduct=async(userId,productId)=>{
+
+  const cart=await Cart.findOne({user:userId});
+
+  if(!cart){
+    throw new Error("Cart not found");
+  }
+
+  cart.items=cart.items.filter(
+    item => item.product.toString() !== productId
+  );
+
+  await cart.save();
+  return cart;
+
+};

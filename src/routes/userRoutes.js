@@ -97,5 +97,10 @@ router.get("/cart/add/:productId", isLoggedIn, userController.addToCart);
 //SHOW CART
 router.get("/cart",isLoggedIn,userController.getCart);
 
+//QUANTITY UPDATE
+router.get("/cart/update/:productId",isLoggedIn, userController.updateCartQuantity);
+
+//REMOVE PRODUCT
+router.get( "/cart/remove/:productId", isLoggedIn, userController.removeCartProduct);
 
 module.exports = router;

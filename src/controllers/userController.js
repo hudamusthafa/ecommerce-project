@@ -344,6 +344,51 @@ exports.getCart=async(req,res)=>{
 };
 
 
+//CART QUANTITY UPDATE
+exports.updateCartQuantity=async(req,res)=>{
+
+  try{
+
+    await userCartService.updateQuantity(
+      req.user._id,
+      req.params.productId,
+      req.query.action
+    );
+    res.redirect("/cart");
+  }
+
+  catch(error){
+    console.log(error);
+    res.redirect("/cart");
+  }
+};
+
+
+//REMOVE PRODUCT
+
+exports.removeCartProduct=async(req,res)=>{
+
+  try{
+
+    await userCartService.removeCartProduct(
+      req.user._id,
+      req.params.productId
+    );
+    res.redirect("/cart");
+  }
+
+  catch(error){
+    console.log(error);
+    res.redirect("/cart");
+  }
+};
+
+
+
+
+
+
+
 
 
 // CHECKOUT
