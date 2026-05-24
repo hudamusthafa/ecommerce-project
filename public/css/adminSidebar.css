@@ -47,3 +47,10 @@
 .sidebar li a:hover{
   color: #ff6b4a;
 }
+.sidebar{
+  position:fixed;
+  z-index:9999;
+}
+.main-content{
+  margin-left:250px;
+}

@@ -53,6 +53,20 @@
               value="<%= search || '' %>"
             >
 
+
+             <% if(search){ %>
+
+              <a href="/admin/categories" class="clear-search">
+                <i class="fa-solid fa-xmark"></i>
+              </a>
+
+            <% } else { %>
+
+              <i class="fa-solid fa-xmark dummy-x"></i>
+
+            <% } %>
+
+
           </div>
 
         </form>
