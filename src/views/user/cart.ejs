@@ -10,7 +10,6 @@
   </title>
 
   <link rel="stylesheet" href="/css/layout.css">
-
   <link rel="stylesheet" href="/css/cart.css">
 
 </head>
@@ -34,11 +33,8 @@
       <div class="cart-header">
 
         <span>Product</span>
-
         <span>Price</span>
-
         <span>Quantity</span>
-
         <span>Subtotal</span>
 
       </div>
@@ -53,9 +49,7 @@
 
           <div class="cart-product">
 
-            <a
-              href="/products/<%= item.product._id %>"
-            >
+            <a href="/products/<%= item.product._id %>">
 
               <img
                 src="/images/<%= item.product.images[0] %>"
@@ -80,7 +74,8 @@
                 High Quality Jewellery
               </p>
 
-              <!-- out of stock -->
+              <!-- OUT OF STOCK -->
+
               <% if(item.product.stock <= 0){ %>
 
                 <p class="out-stock-msg">
@@ -89,14 +84,16 @@
 
               <% } %>
 
+              <!-- REMOVE -->
 
-                    <!-- REMOVE -->
-          <a
-            href="/cart/remove/<%= item.product._id %>"
-            class="remove-btn"
-          >
-            Remove
-          </a>
+              <a
+                href="/cart/remove/<%= item.product._id %>"
+                class="remove-btn"
+              >
+
+                Remove
+
+              </a>
 
             </div>
 
@@ -110,57 +107,91 @@
 
           </div>
 
-        
           <!-- QUANTITY -->
 
           <div class="cart-quantity">
 
-              <a href="/cart/update/<%= item.product._id %>?action=decrease" >
-                <button>-</button>
-              </a>
+            <a
+              href="/cart/update/<%= item.product._id %>?action=decrease"
+            >
 
-              <span><%= item.quantity %></span>
-                
-              
+              <button>
+                -
+              </button>
 
-              <a href="/cart/update/<%= item.product._id %>?action=increase" >
-                <button>+</button>
-              </a>
+            </a>
 
-            </div>
+            <span>
+              <%= item.quantity %>
+            </span>
 
-             <!-- error msg -->
+            <a
+              href="/cart/update/<%= item.product._id %>?action=increase"
+            >
+
+              <button
+                <% if(item.product.stock <= 0){ %>
+                  disabled
+                <% } %>
+              >
+                +
+              </button>
+
+            </a>
+
+          </div>
+
+          <!-- ERROR MESSAGE -->
+
           <% if(
 
-              error &&
+            error &&
 
-              productId == item.product._id.toString()
+            productId == item.product._id.toString()
 
-            ){ %>
+          ){ %>
 
-              <p class="item-error">
+            <p class="item-error">
 
-                <%= error %>
+              <%= error %>
 
-              </p>
+            </p>
 
-            <% } %>
-
+          <% } %>
 
           <!-- SUBTOTAL -->
 
           <div class="cart-subtotal">
 
-            ₹ <%= item.product.price * item.quantity %>
+            <% if(item.product.stock > 0){ %>
+
+              ₹ <%= item.product.price * item.quantity %>
+
+            <% } else { %>
+
+              ₹ 0
+
+            <% } %>
 
           </div>
 
-      
         </div>
 
       <% }) %>
 
-    
+      <!-- AVAILABLE PRODUCT CHECK -->
+
+      <%
+
+        const hasAvailableProducts =
+
+          cart.items.some(
+
+            item => item.product.stock > 0
+
+          );
+
+      %>
 
       <!-- TOTAL -->
 
@@ -175,41 +206,40 @@
           Total :
 
           ₹
-          <%= cart.items.reduce((total,item)=>
 
-            total + (item.product.price * item.quantity)
+          <%= cart.items.reduce((total,item)=>{
 
-          ,0) %>
+            if(item.product.stock > 0){
+
+              return total +
+
+                (item.product.price * item.quantity);
+
+            }
+
+            return total;
+
+          },0) %>
 
         </p>
 
-<!-- restrict checkout for out of stock -->
+        <!-- CHECKOUT BUTTON -->
 
-          <%
+        <button
 
-    const hasOutOfStock=cart.items.some(
+          class="checkout-btn"
 
-      item => item.product.stock <= 0
+          <% if(!hasAvailableProducts){ %>
 
-    );
+            disabled
 
-  %>
+          <% } %>
 
-  <button
+        >
 
-    class="checkout-btn"
+          Proceed To Checkout
 
-    <% if(hasOutOfStock){ %>
-
-      disabled
-
-    <% } %>
-
-  >
-
-    Proceed To Checkout
-
-  </button>
+        </button>
 
       </div>
 
@@ -268,7 +298,6 @@
   </div>
 
 </div>
-
 
 <%- include("../partials/footer") %>
 
