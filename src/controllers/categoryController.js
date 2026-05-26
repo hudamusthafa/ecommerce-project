@@ -6,7 +6,7 @@ exports.getCategories = async (req, res) => {
 
   try {
 
-        // SEARCH
+        // SEARCH 
         const search = req.query.search || "";
 
         // PAGINATION

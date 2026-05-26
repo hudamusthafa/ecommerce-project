@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const session = require("express-session");
 const methodOverride = require("method-override");
+const errorMiddleware = require("./src/middleware/errorMiddleware");
 
 dotenv.config();
 
@@ -13,7 +14,8 @@ require("./src/config/passport");
 // Routes
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
-const adminRoutes = require("./src/routes/adminRoutes");   // 👈 NEW
+const adminRoutes = require("./src/routes/adminRoutes");
+  
 
 const app = express();
 
@@ -21,6 +23,7 @@ const app = express();
 connectDB();
 
 // Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -31,7 +34,7 @@ app.set("views", path.join(__dirname, "src/views"));
 
 // Session configuration
 app.use(session({
-  secret: "secretkey",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
    cookie: {
@@ -82,6 +85,9 @@ app.use("/", authRoutes);
 app.use("/", userRoutes);   //  All page routes here
 app.use("/admin", adminRoutes);
 
+
+// Error middleware
+app.use(errorMiddleware);
 
 // Server
 app.listen(process.env.PORT, () => {

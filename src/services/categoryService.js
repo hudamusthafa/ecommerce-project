@@ -6,7 +6,7 @@ exports.getCategories = async (search, page, limit) => {
 
   const query = {};
 
-  // SEARCH
+  // CHECK SEARCH VALUE EXISTS
   if (search) {
     query.name = {
       $regex: search,

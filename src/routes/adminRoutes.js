@@ -55,7 +55,7 @@ router.get("/logout", (req, res, next) => {
 // CATEGORY MANAGEMENT
 
 // LIST PAGE
-router.get("/categories",categoryController.getCategories);
+router.get("/categories",isAdminLoggedIn,categoryController.getCategories);
 
 // ADD CATEGORY PAGE
 router.get("/add-category",categoryController.getAddCategory);
@@ -77,7 +77,7 @@ router.delete("/delete-category/:id",categoryController.deleteCategory);
 // ===================== PRODUCT MANAGEMENT
 
 // LIST PAGE
-router.get("/products",productController.getProducts);
+router.get("/products",isAdminLoggedIn,productController.getProducts);
 
 // ADD PRODUCT PAGE
 router.get("/add-product",productController.getAddProduct);

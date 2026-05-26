@@ -25,7 +25,7 @@ exports.getProducts=async(query)=>{
   // PAGINATION
   const page=parseInt(query.page) || 1;
 
-  const limit=4;
+  const limit=6;
 
   const skip=(page-1)*limit;
 
@@ -43,9 +43,7 @@ exports.getProducts=async(query)=>{
 
   // CATEGORY FILTER
   if(category){
-
     filter.category=category;
-
   }
 
   // PRICE FILTER

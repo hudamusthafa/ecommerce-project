@@ -49,7 +49,7 @@ exports.getAddProduct = async (req, res) => {
   try {
 
     const categories =
-      await categoryService.getActiveCategories();
+       await categoryService.getActiveCategories();
 
     const error =
       req.session.error;
@@ -121,7 +121,6 @@ for(const file of imageFiles){
   await sharp(file.path)
 
     .resize(500, 500)
-
     .toFile(
       path.join(
         "public/images",

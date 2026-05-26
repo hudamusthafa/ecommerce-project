@@ -75,6 +75,7 @@ exports.getCart=async(userId)=>{
   .populate("items.product");
 };
 
+
 // UPDATE QUANTITY
 
 exports.updateQuantity=async(
@@ -99,6 +100,7 @@ exports.updateQuantity=async(
     throw new Error("Product not found");
   }
 
+  //find original product
   const product=await Product.findById(productId);
 
   // INCREMENT
