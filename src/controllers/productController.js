@@ -1,138 +1,98 @@
-const productService = require("../services/productService");
-const categoryService = require("../services/categoryService");
-const sharp = require("sharp");
-const fs = require("fs");
-const path = require("path");
+const productService=require("../services/productService");
+const categoryService=require("../services/categoryService");
+const sharp=require("sharp");
+const fs=require("fs");
+const path=require("path");
 
-// PRODUCT LIST PAGE
-exports.getProducts = async (req, res) => {
+//==================== PRODUCT LIST PAGE===========
 
-  try {
+exports.getProducts=async(req,res,next)=>{
+  try{
 
     // SEARCH
-    const search = req.query.search || "";
+    const search=req.query.search||"";
 
     // PAGINATION
-    const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const page=parseInt(req.query.page)||1;
+    const limit=5;
 
     // SERVICE
-    const result = await productService.getProducts(
-      search,
-      page,
-      limit
-    );
+    const result=await productService.getProducts(search,page,limit);
 
     // RENDER
-    res.render("admin/products", {
-      products: result.products,
-      total: result.total,
-      totalPages: result.totalPages,
-      currentPage: page,
+    res.render("admin/products",{
+      products:result.products,
+      total:result.total,
+      totalPages:result.totalPages,
+      currentPage:page,
       search
     });
 
-  } catch (error) {
-
-    console.log(error);
-
-    res.redirect("/admin/dashboard");
-
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
-
 };
 
+// ==========ADD PRODUCT PAGE=============
 
-// GET ADD PRODUCT PAGE
-exports.getAddProduct = async (req, res) => {
+exports.getAddProduct=async(req,res,next)=>{
+  try{
 
-  try {
+    const categories=await categoryService.getActiveCategories();
+    const error=req.session.error;
 
-    const categories =
-       await categoryService.getActiveCategories();
+    req.session.error=null;
 
-    const error =
-      req.session.error;
-
-    req.session.error = null;
-
-    res.render("admin/add-product", {
+    res.render("admin/add-product",{
       categories,
       error
     });
 
-  } catch (error) {
-
-    console.log(error);
-
-    res.redirect("/admin/products");
-
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
-
 };
 
+// =============ADD PRODUCT==============
 
-// ADD PRODUCT
-exports.addProduct = async (req, res) => {
+exports.addProduct=async(req,res,next)=>{
+  try{
 
-  try {
+    const {name,description,price,stock,category}=req.body;
 
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category
-    } = req.body;
-
-    // VALIDATION
-    if(
-      !name ||
-      !description ||
-      !price ||
-      !stock ||
-      !category
-    ){
-
-      req.session.error =  "All fields are required";
+    // EMPTY VALIDATION
+    if(!name || !description || !price || !stock || !category){
+      req.session.error="All fields are required";
       return res.redirect("/admin/add-product");
     }
 
-    const imageFiles = req.files || [];
+    const imageFiles=req.files||[];
 
     // MINIMUM 3 IMAGES
-    if(imageFiles.length < 3){
-
-      req.session.error = "Minimum 3 images required";
+    if(imageFiles.length<3){
+      req.session.error="Minimum 3 images required";
       return res.redirect("/admin/add-product");
     }
 
     // IMAGE ARRAY
-  
-const images = [];
+    const images=[];
 
-for(const file of imageFiles){
+    for(const file of imageFiles){
 
-  const filename =
-    "product-" +
-    Date.now() +
-    path.extname(file.originalname);
+      const filename="product-"+Date.now()+path.extname(file.originalname);
 
-  await sharp(file.path)
+      await sharp(file.path)
+        .resize(500,500)
+        .toFile(path.join("public/images",filename));
 
-    .resize(500, 500)
-    .toFile(
-      path.join(
-        "public/images",
-        filename
-      )
-    );
+      images.push(filename);
 
-  images.push(filename);
-  // DELETE TEMP FILE
-  fs.unlinkSync(file.path);
+      // DELETE TEMP FILE
+      fs.unlinkSync(file.path);
+    }
 
-}
     // SAVE PRODUCT
     await productService.addProduct({
       name,
@@ -141,179 +101,142 @@ for(const file of imageFiles){
       stock,
       category,
       images
-
     });
+
     res.redirect("/admin/products");
 
-  } catch (error) {
-    console.log(error);
-    res.redirect("/admin/products");
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
 };
 
+//================= EDIT PRODUCT PAGE ==============
 
-// GET EDIT PRODUCT PAGE
-exports.getEditProduct = async (req, res) => {
+exports.getEditProduct=async(req,res,next)=>{
+  try{
 
-  try {
-    const product = await productService.getProductById(req.params.id);
-    const categories = await categoryService.getActiveCategories();
-    const error = req.session.error;
-    req.session.error = null;
-    res.render("admin/edit-product", {
+    const product=await productService.getProductById(req.params.id);
 
+    // PRODUCT NOT FOUND
+    if(!product){
+      const error=new Error("Product not found");
+      error.statusCode=404;
+      return next(error);
+    }
+
+    const categories=await categoryService.getActiveCategories();
+    const errorMessage=req.session.error;
+
+    req.session.error=null;
+
+    res.render("admin/edit-product",{
       product,
       categories,
-      error
-
+      error:errorMessage
     });
 
-  } catch (error) {
-    console.log(error);
-    res.redirect("/admin/products");
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
 };
 
+// ================UPDATE PRODUCT======================
+exports.updateProduct=async(req,res,next)=>{
+  try{
 
-// UPDATE PRODUCT
-exports.updateProduct = async (req, res) => {
-
-  try {
-
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category
-    } = req.body;
+    const {name,description,price,stock,category}=req.body;
 
     // EMPTY VALIDATION
-    if(
-      !name ||
-      !description ||
-      !price ||
-      !stock ||
-      !category
-    ){
-
-      req.session.error =
-        "All fields are required";
-
-      return res.redirect(
-        "/admin/edit-product/" +
-        req.params.id
-      );
-
+    if(!name || !description || !price || !stock || !category){
+      req.session.error="All fields are required";
+      return res.redirect("/admin/edit-product/"+req.params.id);
     }
 
     // EXISTING PRODUCT
-    const product =
-      await productService.getProductById(
-        req.params.id
-      );
+    const product=await productService.getProductById(req.params.id);
+
+    // PRODUCT NOT FOUND
+    if(!product){
+      const error=new Error("Product not found");
+      error.statusCode=404;
+      return next(error);
+    }
 
     // REMOVED IMAGES
     let removedImages=[];
 
     if(req.body.removedImages){
-
-      removedImages=
-        JSON.parse(
-          req.body.removedImages
-        );
-
+      removedImages=JSON.parse(req.body.removedImages);
     }
 
-    // KEEP REMAINING OLD IMAGES
-    let images=
-      product.images.filter(
-        image=>
-          !removedImages.includes(
-            image
-          )
-      );
+    // KEEP OLD IMAGES
+    let images=product.images.filter(image=>!removedImages.includes(image));
 
     // NEW IMAGES
     if(req.files && req.files.length>0){
 
       for(const file of req.files){
 
-        const filename=
-          "product-"+
-          Date.now()+
-          path.extname(
-            file.originalname
-          );
+        const filename="product-"+Date.now()+path.extname(file.originalname);
 
         await sharp(file.path)
-
           .resize(500,500)
-
-          .toFile(
-            path.join(
-              "public/images",
-              filename
-            )
-          );
+          .toFile(path.join("public/images",filename));
 
         images.push(filename);
 
         // DELETE TEMP FILE
         fs.unlinkSync(file.path);
-
       }
-
     }
 
-    // FINAL IMAGE VALIDATION
+    // MINIMUM IMAGE VALIDATION
     if(images.length<3){
-
-      req.session.error=
-        "Minimum 3 images required";
-
-      return res.redirect(
-        "/admin/edit-product/" +
-        req.params.id
-      );
-
+      req.session.error="Minimum 3 images required";
+      return res.redirect("/admin/edit-product/"+req.params.id);
     }
 
     // UPDATE PRODUCT
-    await productService.updateProduct(
-      req.params.id,
-      {
-        name,
-        description,
-        price,
-        stock,
-        category,
-        images
-      }
-    );
+    await productService.updateProduct(req.params.id,{
+      name,
+      description,
+      price,
+      stock,
+      category,
+      images
+    });
 
     res.redirect("/admin/products");
 
-  } catch (error) {
-
-    console.log(error);
-
-    res.redirect("/admin/products");
-
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
-
 };
 
-// DELETE PRODUCT
-exports.deleteProduct = async (req, res) => {
+// ==========DELETE PRODUCT==========
 
-  try {
+exports.deleteProduct=async(req,res,next)=>{
+  try{
 
-    await productService.softDeleteProduct( req.params.id);
+    const product=await productService.getProductById(req.params.id);
+
+    // PRODUCT NOT FOUND
+    if(!product){
+      const error=new Error("Product not found");
+      error.statusCode=404;
+      return next(error);
+    }
+
+    // SOFT DELETE
+    await productService.softDeleteProduct(req.params.id);
+
     res.redirect("/admin/products");
 
-  } catch (error) {
-    console.log(error);
-    res.redirect("/admin/products");
+  }catch(error){
+    error.statusCode=500;
+    next(error);
   }
 };
