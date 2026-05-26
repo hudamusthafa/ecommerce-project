@@ -1,100 +1,60 @@
-const express = require("express");
-const router = express.Router();
-const adminController = require("../controllers/adminController");
-const { isAdminLoggedIn ,isAdminLoggedOut } = require("../middleware/authMiddleware");
-const { noCache } = require("../middleware/cacheMiddleware");
-const categoryController = require("../controllers/categoryController");
-const productController = require("../controllers/productController");
-const upload = require("../config/multer");
+const express=require("express"),router=express.Router();
+const adminController=require("../controllers/adminController");
+const categoryController=require("../controllers/categoryController");
+const productController=require("../controllers/productController");
 
+const {isAdminLoggedIn,isAdminLoggedOut}=require("../middleware/authMiddleware");
+const {noCache}=require("../middleware/cacheMiddleware");
+const upload=require("../config/multer");
 
-// GET login page
-router.get("/login",noCache, isAdminLoggedOut, adminController.getLogin);
+// ADMIN LOGIN
+router.get("/login",noCache,isAdminLoggedOut,adminController.getLogin);
+router.post("/login",isAdminLoggedOut,adminController.postLogin);
 
-// POST login
-router.post("/login", adminController.postLogin);
+// DASHBOARD
+router.get("/dashboard",noCache,isAdminLoggedIn,adminController.getDashboard);
 
-// dashboard 
-router.get("/dashboard",  noCache, isAdminLoggedIn,adminController.getDashboard);
+// USER MANAGEMENT
+router.get("/users",noCache,isAdminLoggedIn,adminController.getUsers);
+router.patch("/block-user/:id",isAdminLoggedIn,adminController.blockUser);
+router.patch("/unblock-user/:id",isAdminLoggedIn,adminController.unblockUser);
 
-//usermanagemnt
-router.get("/users", noCache, isAdminLoggedIn,adminController.getUsers);
-router.patch("/block-user/:id", adminController.blockUser);
-router.patch("/unblock-user/:id", adminController.unblockUser);
+// ADD USER
+router.get("/add-user",noCache,isAdminLoggedIn,adminController.getAddUser);
+router.post("/add-user",isAdminLoggedIn,adminController.postAddUser);
 
-//add user
-router.get("/add-user",noCache, isAdminLoggedIn, adminController.getAddUser);
-router.post("/add-user", adminController.postAddUser);
+// EDIT USER
+router.get("/edit-user/:id",isAdminLoggedIn,adminController.getEditUser);
+router.put("/edit-user/:id",isAdminLoggedIn,adminController.postEditUser);
 
-//edit user
-router.get("/edit-user/:id", adminController.getEditUser);
-router.put("/edit-user/:id", adminController.postEditUser);
+// DELETE USER
+router.delete("/delete-user/:id",isAdminLoggedIn,adminController.deleteUser);
 
-
-//delete user
-router.delete("/delete-user/:id", adminController.deleteUser);
-
-//logout
-router.get("/logout", (req, res, next) => {
-  req.logout(function (err) {
-    if (err) return next(err);
-
-    req.session.destroy(() => {
-      res.clearCookie("connect.sid"); 
+// LOGOUT
+router.get("/logout",isAdminLoggedIn,(req,res,next)=>{
+  req.logout(err=>{
+    if(err) return next(err);
+    req.session.destroy(()=>{
+      res.clearCookie("connect.sid");
       res.redirect("/admin/login");
     });
   });
 });
 
-
-
-
-
-//===========week2===============
-
 // CATEGORY MANAGEMENT
-
-// LIST PAGE
 router.get("/categories",isAdminLoggedIn,categoryController.getCategories);
+router.get("/add-category",isAdminLoggedIn,categoryController.getAddCategory);
+router.post("/add-category",isAdminLoggedIn,categoryController.addCategory);
+router.get("/edit-category/:id",isAdminLoggedIn,categoryController.getEditCategory);
+router.put("/edit-category/:id",isAdminLoggedIn,categoryController.updateCategory);
+router.delete("/delete-category/:id",isAdminLoggedIn,categoryController.deleteCategory);
 
-// ADD CATEGORY PAGE
-router.get("/add-category",categoryController.getAddCategory);
-
-// ADD CATEGORY
-router.post("/add-category",categoryController.addCategory);
-
-// EDIT CATEGORY PAGE
-router.get("/edit-category/:id",categoryController.getEditCategory);
-
-// UPDATE CATEGORY
-router.put("/edit-category/:id",categoryController.updateCategory);
-
-// SOFT DELETE CATEGORY
-router.delete("/delete-category/:id",categoryController.deleteCategory);
-
-
-
-// ===================== PRODUCT MANAGEMENT
-
-// LIST PAGE
+// PRODUCT MANAGEMENT
 router.get("/products",isAdminLoggedIn,productController.getProducts);
+router.get("/add-product",isAdminLoggedIn,productController.getAddProduct);
+router.post("/add-product",isAdminLoggedIn,upload.array("images",5),productController.addProduct);
+router.get("/edit-product/:id",isAdminLoggedIn,productController.getEditProduct);
+router.put("/edit-product/:id",isAdminLoggedIn,upload.array("images",5),productController.updateProduct);
+router.delete("/delete-product/:id",isAdminLoggedIn,productController.deleteProduct);
 
-// ADD PRODUCT PAGE
-router.get("/add-product",productController.getAddProduct);
-// ADD PRODUCT
-router.post( "/add-product",upload.array("images", 5),productController.addProduct);
-
-
-// GET EDIT PRODUCT PAGE
-router.get("/edit-product/:id",productController.getEditProduct);
-
-// UPDATE PRODUCT
-router.put("/edit-product/:id",
-  upload.array("images", 5),
-  productController.updateProduct
-);
-
-// DELETE PRODUCT
-router.delete("/delete-product/:id",productController.deleteProduct);
-
-module.exports = router;
+module.exports=router;
