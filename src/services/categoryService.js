@@ -37,9 +37,7 @@ exports.getCategories = async (search, page, limit) => {
 
 exports.getActiveCategories = async () => {
 
-  return await Category.find({
-    isDeleted: false
-  });
+  return await Category.find();
 
 };
 

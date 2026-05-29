@@ -413,3 +413,108 @@ td{
   font-size:40px;
   cursor:pointer;
 }
+/* ======================================================
+================ PRODUCT FILTER SECTION =================
+====================================================== */
+
+.filter-form{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-form select{
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+}
+
+.filter-form select:focus{
+  border-color: #ff6b35;
+}
+
+.filter-btn{
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: #ff6b35;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.filter-btn:hover{
+  background: #e85d2a;
+}
+
+.clear-btn{
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.clear-btn:hover{
+  text-decoration: underline;
+}
+
+/* SEARCH INPUT IMPROVEMENT */
+
+.search-input{
+  width: 270px;
+  height: 44px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+}
+
+.search-input input{
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  background: transparent;
+}
+
+/* TOP SECTION */
+
+.top-section{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 992px){
+
+  .filter-form{
+    width: 100%;
+  }
+
+  .search-input{
+    width: 100%;
+  }
+
+  .filter-form select{
+    flex: 1;
+    min-width: 160px;
+  }
+
+}

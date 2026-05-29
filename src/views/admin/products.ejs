@@ -36,40 +36,94 @@
         <h1>Products</h1>
 
         <!-- SEARCH -->
-        <form
-          action="/admin/products"
-          method="GET"
-          class="search-box"
-        >
+        <!-- SEARCH + FILTER -->
+<form action="/admin/products" method="GET" class="search-box filter-form">
 
-          <div class="search-input">
+  <!-- SEARCH -->
+  <div class="search-input">
+    <i class="fa-solid fa-magnifying-glass"></i>
 
-            <i class="fa-solid fa-magnifying-glass"></i>
+    <input
+      type="text"
+      name="search"
+      placeholder="Search Product"
+      value="<%= search || '' %>"
+    >
+  </div>
 
-            <input
-              type="text"
-              name="search"
-              placeholder="Search Bar"
-              value="<%= search || '' %>"
-            >
+<!-- CLEAR BUTTON -->
+<a
+  href="/admin/products"
+  class="clear-btn"
+>
+  Clear
+</a>
 
+  <!-- CATEGORY FILTER -->
+  <select name="category" onchange="this.form.submit()">
 
-             <% if(search){ %>
+    <option value="">All Categories</option>
 
-              <a href="/admin/categories" class="clear-search">
-                <i class="fa-solid fa-xmark"></i>
-              </a>
+    <% categories.forEach(function(cat){ %>
 
-            <% } else { %>
+      <option
+        value="<%= cat._id %>"
+        <%= category==cat._id.toString() ? "selected" : "" %>
+      >
+        <%= cat.name %>
+      </option>
 
-              <i class="fa-solid fa-xmark dummy-x"></i>
+    <% }) %>
 
-            <% } %>
+  </select>
 
+  <!-- STOCK FILTER -->
+  <select name="stock"  onchange="this.form.submit()">
 
-          </div>
+    <option value="">All Stock</option>
 
-        </form>
+    <option
+      value="inStock"
+      <%= stock==="inStock" ? "selected" : "" %>
+    >
+      In Stock
+    </option>
+
+    <option
+      value="outOfStock"
+      <%= stock==="outOfStock" ? "selected" : "" %>
+    >
+      Out Of Stock
+    </option>
+
+  </select>
+
+  <!-- STATUS FILTER -->
+  <select name="status"  onchange="this.form.submit()">
+
+    <option value="">All Status</option>
+
+    <option
+      value="listed"
+      <%= status==="listed" ? "selected" : "" %>
+    >
+      Listed
+    </option>
+
+    <option
+      value="archived"
+      <%= status==="archived" ? "selected" : "" %>
+    >
+      Archived
+    </option>
+
+  </select>
+
+ 
+
+  
+
+</form>
 
       </div>
 
@@ -271,46 +325,38 @@
         </table>
 
         <!-- PAGINATION -->
-        <div class="pagination">
+<div class="pagination">
 
-          <% if(currentPage > 1){ %>
+  <% if(currentPage>1){ %>
 
-            <a
-              href="/admin/products?page=<%= currentPage - 1 %>&search=<%= search %>"
-            >
-              Prev
-            </a>
+    <a
+      href="/admin/products?page=<%= currentPage-1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+    >
+      Prev
+    </a>
 
-          <% } %>
+  <% } %>
 
-          <% for(let i = 1; i <= totalPages; i++){ %>
+  <% for(let i=1;i<=totalPages;i++){ %>
 
-            <a
-              href="/admin/products?page=<%= i %>&search=<%= search %>"
-              class="<%= currentPage === i ? 'active-page' : '' %>"
-            >
-              <%= i %>
-            </a>
+    <a
+      href="/admin/products?page=<%= i %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+      class="<%= currentPage===i ? 'active-page' : '' %>"
+    >
+      <%= i %>
+    </a>
 
-          <% } %>
+  <% } %>
 
-          <% if(currentPage < totalPages){ %>
+  <% if(currentPage<totalPages){ %>
 
-            <a
-              href="/admin/products?page=<%= currentPage + 1 %>&search=<%= search %>"
-            >
-              Next
-            </a>
+    <a
+      href="/admin/products?page=<%= currentPage+1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+    >
+      Next
+    </a>
 
-          <% } %>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+  <% } %>
 
 </div>
 
@@ -450,16 +496,16 @@ function openViewModal(
   // SHOW IMAGES
   const imageContainer = document.getElementById("viewImages");
   imageContainer.innerHTML = "";
-  images.forEach(function(image){
-    imageContainer.innerHTML += `
-      <img
-        src="/images/${image}"
-        class="view-product-image"
-        onclick="openImageZoom('/images/${image}')"
-      >
-    `;
 
-  });
+ images.forEach(function(image){
+  imageContainer.innerHTML += `
+    <img
+      src="/images/${image}"
+      class="view-product-image"
+      onclick="openImageZoom('/images/${image}')"
+    >
+  `;
+});
 
   document.getElementById(
     "viewModal"
