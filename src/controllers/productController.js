@@ -4,20 +4,38 @@ const sharp=require("sharp");
 const fs=require("fs");
 const path=require("path");
 
-//==================== PRODUCT LIST PAGE===========
-
+// PRODUCT LIST PAGE
 exports.getProducts=async(req,res,next)=>{
   try{
 
     // SEARCH
     const search=req.query.search||"";
 
+    // CATEGORY FILTER
+    const category=req.query.category||"";
+
+    // STOCK FILTER
+    const stock=req.query.stock||"";
+
+    // STATUS FILTER
+    const status=req.query.status||"";
+
     // PAGINATION
     const page=parseInt(req.query.page)||1;
     const limit=5;
 
+    // CATEGORIES
+    const categories=await categoryService.getActiveCategories();
+
     // SERVICE
-    const result=await productService.getProducts(search,page,limit);
+    const result=await productService.getProducts(
+      search,
+      category,
+      stock,
+      status,
+      page,
+      limit
+    );
 
     // RENDER
     res.render("admin/products",{
@@ -25,7 +43,11 @@ exports.getProducts=async(req,res,next)=>{
       total:result.total,
       totalPages:result.totalPages,
       currentPage:page,
-      search
+      search,
+      category,
+      stock,
+      status,
+      categories
     });
 
   }catch(error){
@@ -34,12 +56,12 @@ exports.getProducts=async(req,res,next)=>{
   }
 };
 
-// ==========ADD PRODUCT PAGE=============
-
-exports.getAddProduct=async(req,res,next)=>{
+// GET ADD PRODUCT PAGE
+exports.getAddProduct=async(req,res)=>{
   try{
 
     const categories=await categoryService.getActiveCategories();
+
     const error=req.session.error;
 
     req.session.error=null;
@@ -50,21 +72,30 @@ exports.getAddProduct=async(req,res,next)=>{
     });
 
   }catch(error){
-    error.statusCode=500;
-    next(error);
+
+    console.log(error);
+
+    res.redirect("/admin/products");
   }
 };
 
-// =============ADD PRODUCT==============
-
-exports.addProduct=async(req,res,next)=>{
+// ADD PRODUCT
+exports.addProduct=async(req,res)=>{
   try{
 
-    const {name,description,price,stock,category}=req.body;
+    const {
+      name,
+      description,
+      price,
+      stock,
+      category
+    }=req.body;
 
-    // EMPTY VALIDATION
+    // VALIDATION
     if(!name || !description || !price || !stock || !category){
+
       req.session.error="All fields are required";
+
       return res.redirect("/admin/add-product");
     }
 
@@ -72,7 +103,9 @@ exports.addProduct=async(req,res,next)=>{
 
     // MINIMUM 3 IMAGES
     if(imageFiles.length<3){
+
       req.session.error="Minimum 3 images required";
+
       return res.redirect("/admin/add-product");
     }
 
@@ -81,11 +114,19 @@ exports.addProduct=async(req,res,next)=>{
 
     for(const file of imageFiles){
 
-      const filename="product-"+Date.now()+path.extname(file.originalname);
+      const filename=
+        "product-"+
+        Date.now()+
+        path.extname(file.originalname);
 
       await sharp(file.path)
         .resize(500,500)
-        .toFile(path.join("public/images",filename));
+        .toFile(
+          path.join(
+            "public/images",
+            filename
+          )
+        );
 
       images.push(filename);
 
@@ -106,84 +147,95 @@ exports.addProduct=async(req,res,next)=>{
     res.redirect("/admin/products");
 
   }catch(error){
-    error.statusCode=500;
-    next(error);
+
+    console.log(error);
+
+    res.redirect("/admin/products");
   }
 };
 
-//================= EDIT PRODUCT PAGE ==============
-
-exports.getEditProduct=async(req,res,next)=>{
+// GET EDIT PRODUCT PAGE
+exports.getEditProduct=async(req,res)=>{
   try{
 
     const product=await productService.getProductById(req.params.id);
 
-    // PRODUCT NOT FOUND
-    if(!product){
-      const error=new Error("Product not found");
-      error.statusCode=404;
-      return next(error);
-    }
-
     const categories=await categoryService.getActiveCategories();
-    const errorMessage=req.session.error;
+
+    const error=req.session.error;
 
     req.session.error=null;
 
     res.render("admin/edit-product",{
       product,
       categories,
-      error:errorMessage
+      error
     });
 
   }catch(error){
-    error.statusCode=500;
-    next(error);
+
+    console.log(error);
+
+    res.redirect("/admin/products");
   }
 };
 
-// ================UPDATE PRODUCT======================
-exports.updateProduct=async(req,res,next)=>{
+// UPDATE PRODUCT
+exports.updateProduct=async(req,res)=>{
   try{
 
-    const {name,description,price,stock,category}=req.body;
+    const {
+      name,
+      description,
+      price,
+      stock,
+      category
+    }=req.body;
 
     // EMPTY VALIDATION
     if(!name || !description || !price || !stock || !category){
+
       req.session.error="All fields are required";
-      return res.redirect("/admin/edit-product/"+req.params.id);
+
+      return res.redirect(
+        "/admin/edit-product/"+req.params.id
+      );
     }
 
     // EXISTING PRODUCT
     const product=await productService.getProductById(req.params.id);
 
-    // PRODUCT NOT FOUND
-    if(!product){
-      const error=new Error("Product not found");
-      error.statusCode=404;
-      return next(error);
-    }
-
     // REMOVED IMAGES
     let removedImages=[];
 
     if(req.body.removedImages){
+
       removedImages=JSON.parse(req.body.removedImages);
     }
 
-    // KEEP OLD IMAGES
-    let images=product.images.filter(image=>!removedImages.includes(image));
+    // KEEP REMAINING OLD IMAGES
+    let images=product.images.filter(
+      image=>!removedImages.includes(image)
+    );
 
     // NEW IMAGES
     if(req.files && req.files.length>0){
 
       for(const file of req.files){
 
-        const filename="product-"+Date.now()+path.extname(file.originalname);
+        const filename=
+          "product-"+
+          Date.now()+
+          path.extname(file.originalname);
 
         await sharp(file.path)
           .resize(500,500)
-          .toFile(path.join("public/images",filename));
+          .toFile(
+            path.join(
+              "public/images",
+              filename
+            )
+          );
 
         images.push(filename);
 
@@ -194,49 +246,44 @@ exports.updateProduct=async(req,res,next)=>{
 
     // MINIMUM IMAGE VALIDATION
     if(images.length<3){
+
       req.session.error="Minimum 3 images required";
-      return res.redirect("/admin/edit-product/"+req.params.id);
+
+      return res.redirect(
+        "/admin/edit-product/"+req.params.id
+      );
     }
 
     // UPDATE PRODUCT
-    await productService.updateProduct(req.params.id,{
-      name,
-      description,
-      price,
-      stock,
-      category,
-      images
-    });
+    await productService.updateProduct(
+      req.params.id,
+      {
+        name,
+        description,
+        price,
+        stock,
+        category,
+        images
+      }
+    );
 
     res.redirect("/admin/products");
 
   }catch(error){
-    error.statusCode=500;
-    next(error);
+    console.log(error);
+    res.redirect("/admin/products");
   }
 };
 
-// ==========DELETE PRODUCT==========
-
-exports.deleteProduct=async(req,res,next)=>{
+// DELETE PRODUCT
+exports.deleteProduct=async(req,res)=>{
   try{
 
-    const product=await productService.getProductById(req.params.id);
-
-    // PRODUCT NOT FOUND
-    if(!product){
-      const error=new Error("Product not found");
-      error.statusCode=404;
-      return next(error);
-    }
-
-    // SOFT DELETE
     await productService.softDeleteProduct(req.params.id);
-
     res.redirect("/admin/products");
 
   }catch(error){
-    error.statusCode=500;
-    next(error);
+    console.log(error);
+    res.redirect("/admin/products");
   }
 };

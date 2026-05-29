@@ -1,75 +1,99 @@
-const Product = require("../models/Product");
+const Product=require("../models/Product");
 
+// ================= GET ALL PRODUCTS ====================
 
-// GET ALL PRODUCTS
-exports.getProducts = async (search, page, limit) => {
+exports.getProducts=async(
+  search,
+  category,
+  stock,
+  status,
+  page,
+  limit
+)=>{
 
-  const query = {};
+  // FILTER OBJECT
+  let query={isDeleted:false};
 
   // SEARCH
-  if (search) {
-    query.name = {
-      $regex: search,
-      $options: "i"
+  if(search && search.trim()!==""){
+    query.name={
+      $regex:search,
+      $options:"i"
     };
   }
 
+  // CATEGORY FILTER
+  if(category && category!==""){
+    query.category=category;
+  }
+
+  // STOCK FILTER
+  if(stock==="inStock"){
+    query.stock={$gt:0};
+  }
+
+  else if(stock==="outOfStock"){
+    query.stock=0;
+  }
+
+  // STATUS FILTER
+  if(status==="archived"){
+    query.isDeleted=true;
+  }
+
+  else if(status==="listed"){
+    query.isDeleted=false;
+  }
+
   // PAGINATION
-  const skip = (page - 1) * limit;
+  const skip=(page-1)*limit;
 
-  // TOTAL COUNT
-  const total = await Product.countDocuments(query);
+  // TOTAL PRODUCTS
+  const total=await Product.countDocuments(query);
 
-  // PRODUCT DATA
-  const products = await Product.find(query)
+  // PRODUCTS
+  const products=await Product.find(query)
     .populate("category")
-    .sort({ createdAt: -1 })
+    .sort({createdAt:-1})
     .skip(skip)
     .limit(limit);
 
-  return {
+  return{
     products,
     total,
-    totalPages: Math.ceil(total / limit)
+    totalPages:Math.ceil(total/limit)
   };
-
 };
 
+// ================= ADD PRODUCT ====================
 
-// ADD PRODUCT
-exports.addProduct = async (data) => {
+exports.addProduct=async(data)=>{
   return await Product.create(data);
 };
 
+// ================= GET PRODUCT BY ID ====================
 
-// GET PRODUCT BY ID
-exports.getProductById = async (id) => {
-
+exports.getProductById=async(id)=>{
   return await Product.findById(id)
     .populate("category");
-
 };
 
+// ================= UPDATE PRODUCT ====================
 
-// UPDATE PRODUCT
-exports.updateProduct = async (id, data) => {
-
+exports.updateProduct=async(id,data)=>{
   return await Product.findByIdAndUpdate(
     id,
     data,
-    { returnDocument: "after" }
+    {returnDocument:"after"}
   );
-
 };
 
+// ================= SOFT DELETE PRODUCT ====================
 
-// SOFT DELETE PRODUCT
-exports.softDeleteProduct = async (id) => {
-
+exports.softDeleteProduct=async(id)=>{
   return await Product.findByIdAndUpdate(
     id,
-    { isDeleted: true },
-    { returnDocument: "after" }
+    {isDeleted:true},
+    {returnDocument:"after"}
   );
-
 };
