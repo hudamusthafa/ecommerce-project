@@ -216,7 +216,7 @@
                   <!-- CATEGORY -->
                   <td>
 
-                    <%= product.category.name %>
+                    <%= product.category ? product.category.name : "No Category" %>
 
                   </td>
 
@@ -280,7 +280,7 @@
                                 class="icon-btn"
                                 onclick='openViewModal(
                                   "<%= product.name %>",
-                                  "<%= product.category.name %>",
+                                  "<%= product.category ? product.category.name : 'No Category' %>",
                                   "<%= product.price %>",
                                   "<%= product.stock %>",
                                   "<%= product.description %>",
