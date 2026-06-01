@@ -37,6 +37,23 @@ router.get("/cart",cacheMiddleware.noCache,isLoggedIn,userController.getCart);
 router.get("/cart/update/:productId",cacheMiddleware.noCache,isLoggedIn,userController.updateCartQuantity);
 router.get("/cart/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeCartProduct);
 
+
+// WISHLIST
+
+router.get("/wishlist",cacheMiddleware.noCache,isLoggedIn,userController.getWishlist);
+router.get("/wishlist/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToWishlist);
+router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeWishlistItem);
+
+
+
+
+
+
+
+
+
+
+
 // LOGOUT
 router.get("/logout",isLoggedIn,(req,res,next)=>{
   req.logout(err=>{

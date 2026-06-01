@@ -4,7 +4,7 @@ const Product=require("../models/Product");
 const Category=require("../models/Category");
 const userProductService=require("../services/userProductService");
 const userCartService=require("../services/userCartService");
-
+const userWishlistService=require("../services/userWishlistService");
 
 // ADD ADDRESS
 
@@ -232,7 +232,7 @@ if (req.user.password && req.user.password !== "google" && req.user.password !==
 //==============week 2===========
 
 //product listing
-exports.getProductsPage=async(req,res)=>{
+exports.getProductsPage=async(req,res,next)=>{
 
   try{
 
@@ -251,7 +251,7 @@ exports.getProductsPage=async(req,res)=>{
 
   catch(error){
    
-    res.redirect("/home");
+     next(error);
 
   }
 
@@ -259,7 +259,7 @@ exports.getProductsPage=async(req,res)=>{
 
 //product details
 
-exports.getProductDetails=async(req,res)=>{
+exports.getProductDetails=async(req,res,next)=>{
 
   try{
 
@@ -289,8 +289,7 @@ exports.getProductDetails=async(req,res)=>{
   }
 
   catch(error){
-    console.log(error)
-    res.redirect("/products?error=productUnavailable");
+      next(error);
   }
 
 };
@@ -298,7 +297,7 @@ exports.getProductDetails=async(req,res)=>{
 
 // add to cart
 
-exports.addToCart=async(req,res)=>{
+exports.addToCart=async(req,res,next)=>{
 
   try{
 
@@ -311,7 +310,7 @@ exports.addToCart=async(req,res)=>{
 
   catch(error){
    
-    res.redirect("/products");
+      next(error);
   }
 
 };
@@ -347,7 +346,7 @@ exports.getCart=async(req,res)=>{
 
 
 //CART QUANTITY UPDATE
-exports.updateCartQuantity=async(req,res)=>{
+exports.updateCartQuantity=async(req,res,next)=>{
 
   try{
 
@@ -360,9 +359,8 @@ exports.updateCartQuantity=async(req,res)=>{
   }
 
   catch(error){
-    res.redirect("/cart?error=" + encodeURIComponent(error.message) 
- + "&productId=" + req.params.productId
-  );
+     next(error);
+  
 
   }
 };
@@ -370,7 +368,7 @@ exports.updateCartQuantity=async(req,res)=>{
 
 //REMOVE PRODUCT
 
-exports.removeCartProduct=async(req,res)=>{
+exports.removeCartProduct=async(req,res,next)=>{
 
   try{
 
@@ -383,14 +381,70 @@ exports.removeCartProduct=async(req,res)=>{
 
   catch(error){
    
-    res.redirect("/cart");
+      next(error);
+  }
+};
+
+//=====================week3=================
+
+//GET WISHLIST
+
+exports.getWishlist=async(req,res,next)=>{
+  try{
+
+    const wishlist=await userWishlistService.getWishlist(
+      req.user._id
+    );
+
+   res.render("user/wishlist",{
+  wishlist: wishlist || { products: [] },
+  user:req.user || null
+});
+
+  }catch(error){
+
+   next(error);
+  }
+};
+
+//ADD TO WISHLIST
+
+exports.addToWishlist=async(req,res,next)=>{
+  try{
+
+    await userWishlistService.addToWishlist(
+      req.user._id,
+      req.params.productId
+    );
+
+    res.redirect("/wishlist");
+
+  }catch(error){
+
+      next(error);
+
   }
 };
 
 
+//REMOVE FROM WISHLIST
 
+exports.removeWishlistItem=async(req,res,next)=>{
+  try{
 
+    await userWishlistService.removeWishlistItem(
+      req.user._id,
+      req.params.productId
+    );
 
+    res.redirect("/wishlist");
+
+  }catch(error){
+
+      next(error);
+
+  }
+};
 
 
 

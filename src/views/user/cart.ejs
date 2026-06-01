@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <title>
-    Cart
-  </title>
-
+  <title>Cart</title>
   <link rel="stylesheet" href="/css/layout.css">
   <link rel="stylesheet" href="/css/cart.css">
-
 </head>
 
 <body>
@@ -19,88 +12,50 @@
 <%- include("../partials/header") %>
 
 <div class="cart-page">
-
   <div class="cart-container">
 
-    <h2 class="cart-title">
-      Cart
-    </h2>
+    <h2 class="cart-title">Cart</h2>
 
-    <% if(cart && cart.items.length > 0){ %>
+    <% if(cart && cart.items.length>0){ %>
 
       <!-- TABLE HEADER -->
-
       <div class="cart-header">
-
         <span>Product</span>
         <span>Price</span>
         <span>Quantity</span>
         <span>Subtotal</span>
-
       </div>
 
       <!-- CART ITEMS -->
-
       <% cart.items.forEach(function(item){ %>
 
-         <% if(!item.product){ return; } %>
+        <% if(!item.product){ return; } %>
 
         <div class="cart-row">
 
           <!-- PRODUCT -->
-
           <div class="cart-product">
 
-          <% if(item.product){ %>
-          <a href="/products/<%= item.product._id %>">
-          <% } %>
-
-          <% if(item.product){ %>
-          </a>
-          <% } %>
-
-              <img
-                src="/images/<%= item.product.images[0] %>"
-              >
-
+            <a href="/products/<%= item.product._id %>">
+              <img src="/images/<%= item.product.images[0] %>">
             </a>
 
             <div>
 
-              <a
-                href="/products/<%= item.product._id %>"
-                class="cart-product-link"
-              >
-
-                <h4>
-                  <%= item.product.name %>
-                </h4>
-
+              <a href="/products/<%= item.product._id %>" class="cart-product-link">
+                <h4><%= item.product.name %></h4>
               </a>
 
-              <p>
-                High Quality Jewellery
-              </p>
+              <p>High Quality Jewellery</p>
 
               <!-- OUT OF STOCK -->
-
-              <% if(item.product.stock <= 0){ %>
-
-                <p class="out-stock-msg">
-                  Out Of Stock
-                </p>
-
+              <% if(item.product.stock<=0){ %>
+                <p class="out-stock-msg">Out Of Stock</p>
               <% } %>
 
               <!-- REMOVE -->
-
-              <a
-                href="/cart/remove/<%= item.product._id %>"
-                class="remove-btn"
-              >
-
+              <a href="/cart/remove/<%= item.product._id %>" class="remove-btn">
                 Remove
-
               </a>
 
             </div>
@@ -108,79 +63,39 @@
           </div>
 
           <!-- PRICE -->
-
           <div class="cart-price">
-
             ₹ <%= item.product.price %>
-
           </div>
 
           <!-- QUANTITY -->
-
           <div class="cart-quantity">
 
-            <a
-              href="/cart/update/<%= item.product._id %>?action=decrease"
-            >
-
-              <button>
-                -
-              </button>
-
+            <a href="/cart/update/<%= item.product._id %>?action=decrease">
+              <button>-</button>
             </a>
 
-            <span>
-              <%= item.quantity %>
-            </span>
+            <span><%= item.quantity %></span>
 
-            <a
-              href="/cart/update/<%= item.product._id %>?action=increase"
-            >
-
-              <button
-                <% if(item.product.stock <= 0){ %>
-                  disabled
-                <% } %>
-              >
+            <a href="/cart/update/<%= item.product._id %>?action=increase">
+              <button <% if(item.product.stock<=0){ %>disabled<% } %>>
                 +
               </button>
-
             </a>
 
           </div>
 
           <!-- ERROR MESSAGE -->
-
-          <% if(
-
-            error &&
-
-            productId == item.product._id.toString()
-
-          ){ %>
-
-            <p class="item-error">
-
-              <%= error %>
-
-            </p>
-
+          <% if(error && productId==item.product._id.toString()){ %>
+            <p class="item-error"><%= error %></p>
           <% } %>
 
           <!-- SUBTOTAL -->
-
           <div class="cart-subtotal">
-
-            <% if(item.product.stock > 0){ %>
-
-              ₹ <%= item.product.price * item.quantity %>
-
+            <% if(item.product.stock>0){ %>
+              ₹ <%= item.product.price*item.quantity %>
             <% } else { %>
-
               ₹ 0
-
             <% } %>
-
           </div>
 
         </div>
@@ -188,119 +103,55 @@
       <% }) %>
 
       <!-- AVAILABLE PRODUCT CHECK -->
-
-      <%
-
-        const hasAvailableProducts =
-
-          cart.items.some(
-
-       item => item.product && item.product.stock > 0
-
-          );
-
-      %>
+      <% const hasAvailableProducts=cart.items.some(item=>item.product && item.product.stock>0); %>
 
       <!-- TOTAL -->
-
       <div class="cart-total-box">
 
-        <h3>
-          Cart Totals
-        </h3>
+        <h3>Cart Totals</h3>
 
         <p>
-
-          Total :
-
-          ₹
-
+          Total : ₹
           <%= cart.items.reduce((total,item)=>{
-
-            if(item.product && item.product.stock > 0){
-
-              return total +
-                (item.product.price * item.quantity);
-
+            if(item.product && item.product.stock>0){
+              return total+(item.product.price*item.quantity);
             }
-
             return total;
-
           },0) %>
         </p>
 
         <!-- CHECKOUT BUTTON -->
-
-        <button
-
-          class="checkout-btn"
-
-          <% if(!hasAvailableProducts){ %>
-
-            disabled
-
-          <% } %>
-
-        >
-
+        <button class="checkout-btn" <% if(!hasAvailableProducts){ %>disabled<% } %>>
           Proceed To Checkout
-
         </button>
 
       </div>
 
     <% } else { %>
 
-      <h2 class="empty-cart">
-
-        Cart is empty
-
-      </h2>
+      <h2 class="empty-cart">Cart is empty</h2>
 
     <% } %>
 
   </div>
-
 </div>
 
 <!-- FEATURES -->
-
 <div class="cart-features">
 
   <div class="feature-box">
-
-    <h4>
-      Free Delivery
-    </h4>
-
-    <p>
-      For all orders above ₹999
-    </p>
-
+    <h4>Free Delivery</h4>
+    <p>For all orders above ₹999</p>
   </div>
 
   <div class="feature-box">
-
-    <h4>
-      7 Days Return
-    </h4>
-
-    <p>
-      Hassle free returns
-    </p>
-
+    <h4>7 Days Return</h4>
+    <p>Hassle free returns</p>
   </div>
 
   <div class="feature-box">
-
-    <h4>
-      Secure Payment
-    </h4>
-
-    <p>
-      100% secure checkout
-    </p>
-
+    <h4>Secure Payment</h4>
+    <p>100% secure checkout</p>
   </div>
 
 </div>
