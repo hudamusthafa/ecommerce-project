@@ -287,15 +287,15 @@
 
                     </a>
 
-                   <% if(product.stock > 0){ %>
+                  <div class="product-actions">
+
+                    <% if(product.stock > 0){ %>
 
                       <a
                         href="/cart/add/<%= product._id %>"
                         class="cart-btn"
                       >
-
                         Add To Cart
-
                       </a>
 
                     <% } else { %>
@@ -304,13 +304,19 @@
                         class="out-stock-btn"
                         disabled
                       >
-
                         Out Of Stock
-
                       </button>
 
                     <% } %>
 
+                    <a
+                      href="/wishlist/add/<%= product._id %>"
+                      class="wishlist-btn"
+                    >
+                      <i class="fa-regular fa-heart"></i>
+                    </a>
+
+                  </div>
                   </div>
 
                 <% }) %>
