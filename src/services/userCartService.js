@@ -73,6 +73,14 @@ exports.getCart=async(userId)=>{
     user:userId
   })
   .populate("items.product");
+
+   if(cart){
+    cart.items = cart.items.filter(
+      item => item.product
+    );
+  }
+
+  return cart;
 };
 
 

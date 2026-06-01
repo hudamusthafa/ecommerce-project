@@ -377,6 +377,31 @@
 
 <script>
 
+
+
+const image=document.getElementById("mainProductImage");
+
+image.addEventListener("mousemove",function(e){
+
+  const rect=image.getBoundingClientRect();
+
+  const x=((e.clientX-rect.left)/rect.width)*100;
+  const y=((e.clientY-rect.top)/rect.height)*100;
+
+  image.style.transformOrigin=`${x}% ${y}%`;
+  image.style.transform="scale(2)";
+});
+
+image.addEventListener("mouseleave",function(){
+
+  image.style.transformOrigin="center";
+  image.style.transform="scale(1)";
+});
+
+
+
+
+
   function openZoom(imageSrc){
 
     document.getElementById("zoomModal").style.display="flex";

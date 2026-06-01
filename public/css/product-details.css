@@ -53,22 +53,26 @@
 
 /* MAIN IMAGE */
 
+
+
 .main-image{
   width:100%;
   height:450px;
   overflow:hidden;
   border-radius:12px;
+  cursor:zoom-in;
 }
 
 .main-image img{
   width:100%;
   height:100%;
   object-fit:cover;
-    transition:0.4s;
+  transition:transform 0.15s ease;
 }
 /* .main-image:hover img{
   transform:scale(1.2);
 } */
+ 
 /* ZOOM MODAL */
 
 .zoom-modal{

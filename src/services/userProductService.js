@@ -137,7 +137,7 @@ exports.getProductDetails=async(productId)=>{
   .populate("category");
 
   // PRODUCT NOT FOUND
-  if(!product || product.isDeleted || !product.category || !product.category.isDeleted){
+  if(!product || product.isDeleted || !product.category || product.category.isDeleted){
     return null;
   }
 

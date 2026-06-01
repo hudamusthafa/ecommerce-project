@@ -43,13 +43,21 @@
 
       <% cart.items.forEach(function(item){ %>
 
+         <% if(!item.product){ return; } %>
+
         <div class="cart-row">
 
           <!-- PRODUCT -->
 
           <div class="cart-product">
 
-            <a href="/products/<%= item.product._id %>">
+          <% if(item.product){ %>
+          <a href="/products/<%= item.product._id %>">
+          <% } %>
+
+          <% if(item.product){ %>
+          </a>
+          <% } %>
 
               <img
                 src="/images/<%= item.product.images[0] %>"
@@ -187,7 +195,7 @@
 
           cart.items.some(
 
-            item => item.product.stock > 0
+       item => item.product && item.product.stock > 0
 
           );
 
@@ -209,10 +217,9 @@
 
           <%= cart.items.reduce((total,item)=>{
 
-            if(item.product.stock > 0){
+            if(item.product && item.product.stock > 0){
 
               return total +
-
                 (item.product.price * item.quantity);
 
             }
@@ -220,7 +227,6 @@
             return total;
 
           },0) %>
-
         </p>
 
         <!-- CHECKOUT BUTTON -->

@@ -289,7 +289,7 @@ exports.getProductDetails=async(req,res)=>{
   }
 
   catch(error){
-    
+    console.log(error)
     res.redirect("/products?error=productUnavailable");
   }
 
