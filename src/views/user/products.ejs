@@ -51,8 +51,7 @@
             </a> -->
 
              <a
-              href="/products?category=<%= categoryItem._id %>&search=<%= search %>&sort=<%= sort %>"
-
+              href="/products?category=<%= categoryItem._id %>&search=<%= search %>&sort=<%= sort %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>"
               class="<%= category == categoryItem._id.toString()
               ? 'active-category'
               : '' %>"
@@ -149,6 +148,18 @@
             value="<%= sort %>"
           >
 
+          <input
+          type="hidden"
+          name="minPrice"
+          value="<%= minPrice %>"
+          >
+
+          <input 
+          type="hidden"
+          name="maxPrice"
+          value="<%= maxPrice %>"
+          >
+
           <button type="submit">
             Search
           </button>
@@ -184,6 +195,17 @@
             type="hidden"
             name="category"
             value="<%= category %>"
+          >
+          <input
+            type="hidden"
+            name="minPrice"
+            value="<%= minPrice %>"
+          >
+
+          <input
+            type="hidden"
+            name="maxPrice"
+            value="<%= maxPrice %>"
           >
 
           <select
