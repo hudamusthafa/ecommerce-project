@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Wishlist</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/wishlist.css">
+
+</head>
+
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="wishlist-page">
+
+  <div class="wishlist-container">
+
+    <h2 class="wishlist-title">My Wishlist</h2>
+
+    <% if(wishlist && wishlist.products.length>0){ %>
+
+      <div class="wishlist-grid">
+
+        <% wishlist.products.forEach(function(product){ %>
+
+          <% if(!product){ return; } %>
+
+          <div class="wishlist-card">
+
+            <!-- REMOVE -->
+            <a
+              href="/wishlist/remove/<%= product._id %>"
+              class="wishlist-remove"
+            >
+              ♥
+            </a>
+
+            <!-- IMAGE -->
+            <a href="/products/<%= product._id %>">
+
+              <img
+                src="/images/<%= product.images[0] %>"
+                class="wishlist-image"
+              >
+
+            </a>
+
+            <!-- NAME -->
+            <h3><%= product.name %></h3>
+
+            <!-- CATEGORY -->
+            <p class="wishlist-category">
+              <%= product.category.name %>
+            </p>
+
+            <!-- PRICE -->
+            <h4>₹ <%= product.price %></h4>
+
+            <!-- STOCK -->
+            <% if(product.stock>0){ %>
+
+              <p class="in-stock">
+                In Stock
+              </p>
+
+            <% } else { %>
+
+              <p class="out-stock">
+                Out Of Stock
+              </p>
+
+            <% } %>
+
+            <!-- BUTTONS -->
+            <div class="wishlist-actions">
+
+              <a
+                href="/wishlist/move-to-cart/<%= product._id %>"
+                class="cart-btn"
+              >
+                Add To Cart
+              </a>
+
+              <a
+                href="/checkout?product=<%= product._id %>"
+                class="buy-btn"
+              >
+                Buy Now
+              </a>
+
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <div class="empty-wishlist">
+
+        <div class="empty-heart">♡</div>
+
+        <h2>Your Wishlist Is Empty</h2>
+
+        <p>
+          Save your favourite jewellery here and shop later.
+        </p>
+
+        <a href="/products" class="shop-btn">
+          Continue Shopping
+        </a>
+
+      </div>
+
+    <% } %>
+
+  </div>
+
+</div>
+
+<%- include("../partials/footer") %>
+
+</body>
+
+</html>

@@ -288,3 +288,13 @@ input {
   text-decoration:none;
   font-size:20px;
 }
+.wishlist-icon{
+  color:#333;
+  font-size:20px;
+  text-decoration:none;
+  margin-left:15px;
+}
+
+.wishlist-icon:hover{
+  color:#e63946;
+}
