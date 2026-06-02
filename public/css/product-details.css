@@ -367,3 +367,25 @@
   color:#555;
   line-height:1.6;
 }
+.wishlist-btn{
+  padding:14px 30px;
+  border:none;
+  border-radius:30px;
+  background:#fff;
+  color:#8b5e3c;
+  border:2px solid #8b5e3c;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+
+.wishlist-btn:hover{
+  background:#8b5e3c;
+  color:#fff;
+}
+.wishlist-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}

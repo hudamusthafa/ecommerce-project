@@ -263,11 +263,7 @@ exports.getProductDetails=async(req,res,next)=>{
 
   try{
 
-    const data=await userProductService.getProductDetails(
-
-      req.params.id
-
-    );
+    const data=await userProductService.getProductDetails( req.params.id, req.user._id);
 
     // PRODUCT NOT FOUND
     if(!data){
@@ -283,6 +279,7 @@ exports.getProductDetails=async(req,res,next)=>{
       {
         product:data.product,
         relatedProducts:data.relatedProducts,
+        isWishlisted:data.isWishlisted,
         user:req.user || null
       }
     );

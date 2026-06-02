@@ -1,6 +1,7 @@
 const Product=require("../models/Product");
 
 const Category=require("../models/Category");
+const Wishlist = require("../models/Wishlist");
 
 
 
@@ -126,11 +127,11 @@ exports.getProducts=async(query)=>{
 
 };
 
-
+//==================================================
 
 // PRODUCT DETAILS PAGE
 
-exports.getProductDetails=async(productId)=>{
+exports.getProductDetails=async(productId,userId)=>{
 
   // FIND PRODUCT
   const product=await Product.findById(productId)
@@ -150,8 +151,24 @@ exports.getProductDetails=async(productId)=>{
   })
   .limit(6);
 
+
+  let isWishlisted = false;
+
+if(userId){
+  const wishlist = await Wishlist.findOne({
+    user:userId
+  });
+
+  if(wishlist){
+    isWishlisted = wishlist.products.some(
+      item => item.toString() === productId.toString()
+    );
+  }
+}
+
   return{
     product,
-    relatedProducts
+    relatedProducts,
+    isWishlisted
   };
 };

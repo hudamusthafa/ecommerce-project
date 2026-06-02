@@ -216,18 +216,31 @@
 
   <% if(product.stock > 0){ %>
 
-    <button class="buy-btn">
-
-      Buy Now
-
-    </button>
+    <button class="buy-btn">Buy Now </button>
 
     <a
-      href="/cart/add/<%= product._id %>"
-      class="cart-btn"
-    >
+      href="/cart/add/<%= product._id %>"class="cart-btn">
       Add To Cart
     </a>
+
+            <a
+          href="/wishlist/add/<%= product._id %>" class="wishlist-btn">
+        
+
+
+         <% if(typeof isWishlisted !== "undefined" && isWishlisted){ %>
+
+             <i class="fa-solid fa-heart"></i> Wishlisted
+
+          <% } else { %>
+
+            Add To Wishlist
+
+          <% } %>
+
+        </a>
+
+
     
   <% } else { %>
 
