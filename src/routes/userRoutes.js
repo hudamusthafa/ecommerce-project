@@ -44,7 +44,9 @@ router.get("/wishlist",cacheMiddleware.noCache,isLoggedIn,userController.getWish
 router.get("/wishlist/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToWishlist);
 router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeWishlistItem);
 
+// MOVE WISHLIST TO CART
 
+router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedIn,userController.moveWishlistToCart);
 
 
 

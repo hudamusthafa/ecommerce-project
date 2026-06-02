@@ -38,6 +38,9 @@ exports.addToCart=async(userId,productId)=>{
 
   else{
 
+
+
+
      // CHECK PRODUCT ALREADY EXISTS
     const itemIndex=cart.items.findIndex(
       item => item.product.toString() === productId.toString()

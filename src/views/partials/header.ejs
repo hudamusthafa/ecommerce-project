@@ -1,42 +1,65 @@
-
-
 <nav class="navbar">
 
   <!-- LEFT -->
-  <div class="logo">Aura</div>
+  <div class="logo">
+    Aura
+  </div>
 
   <!-- CENTER -->
   <div class="nav-links">
+
     <a href="/home">Home</a>
+
     <a href="#">Shop</a>
+
     <a href="/products">Products</a>
-    
+
   </div>
 
   <!-- RIGHT -->
   <div class="nav-right">
 
-  <% if (user) { %>
+    <% if(user){ %>
 
-    <span class="welcome">Welcome <%= user.name %></span>
+      <span class="welcome">
+        Welcome <%= user.name %>
+      </span>
 
-      <a href="/cart" class="cart-icon">
-        <i class="fa-solid fa-cart-shopping"></i>
-      
+      <!-- WISHLIST -->
+      <a
+        href="/wishlist"
+        class="wishlist-icon"
+        title="Wishlist"
+      >
+        <i class="fa-regular fa-heart"></i>
       </a>
 
-    <a href="/wishlist" class="wishlist-icon">
-     <i class="fa-regular fa-heart"></i>
-   </a>
+      <!-- CART -->
+      <a
+        href="/cart"
+        class="cart-icon"
+        title="Cart"
+      >
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
 
-    <a href="/logout" class="logout">Log Out</a>
+      <!-- LOGOUT -->
+      <a href="/logout" class="logout">
+        Log Out
+      </a>
 
-  <% } else { %>
+    <% }else{ %>
 
-    <a href="/login" class="login-btn">Login</a>
-    <a href="/register" class="signup-btn">Sign Up</a>
+      <a href="/login" class="login-btn">
+        Login
+      </a>
 
-  <% } %>
+      <a href="/register" class="signup-btn">
+        Sign Up
+      </a>
 
-</div>
+    <% } %>
+
+  </div>
+
 </nav>

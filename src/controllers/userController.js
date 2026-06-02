@@ -447,6 +447,30 @@ exports.removeWishlistItem=async(req,res,next)=>{
 };
 
 
+// MOVE WISHLIST TO CART 
+
+exports.moveWishlistToCart = async(req,res,next)=>{
+
+  try{
+
+    await userCartService.addToCart(
+      req.user._id,
+      req.params.productId
+    );
+
+    await userWishlistService.removeWishlistItem(
+      req.user._id,
+      req.params.productId
+    );
+
+    res.redirect("/wishlist");
+  }
+
+  catch(error){
+    next(error);
+  }
+
+};
 
 
 // CHECKOUT

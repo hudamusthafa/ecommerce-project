@@ -298,3 +298,57 @@ input {
 .wishlist-icon:hover{
   color:#e63946;
 }
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.cart-icon,
+.wishlist-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#2d1b12;
+  font-size:18px;
+  transition:.3s;
+}
+
+.cart-icon:hover,
+.wishlist-icon:hover{
+  background:#8b5e3c;
+  color:#fff;
+  transform:scale(1.08);
+}
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.cart-icon,
+.wishlist-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#2d1b12;
+  font-size:18px;
+  transition:.3s;
+}
+
+.cart-icon:hover,
+.wishlist-icon:hover{
+  background:#8b5e3c;
+  color:#fff;
+  transform:scale(1.08);
+}
