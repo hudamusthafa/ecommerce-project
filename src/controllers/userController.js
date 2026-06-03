@@ -5,6 +5,8 @@ const Category=require("../models/Category");
 const userProductService=require("../services/userProductService");
 const userCartService=require("../services/userCartService");
 const userWishlistService=require("../services/userWishlistService");
+const userCheckoutService = require("../services/userCheckoutService");
+
 
 // ADD ADDRESS
 
@@ -471,7 +473,24 @@ exports.moveWishlistToCart = async(req,res,next)=>{
 
 
 // CHECKOUT
-exports.getCheckout = async (req, res) => {
-  const user = await userService.getUserById(req.user._id);
-  res.render("user/checkout", { user });
+exports.getCheckout=async(req,res,next)=>{
+  try{
+
+    const data=await userCheckoutService.getCheckoutData(
+      req.user._id
+    );
+
+    res.render("user/checkout",{
+      user:data.user,
+      cart:data.cart,
+      subtotal:data.subtotal,
+      shipping:data.shipping,
+      discount:data.discount,
+      total:data.total
+    });
+
+  }catch(error){
+
+    next(error);
+  }
 };
