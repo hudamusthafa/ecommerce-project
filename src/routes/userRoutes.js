@@ -51,14 +51,16 @@ router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedI
 // PLACE ORDER
 router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);
 
-
 // ORDER SUCCESS
 router.get("/order-success/:orderId",cacheMiddleware.noCache,isLoggedIn,userController.getOrderSuccess);
 
-
+// GET ORDERS 
+router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders);
 
 // ORDER DETAILS
-router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders);
+router.get("/orders/:id",cacheMiddleware.noCache,isLoggedIn,userController.getOrderDetails);
+
+
 
 
 

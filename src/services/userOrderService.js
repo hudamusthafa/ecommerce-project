@@ -86,7 +86,7 @@ return order;
 };
 
 
-// get order details
+// get user orders
 exports.getOrders=async(userId)=>{
 
   const orders=await Order.find({user:userId})
@@ -94,4 +94,22 @@ exports.getOrders=async(userId)=>{
     .sort({createdAt:-1});
 
   return orders;
+};
+
+
+
+//get order details
+
+exports.getOrderDetails=async(orderId,userId)=>{
+
+  const order=await Order.findOne({
+    _id:orderId,
+    user:userId
+  }).populate("items.product");
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  return order;
 };

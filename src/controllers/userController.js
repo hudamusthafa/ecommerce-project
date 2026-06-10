@@ -530,7 +530,7 @@ exports.getOrderSuccess=async(req,res,next)=>{
 
 
 
-//get order details
+//get orders 
 
 exports.getOrders=async(req,res,next)=>{
   try{
@@ -540,6 +540,26 @@ exports.getOrders=async(req,res,next)=>{
     );
 
     res.render("user/orders",{orders,user:req.user});
+
+  }catch(error){
+    next(error);
+  }
+};
+
+
+//get order details
+exports.getOrderDetails=async(req,res,next)=>{
+  try{
+
+    const order=await userOrderService.getOrderDetails(
+      req.params.id,
+      req.user._id
+    );
+
+    res.render("user/order-details",{
+      order,
+      user:req.user
+    });
 
   }catch(error){
     next(error);
