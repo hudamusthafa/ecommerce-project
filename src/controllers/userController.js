@@ -524,7 +524,24 @@ exports.getOrderSuccess=async(req,res,next)=>{
     });
 
   }catch(error){
+    next(error);
+  }
+};
 
+
+
+//get order details
+
+exports.getOrders=async(req,res,next)=>{
+  try{
+
+    const orders=await userOrderService.getOrders(
+      req.user._id
+    );
+
+    res.render("user/orders",{orders,user:req.user});
+
+  }catch(error){
     next(error);
   }
 };

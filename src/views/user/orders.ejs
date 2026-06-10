@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>My Orders</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/orders.css">
+
+</head>
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="orders-page">
+
+  <h2 class="orders-title">
+    My Orders
+  </h2>
+
+  <% if(orders.length > 0){ %>
+
+    <div class="orders-list">
+
+      <% orders.forEach(function(order){ %>
+
+        <div class="order-card">
+
+          <!-- PRODUCTS -->
+          <div class="order-products">
+
+            <% order.items.forEach(function(item){ %>
+
+              <% if(item.product){ %>
+
+                <div class="order-product">
+
+                  <img
+                    src="/images/<%= item.product.images[0] %>"
+                    alt="<%= item.product.name %>"
+                  >
+
+                  <div>
+
+                    <h4>
+                      <%= item.product.name %>
+                    </h4>
+
+                    <p>
+                      Qty : <%= item.quantity %>
+                    </p>
+
+                    <p>
+                      ₹<%= item.price %>
+                    </p>
+
+                  </div>
+
+                </div>
+
+              <% } %>
+
+            <% }) %>
+
+          </div>
+
+          <!-- ORDER INFO -->
+          <div class="order-info">
+
+            <div>
+
+              <h4>
+                Order ID
+              </h4>
+
+              <p>
+                <%= order.orderId %>
+              </p>
+
+            </div>
+
+            <div>
+
+              <h4>
+                Order Date
+              </h4>
+
+              <p>
+                <%= new Date(
+                  order.createdAt
+                ).toLocaleDateString() %>
+              </p>
+
+            </div>
+
+            <div>
+
+              <h4>
+                Status
+              </h4>
+
+              <p class="status">
+                <%= order.orderStatus %>
+              </p>
+
+            </div>
+
+            <div>
+
+              <h4>
+                Total
+              </h4>
+
+              <p>
+                ₹<%= order.total %>
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- ACTION BUTTON -->
+          <div class="order-actions">
+
+            <a
+              href="/orders/<%= order._id %>"
+              class="view-btn"
+            >
+              View Details
+            </a>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } else { %>
+
+    <div class="empty-orders">
+
+      <h3>
+        No Orders Found
+      </h3>
+
+      <a
+        href="/products"
+        class="shop-btn"
+      >
+        Continue Shopping
+      </a>
+
+    </div>
+
+  <% } %>
+
+</div>
+
+<%- include("../partials/footer") %>
+
+</body>
+</html>

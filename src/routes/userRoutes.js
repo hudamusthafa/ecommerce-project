@@ -57,6 +57,10 @@ router.get("/order-success/:orderId",cacheMiddleware.noCache,isLoggedIn,userCont
 
 
 
+// ORDER DETAILS
+router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders);
+
+
 
 // LOGOUT
 router.get("/logout",isLoggedIn,(req,res,next)=>{

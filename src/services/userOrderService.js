@@ -86,3 +86,12 @@ return order;
 };
 
 
+// get order details
+exports.getOrders=async(userId)=>{
+
+  const orders=await Order.find({user:userId})
+    .populate("items.product")
+    .sort({createdAt:-1});
+
+  return orders;
+};
