@@ -8,6 +8,12 @@ const orderSchema = new mongoose.Schema({
     required:true
   },
 
+  orderId:{
+    type:String,
+    required:true,
+    unique:true
+  },
+
   items:[{
 
     product:{
@@ -67,7 +73,10 @@ const orderSchema = new mongoose.Schema({
 
   paymentStatus:{
     type:String,
-    enum:["Pending","Paid"],
+    enum:[
+      "Pending",
+      "Paid"
+    ],
     default:"Pending"
   },
 
@@ -81,13 +90,25 @@ const orderSchema = new mongoose.Schema({
       "Cancelled"
     ],
     default:"Placed"
+  },
+
+  returnReason:{
+    type:String,
+    default:""
+  },
+
+  isReturned:{
+    type:Boolean,
+    default:false
   }
 
 },{
   timestamps:true
 });
 
-module.exports = mongoose.model(
-  "Order",
-  orderSchema
-);
+module.exports =
+  mongoose.models.Order ||
+  mongoose.model(
+    "Order",
+    orderSchema
+  );

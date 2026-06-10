@@ -218,3 +218,8 @@ body{
   background:#999;
   cursor:not-allowed;
 }
+.checkout-btn{
+  display:inline-block;
+  text-decoration:none;
+  text-align:center;
+}

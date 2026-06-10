@@ -25,6 +25,8 @@
 
   <h2 class="checkout-title">Checkout</h2>
 
+  <form action="/checkout/place-order" method="POST">
+
   <div class="checkout-container">
 
     <!-- LEFT SECTION -->
@@ -195,7 +197,10 @@
         <span>₹<%= total %></span>
       </div>
 
-      <button class="place-order-btn">
+      <button
+        type="submit"
+        class="place-order-btn"
+      >
         Place Order
       </button>
 
@@ -205,6 +210,7 @@
 
 </div>
 
+</form>
 <%- include("../partials/footer") %>
 
 </body>

@@ -45,11 +45,11 @@ router.get("/wishlist/add/:productId",cacheMiddleware.noCache,isLoggedIn,userCon
 router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeWishlistItem);
 
 // MOVE WISHLIST TO CART
-
 router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedIn,userController.moveWishlistToCart);
 
 
-
+// PLACE ORDER
+router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);
 
 
 

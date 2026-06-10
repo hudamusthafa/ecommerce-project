@@ -6,7 +6,7 @@ const userProductService=require("../services/userProductService");
 const userCartService=require("../services/userCartService");
 const userWishlistService=require("../services/userWishlistService");
 const userCheckoutService = require("../services/userCheckoutService");
-
+const userOrderService = require("../services/userOrderService");
 
 // ADD ADDRESS
 
@@ -488,6 +488,25 @@ exports.getCheckout=async(req,res,next)=>{
       discount:data.discount,
       total:data.total
     });
+
+  }catch(error){
+
+    next(error);
+  }
+};
+
+
+//PLACE ORDER
+
+exports.placeOrder=async(req,res,next)=>{
+  try{
+
+    const order=await userOrderService.placeOrder(
+      req.user._id,
+      req.body.selectedAddress
+    );
+
+    res.send(`Order Created : ${order.orderId}`);
 
   }catch(error){
 
