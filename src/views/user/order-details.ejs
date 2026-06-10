@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Order Details</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/order-details.css">
+
+</head>
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="order-details-page">
+
+  <h2 class="page-title">
+    Order Details
+  </h2>
+
+ <!-- PRODUCTS -->
+
+  <div class="products-card">
+
+    <h3>
+      Ordered Products
+    </h3>
+
+    <% order.items.forEach(function(item){ %>
+
+      <div class="product-row">
+
+        <img
+          src="/images/<%= item.product.images[0] %>"
+          alt="<%= item.product.name %>"
+        >
+
+        <div class="product-info">
+
+          <h4>
+            <%= item.product.name %>
+          </h4>
+
+          <p>
+            Quantity :
+            <%= item.quantity %>
+          </p>
+
+          <p>
+            Price :
+            ₹<%= item.price %>
+          </p>
+
+        </div>
+
+        <div class="product-total">
+
+          ₹<%= item.price * item.quantity %>
+
+        </div>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+
+
+  <!-- ORDER INFO -->
+
+  <div class="order-info-card">
+
+    <div>
+
+      <h4>Order ID</h4>
+
+      <p>
+        <%= order.orderId %>
+      </p>
+
+    </div>
+
+    <div>
+
+      <h4>Order Date</h4>
+
+      <p>
+        <%= new Date(order.createdAt).toLocaleDateString() %>
+      </p>
+
+    </div>
+
+    <div>
+
+      <h4>Status</h4>
+
+      <p class="order-status">
+        <%= order.orderStatus %>
+      </p>
+
+    </div>
+
+    <div>
+
+      <h4>Total</h4>
+
+      <p>
+        ₹<%= order.total %>
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- ADDRESS -->
+
+  <div class="address-card">
+
+    <h3>
+      Delivery Address
+    </h3>
+
+    <p>
+      <strong>
+        <%= order.address.fullName %>
+      </strong>
+    </p>
+
+    <p>
+      <%= order.address.house %>
+    </p>
+
+    <p>
+      <%= order.address.area %>
+    </p>
+
+    <p>
+      <%= order.address.city %>,
+      <%= order.address.state %>
+    </p>
+
+    <p>
+      PIN : <%= order.address.pincode %>
+    </p>
+
+    <p>
+      Phone : <%= order.address.phone %>
+    </p>
+
+  </div>
+
+ 
+
+  <!-- PRICE SUMMARY -->
+
+  <div class="summary-card">
+
+    <div class="summary-row">
+
+      <span>
+        Subtotal
+      </span>
+
+      <span>
+        ₹<%= order.subtotal %>
+      </span>
+
+    </div>
+
+    <div class="summary-row">
+
+      <span>
+        Shipping
+      </span>
+
+      <span>
+        ₹<%= order.shipping %>
+      </span>
+
+    </div>
+
+    <div class="summary-row">
+
+      <span>
+        Discount
+      </span>
+
+      <span>
+        ₹<%= order.discount %>
+      </span>
+
+    </div>
+
+    <div class="summary-row total-row">
+
+      <span>
+        Total
+      </span>
+
+      <span>
+        ₹<%= order.total %>
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+<%- include("../partials/footer") %>
+
+</body>
+</html>
