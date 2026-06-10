@@ -1,0 +1,120 @@
+/* PAGE */
+
+.success-page{
+  min-height:70vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px 20px;
+}
+
+
+/* CARD */
+
+.success-card{
+  background:#fff;
+  width:600px;
+  max-width:100%;
+  text-align:center;
+  padding:50px 40px;
+  border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+
+
+/* SUCCESS ICON */
+
+.success-icon{
+  font-size:80px;
+  color:#28a745;
+  margin-bottom:20px;
+}
+
+
+/* HEADING */
+
+.success-card h1{
+  margin-bottom:15px;
+  color:#222;
+}
+
+
+/* MESSAGE */
+
+.success-message{
+  color:#666;
+  margin-bottom:20px;
+  font-size:16px;
+}
+
+
+/* ORDER ID */
+
+.order-number{
+  background:#f5f5f5;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:30px;
+  font-size:15px;
+}
+
+
+/* BUTTONS */
+
+.success-buttons{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+
+/* COMMON BUTTON */
+
+.success-buttons a{
+  text-decoration:none;
+  padding:12px 24px;
+  border-radius:6px;
+  font-weight:600;
+  transition:0.3s;
+}
+
+
+/* VIEW ORDERS */
+
+.view-order-btn{
+  background:#8b5e3c;
+  color:white;
+}
+
+
+/* CONTINUE SHOPPING */
+
+.continue-btn{
+  background:#222;
+  color:white;
+}
+
+
+.success-buttons a:hover{
+  opacity:0.9;
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .success-card{
+    padding:30px 20px;
+  }
+
+  .success-icon{
+    font-size:60px;
+  }
+
+  .success-buttons{
+    flex-direction:column;
+  }
+
+}

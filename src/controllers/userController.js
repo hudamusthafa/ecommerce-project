@@ -506,7 +506,22 @@ exports.placeOrder=async(req,res,next)=>{
       req.body.selectedAddress
     );
 
-    res.send(`Order Created : ${order.orderId}`);
+  res.redirect("/order-success/" + order.orderId);
+
+  }catch(error){
+    next(error);
+  }
+};
+
+//order success
+
+exports.getOrderSuccess=async(req,res,next)=>{
+  try{
+
+    res.render("user/order-success",{
+      orderId:req.params.orderId,
+      user:req.user
+    });
 
   }catch(error){
 

@@ -12,10 +12,8 @@ const cart = await Cart.findOne({user:userId}).populate("items.product");
 
 cart.items = cart.items.filter( item => item.product);
 await cart.save();
-console.log(
-  "VALID ITEMS =",
-  cart.items.length
-);
+
+//console.log("VALID ITEMS =",cart.items.length);
 
 const selectedAddress=user.address.id(addressId);
 if(!selectedAddress){
@@ -46,7 +44,7 @@ const total=subtotal+shipping-discount;
 
 const orderId="ORD"+Date.now();
 
-console.log("ORDER ID =",orderId);
+//console.log("ORDER ID =",orderId);
 
 
 
@@ -78,10 +76,10 @@ await order.save();
 
 cart.items = [];
 await cart.save();
-console.log("CART CLEARED");
+//console.log("CART CLEARED");
 
 
-console.log("ORDER CREATED =",order.orderId);
+//console.log("ORDER CREATED =",order.orderId);
 
 return order;
 

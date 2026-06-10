@@ -52,6 +52,8 @@ router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedI
 router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);
 
 
+// ORDER SUCCESS
+router.get("/order-success/:orderId",cacheMiddleware.noCache,isLoggedIn,userController.getOrderSuccess);
 
 
 
