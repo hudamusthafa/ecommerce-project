@@ -115,6 +115,63 @@
 
   </div>
 
+<!-- CANCEL ORDER -->
+
+<% if(order.orderStatus !== "Cancelled"){ %>
+
+  <div class="cancel-order-card">
+
+    <h3>
+      Cancel Order
+    </h3>
+
+    <form
+      action="/orders/<%= order._id %>/cancel"
+      method="POST"
+    >
+
+      <textarea
+        name="reason"
+        placeholder="Reason for cancellation (optional)"
+      ></textarea>
+
+      <button
+        type="submit"
+        class="cancel-btn"
+      >
+        Cancel Order
+      </button>
+
+    </form>
+
+  </div>
+
+<% } else { %>
+
+  <div class="cancel-order-card">
+
+    <h3>
+      Order Cancelled
+    </h3>
+
+    <p>
+      Status : <strong>Cancelled</strong>
+    </p>
+
+    <% if(order.cancelReason){ %>
+
+      <p>
+        Reason :
+        <%= order.cancelReason %>
+      </p>
+
+    <% } %>
+
+  </div>
+
+<% } %>
+
+
   <!-- ADDRESS -->
 
   <div class="address-card">

@@ -34,6 +34,8 @@ exports.getCheckoutData = async(userId) => {
       await cart.save();
     }
 
+
+
   // NO VALID PRODUCTS
   if(cart.items.length === 0){
 
@@ -64,10 +66,7 @@ exports.getCheckoutData = async(userId) => {
   const shipping = 0;
   const discount = 0;
 
-  const total =
-    subtotal +
-    shipping -
-    discount;
+  const total = subtotal + shipping - discount;
 
   return {
     user,

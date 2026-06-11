@@ -92,6 +92,10 @@ const orderSchema = new mongoose.Schema({
     default:"Placed"
   },
 
+  cancelReason:{
+    type:String,
+    default:""
+  },
   returnReason:{
     type:String,
     default:""
@@ -106,9 +110,5 @@ const orderSchema = new mongoose.Schema({
   timestamps:true
 });
 
-module.exports =
-  mongoose.models.Order ||
-  mongoose.model(
-    "Order",
-    orderSchema
-  );
+module.exports = mongoose.models.Order ||
+  mongoose.model("Order", orderSchema);

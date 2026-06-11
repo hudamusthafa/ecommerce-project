@@ -130,3 +130,19 @@
   margin:2px 0;
   color:#666;
 }
+
+.status{
+  font-weight:600;
+}
+
+.status.placed{
+  color:#8b5e3c;
+}
+
+.status.cancelled{
+  color:red;
+}
+
+.status.delivered{
+  color:green;
+}

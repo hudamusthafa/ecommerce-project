@@ -592,3 +592,20 @@ exports.getOrderDetails=async(req,res,next)=>{
     next(error);
   }
 };
+
+//cancel order
+exports.cancelOrder=async(req,res,next)=>{
+  try{
+
+    await userOrderService.cancelOrder(
+      req.params.id,
+      req.body.reason
+    );
+
+    res.redirect("/orders/"+req.params.id);
+
+  }catch(error){
+
+    next(error);
+  }
+};

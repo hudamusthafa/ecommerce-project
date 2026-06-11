@@ -85,6 +85,9 @@ const order=new Order({
 
 await order.save();
 
+
+
+
 //reduce the stock after user order
 for(const item of cart.items){
 
@@ -99,17 +102,16 @@ for(const item of cart.items){
 
 }
 
-
 cart.items = [];
 await cart.save();
 //console.log("CART CLEARED");
-
-
 //console.log("ORDER CREATED =",order.orderId);
 
 return order;
 
 };
+
+
 
 
 // get user orders
@@ -121,6 +123,7 @@ exports.getOrders=async(userId)=>{
 
   return orders;
 };
+
 
 
 
@@ -138,4 +141,46 @@ exports.getOrderDetails=async(orderId,userId)=>{
   }
 
   return order;
+};
+
+
+
+// cancel order
+
+exports.cancelOrder = async(orderId,reason)=>{
+
+  const order = await Order.findById(orderId);
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  if(order.orderStatus === "Cancelled"){
+    throw new Error("Order already cancelled");
+  }
+
+  // restore stock
+  for(const item of order.items){
+
+    await Product.findByIdAndUpdate(
+      item.product,
+      {
+        $inc:{
+          stock:item.quantity
+        }
+      }
+    );
+
+  }
+
+  // update order status
+  order.orderStatus = "Cancelled";
+
+  // save cancellation reason
+  order.cancelReason = reason || "";
+
+  await order.save();
+
+  return order;
+
 };
