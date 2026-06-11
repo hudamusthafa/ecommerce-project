@@ -24,7 +24,7 @@
 
   <div class="cart-container">
 
-```
+
 <h2 class="cart-title">Cart</h2>
 
 <% if(cart && cart.items.length > 0){ %>
@@ -99,14 +99,16 @@
           </button>
         </a>
 
-      </div>
-
-      <!-- ERROR MESSAGE -->
+<!-- ERROR MESSAGE -->
       <% if(error && productId == item.product._id.toString()){ %>
         <p class="item-error">
           <%= error %>
         </p>
       <% } %>
+
+      </div>
+
+      
 
       <!-- SUBTOTAL -->
       <div class="cart-subtotal">

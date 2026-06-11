@@ -25,6 +25,15 @@
 
   <h2 class="checkout-title">Checkout</h2>
 
+
+  <% if(error){ %>
+
+  <div class="checkout-error">
+    <%= error %>
+  </div>
+
+<% } %>
+
   <form action="/checkout/place-order" method="POST">
 
   <div class="checkout-container">

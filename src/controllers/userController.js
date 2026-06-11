@@ -370,6 +370,17 @@ exports.updateCartQuantity=async(req,res,next)=>{
   }
 
   catch(error){
+if(error.message==="Stock limit reached"){
+
+    return res.redirect(
+      "/cart?error=" +
+      encodeURIComponent(error.message) +
+      "&productId=" +
+      req.params.productId
+    );
+
+  }
+
      next(error);
   
 
@@ -498,7 +509,8 @@ exports.getCheckout=async(req,res,next)=>{
       subtotal:data.subtotal,
       shipping:data.shipping,
       discount:data.discount,
-      total:data.total
+      total:data.total,
+      error:req.query.error
     });
 
   }catch(error){
@@ -521,7 +533,10 @@ exports.placeOrder=async(req,res,next)=>{
   res.redirect("/order-success/" + order.orderId);
 
   }catch(error){
-    next(error);
+    res.redirect(
+    "/checkout?error=" +
+    encodeURIComponent(error.message)
+  );
   }
 };
 

@@ -2,7 +2,7 @@
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
-
+const Product = require("../models/Product");
 
 exports.placeOrder = async(userId,addressId)=>{
 
@@ -16,10 +16,22 @@ await cart.save();
 //console.log("VALID ITEMS =",cart.items.length);
 
 const selectedAddress=user.address.id(addressId);
+
 if(!selectedAddress){
   throw new Error("Address not found");
 }
 
+
+for(const item of cart.items){
+
+  if(item.quantity > item.product.stock){
+
+    throw new Error(item.product.name +" has only " +
+                    item.product.stock +" item(s) left");
+
+  }
+
+}
 
 //coverting cart items
 const orderItems=cart.items.map(item=>({
@@ -72,6 +84,20 @@ const order=new Order({
 });
 
 await order.save();
+
+//reduce the stock after user order
+for(const item of cart.items){
+
+  await Product.findByIdAndUpdate(
+    item.product._id,
+    {
+      $inc:{
+        stock:-item.quantity
+      }
+    }
+  );
+
+}
 
 
 cart.items = [];
