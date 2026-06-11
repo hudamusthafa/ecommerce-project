@@ -138,23 +138,27 @@
   }
 
   function confirmDelete() {
-    fetch(`/address/delete/${selectedAddressId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "same-origin"
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Delete failed");
 
-      closeModal();
-      location.reload();
-    })
-    .catch(() => {
-      alert("Something went wrong");
-    });
-  }
+  fetch("/address/" + selectedAddressId, {
+    method: "DELETE"
+  })
+
+  .then(res => {
+
+    if (!res.ok) {
+      throw new Error("Delete failed");
+    }
+
+    closeModal();
+    location.reload();
+
+  })
+
+  .catch(() => {
+    alert("Something went wrong");
+  });
+
+}
 </script>
 
 </body>

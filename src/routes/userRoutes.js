@@ -14,8 +14,6 @@ router.put("/profile",cacheMiddleware.noCache,isLoggedIn,upload.single("image"),
 router.put("/profile/password",cacheMiddleware.noCache,isLoggedIn,userController.changePassword);
 router.post("/profile/set-password",cacheMiddleware.noCache,isLoggedIn,userController.setPassword);
 
-// CHECKOUT
-router.get("/checkout",cacheMiddleware.noCache,isLoggedIn,userController.getCheckout);
 
 // ADDRESS
 router.get("/address",cacheMiddleware.noCache,isLoggedIn,userController.getAddressPage);
@@ -46,6 +44,10 @@ router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,user
 
 // MOVE WISHLIST TO CART
 router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedIn,userController.moveWishlistToCart);
+
+
+// CHECKOUT
+router.get("/checkout",cacheMiddleware.noCache,isLoggedIn,userController.getCheckout);
 
 
 // PLACE ORDER

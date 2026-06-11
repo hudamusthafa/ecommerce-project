@@ -18,7 +18,11 @@
 </h2>
 <div class="address-container">
 
-<form action="<%= address ? '/address/update/' + address._id : '/address/add' %>" method="POST">
+<form
+  action="<%= address ? '/address/' + address._id + '?_method=PUT' : '/address' %>"
+  method="POST"
+>
+ 
   <!-- ROW 1 -->
   <div class="form-row">
     <div class="form-group">

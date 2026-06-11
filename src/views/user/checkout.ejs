@@ -79,7 +79,7 @@
                   Phone : <%= addr.phone %>
                 </p>
 
-                <div class="address-actions">
+               <div class="address-actions">
 
                   <a
                     href="/address/edit/<%= addr._id %>"
@@ -87,6 +87,14 @@
                   >
                     Edit
                   </a>
+
+                  <button
+                    type="button"
+                    class="btn delete-btn"
+                    onclick="openDeleteModal('<%= addr._id %>')"
+                  >
+                    Delete
+                  </button>
 
                 </div>
 
@@ -212,6 +220,89 @@
 
 </form>
 <%- include("../partials/footer") %>
+
+
+<div id="deleteModal" class="modal">
+
+  <div class="modal-content">
+
+    <p>Delete this address?</p>
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-btn"
+        onclick="closeModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="confirm-btn"
+        onclick="confirmDelete()"
+      >
+        Delete
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let selectedAddressId = null;
+
+function openDeleteModal(id){
+
+  selectedAddressId = id;
+
+  document.getElementById(
+    "deleteModal"
+  ).style.display = "flex";
+
+}
+
+function closeModal(){
+
+  document.getElementById(
+    "deleteModal"
+  ).style.display = "none";
+
+}
+
+function confirmDelete(){
+
+  fetch(
+    "/address/" + selectedAddressId,
+    {
+      method:"DELETE"
+    }
+  )
+
+  .then(res=>{
+
+    if(!res.ok){
+      throw new Error();
+    }
+
+    location.reload();
+
+  })
+
+  .catch(()=>{
+
+    alert(
+      "Failed to delete address"
+    );
+
+  });
+
+}
+
+</script>
 
 </body>
 

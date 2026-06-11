@@ -19,9 +19,13 @@ exports.getAddressPage = async (req, res) => {
 };
 
 exports.addAddress = async (req, res) => {
+
   try {
+
+    
     await userService.addAddress(req.user._id, req.body);
-    res.redirect("/address");   
+    res.redirect("/address"); 
+
   } catch (err) {
     res.send("Error adding address");
   }
@@ -29,11 +33,19 @@ exports.addAddress = async (req, res) => {
 
 // DELETE ADDRESS
 exports.deleteAddress = async (req, res) => {
+
   try {
     await userService.deleteAddress(req.user._id, req.params.id);
-    res.redirect("/address");   
+     res.json({
+      success: true
+    });
+
   } catch (err) {
-    res.send("Error deleting address");
+    
+   res.status(500).json({
+      success: false
+    });
+
   }
 };
 
