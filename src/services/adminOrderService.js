@@ -1,6 +1,6 @@
 const Order = require("../models/Order");
 
-exports.getOrders = async(search,page,limit)=>{
+exports.getOrders = async(search,status,page,limit)=>{
 
   const skip = (page - 1) * limit;
 
@@ -13,6 +13,10 @@ if(search){
     $regex: search,
     $options: "i"
   };
+}
+if(status){
+
+  query.orderStatus = status;
 
 }
 

@@ -564,3 +564,10 @@ td{
   color:#e74c3c;
   font-weight:600;
 }
+.status-filter{
+  padding:10px 14px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+  min-width:180px;
+}
