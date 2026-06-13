@@ -7,6 +7,8 @@ const {isAdminLoggedIn,isAdminLoggedOut}=require("../middleware/authMiddleware")
 const {noCache}=require("../middleware/cacheMiddleware");
 const upload=require("../config/multer");
 
+const adminOrderController = require("../controllers/adminOrderController");
+
 // ADMIN LOGIN
 router.get("/login",noCache,isAdminLoggedOut,adminController.getLogin);
 router.post("/login",isAdminLoggedOut,adminController.postLogin);
@@ -56,5 +58,11 @@ router.post("/add-product",isAdminLoggedIn,upload.array("images",5),productContr
 router.get("/edit-product/:id",isAdminLoggedIn,productController.getEditProduct);
 router.put("/edit-product/:id",isAdminLoggedIn,upload.array("images",5),productController.updateProduct);
 router.delete("/delete-product/:id",isAdminLoggedIn,productController.deleteProduct);
+
+
+// ORDERS
+router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
+//ORDER DETAILS
+router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
 
 module.exports=router;
