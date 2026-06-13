@@ -62,5 +62,7 @@ router.delete("/delete-product/:id",isAdminLoggedIn,productController.deleteProd
 
 // ORDERS
 router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
+//ORDER DETAILS
+router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
 
 module.exports=router;

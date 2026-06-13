@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Order Management</title>
+
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/category.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+</head>
+
+<body>
+
+<%- include('../partials/admin-header') %>
+
+<div class="layout">
+
+  <%- include('../partials/admin-sidebar') %>
+
+  <div class="main-content">
+
+    <div class="category-page">
+
+      <!-- TOP -->
+      <div class="top-section">
+
+        <h1>Orders</h1>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary-card">
+
+        <div class="summary-left">
+
+          <div class="summary-item">
+
+            Total Orders:
+            <strong><%= total %></strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <% if(orders.length > 0){ %>
+
+              <% orders.forEach(function(order){ %>
+
+                <tr>
+
+                  
+                  <td>
+                    <%= order.orderId %>
+                  </td>
+
+                  <td>
+
+                    <% if(order.user){ %>
+
+                      <strong>
+                        <%= order.user.name %>
+                      </strong>
+
+                      <br>
+
+                      <small>
+                        <%= order.user.email %>
+                      </small>
+
+                    <% } else { %>
+
+                      User Removed
+
+                    <% } %>
+
+                  </td>
+
+                  <td>
+
+                    <%= new Date(order.createdAt)
+                    .toLocaleDateString("en-GB") %>
+
+                  </td>
+
+                  <td>
+
+                    ₹<%= order.total %>
+
+                  </td>
+
+                  <td>
+
+                    <span class="status listed">
+
+                      <%= order.orderStatus %>
+
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <a
+                      href="/admin/orders/<%= order._id %>"
+                      class="icon-btn"
+                    >
+                      <i class="fa-regular fa-eye"></i>
+                    </a>
+
+                  </td>
+
+                </tr>
+
+              <% }) %>
+
+            <% } else { %>
+
+              <tr>
+
+                <td colspan="6" class="empty-msg">
+
+                  No Orders Found
+
+                </td>
+
+              </tr>
+
+            <% } %>
+
+          </tbody>
+
+        </table>
+
+        <!-- PAGINATION -->
+
+        <div class="pagination">
+
+          <% if(currentPage > 1){ %>
+
+            <a
+              href="/admin/orders?page=<%= currentPage - 1 %>"
+            >
+              Prev
+            </a>
+
+          <% } %>
+
+          <% for(let i=1;i<=totalPages;i++){ %>
+
+            <a
+              href="/admin/orders?page=<%= i %>"
+              class="<%= currentPage===i ? 'active-page' : '' %>"
+            >
+              <%= i %>
+            </a>
+
+          <% } %>
+
+          <% if(currentPage < totalPages){ %>
+
+            <a
+              href="/admin/orders?page=<%= currentPage + 1 %>"
+            >
+              Next
+            </a>
+
+          <% } %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('../partials/admin-footer') %>
+
+</body>
+</html>

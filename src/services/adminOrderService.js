@@ -19,3 +19,20 @@ exports.getOrders = async(page,limit)=>{
   };
 
 };
+
+
+//GET ORDER DETAILS
+
+exports.getOrderDetails = async(orderId)=>{
+
+  const order = await Order.findById(orderId)
+    .populate("user")
+    .populate("items.product");
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  return order;
+
+};

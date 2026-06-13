@@ -1,5 +1,7 @@
 const adminOrderService=require("../services/adminOrderService");
 
+// GET ORDERS PAGE
+
 exports.getOrders=async(req,res,next)=>{
   try{
 
@@ -16,6 +18,26 @@ exports.getOrders=async(req,res,next)=>{
       total:result.total,
       totalPages:result.totalPages,
       currentPage:page
+    });
+
+  }catch(error){
+
+    next(error);
+  }
+};
+
+
+// GET ORDER DETAILS PAGE
+
+exports.getOrderDetails=async(req,res,next)=>{
+  try{
+
+    const order=await adminOrderService.getOrderDetails(
+      req.params.id
+    );
+
+    res.render("admin/order-details",{
+      order
     });
 
   }catch(error){
