@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Order Details</title>
+
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/admin-order-details.css">
+
+</head>
+
+<body>
+
+<%- include("../partials/admin-header") %>
+
+<div class="layout">
+
+  <%- include("../partials/admin-sidebar") %>
+
+  <div class="main-content">
+
+    <h1>Order Details</h1>
+
+    <!-- ORDER INFO -->
+    <div class="card">
+
+      <h3>Order Information</h3>
+
+      <p>
+        <strong>Order ID:</strong>
+        <%= order.orderId %>
+      </p>
+
+      <p>
+        <strong>Order Date:</strong>
+        <%= new Date(order.createdAt).toLocaleDateString() %>
+      </p>
+
+      <p>
+      <strong>Status:</strong>
+
+      <span class="status-badge status-<%= order.orderStatus.toLowerCase() %>">
+        <%= order.orderStatus %>
+      </span>
+    </p>
+
+      <p>
+        <strong>Payment Method:</strong>
+        <%= order.paymentMethod %>
+      </p>
+
+      <p>
+        <strong>Payment Status:</strong>
+        <%= order.paymentStatus %>
+      </p>
+
+    </div>
+
+    <!-- CUSTOMER -->
+    <div class="card">
+
+      <h3>Customer Details</h3>
+
+      <p>
+        <strong>Name:</strong>
+        <%= order.user.name %>
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        <%= order.user.email %>
+      </p>
+
+      <p>
+        <strong>Phone:</strong>
+        <%= order.address.phone %>
+      </p>
+
+    </div>
+
+    <!-- ADDRESS -->
+    <div class="card">
+
+      <h3>Delivery Address</h3>
+
+      <p><%= order.address.house %></p>
+
+      <p><%= order.address.area %></p>
+
+      <p>
+        <%= order.address.city %>,
+        <%= order.address.state %>
+      </p>
+
+      <p>
+        PIN : <%= order.address.pincode %>
+      </p>
+
+    </div>
+
+    <!-- Ordered Products Section -->
+
+        <div class="card">
+
+      <h3>Ordered Products</h3>
+
+      <% order.items.forEach(function(item){ %>
+
+        <div class="product-row">
+
+          <img
+            src="/images/<%= item.product.images[0] %>"
+            alt="<%= item.product.name %>"
+            class="product-image"
+          >
+
+         <div class="product-info">
+
+            <h4><%= item.product.name %></h4>
+
+            <p>Qty : <%= item.quantity %></p>
+
+            <p>Price : ₹<%= item.price %></p>
+
+            <p>
+              Subtotal :
+              ₹<%= item.price * item.quantity %>
+            </p>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+    <!-- Price Summary -->
+
+      <div class="card">
+
+  <h3>Price Summary</h3>
+
+  <div class="summary-box">
+
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span>₹<%= order.subtotal %></span>
+    </div>
+
+    <div class="summary-row">
+      <span>Shipping</span>
+      <span>₹<%= order.shipping %></span>
+    </div>
+
+    <div class="summary-row">
+      <span>Discount</span>
+      <span>₹<%= order.discount %></span>
+    </div>
+
+    <div class="summary-row total-row">
+      <span>Total</span>
+      <span>₹<%= order.total %></span>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+<%- include("../partials/admin-footer") %>
+</body>
+</html>

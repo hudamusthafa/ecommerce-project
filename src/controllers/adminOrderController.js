@@ -32,13 +32,9 @@ exports.getOrders=async(req,res,next)=>{
 exports.getOrderDetails=async(req,res,next)=>{
   try{
 
-    const order=await adminOrderService.getOrderDetails(
-      req.params.id
-    );
+    const order = await adminOrderService.getOrderDetails(req.params.id);
 
-    res.render("admin/order-details",{
-      order
-    });
+    res.render("admin/order-details",{order });
 
   }catch(error){
 
