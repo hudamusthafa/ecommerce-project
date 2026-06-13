@@ -304,4 +304,4 @@ exports.postEditCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   await categoryService.deleteCategory(req.params.id);
   res.redirect("/admin/categories");
-};6
+};
