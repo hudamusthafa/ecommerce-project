@@ -1,16 +1,28 @@
 const Order = require("../models/Order");
 
-exports.getOrders = async(page,limit)=>{
+exports.getOrders = async(search,page,limit)=>{
 
   const skip = (page - 1) * limit;
 
-  const orders = await Order.find()
+
+  let query = {};
+
+if(search){
+
+  query.orderId = {
+    $regex: search,
+    $options: "i"
+  };
+
+}
+
+  const orders = await Order.find(query)
     .populate("user")
     .sort({createdAt:-1})
     .skip(skip)
     .limit(limit);
 
-  const total = await Order.countDocuments();
+  const total = await Order.countDocuments(query);
 
   return {
     orders,

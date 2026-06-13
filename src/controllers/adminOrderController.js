@@ -7,8 +7,10 @@ exports.getOrders=async(req,res,next)=>{
 
     const page=parseInt(req.query.page)||1;
     const limit=10;
+    const search = req.query.search || "";
 
     const result=await adminOrderService.getOrders(
+      search,
       page,
       limit
     );
@@ -17,7 +19,8 @@ exports.getOrders=async(req,res,next)=>{
       orders:result.orders,
       total:result.total,
       totalPages:result.totalPages,
-      currentPage:page
+      currentPage:page,
+      search
     });
 
   }catch(error){
