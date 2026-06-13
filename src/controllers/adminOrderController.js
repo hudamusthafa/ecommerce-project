@@ -41,3 +41,22 @@ exports.getOrderDetails=async(req,res,next)=>{
     next(error);
   }
 };
+
+
+//UPDATE ORDER DETAILS
+exports.updateOrderStatus = async(req,res,next)=>{
+
+  try{
+
+    await adminOrderService.updateOrderStatus(
+      req.params.id,
+      req.body.status
+    );
+
+    res.redirect("/admin/orders/" + req.params.id);
+
+  }catch(error){
+    next(error);
+  }
+
+};

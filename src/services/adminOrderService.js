@@ -36,3 +36,21 @@ exports.getOrderDetails = async(orderId)=>{
   return order;
 
 };
+
+
+//update orderstatus
+exports.updateOrderStatus = async(orderId,status)=>{
+
+  const order = await Order.findById(orderId);
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  order.orderStatus = status;
+
+  await order.save();
+
+  return order;
+
+};

@@ -65,4 +65,9 @@ router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
 //ORDER DETAILS
 router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
 
+// UPDATE ORDER STATUS
+router.post("/orders/:id/status",isAdminLoggedIn,adminOrderController.updateOrderStatus);
+
+
+
 module.exports=router;
