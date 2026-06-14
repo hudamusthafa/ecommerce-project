@@ -28,13 +28,18 @@ exports.getProducts=async(
   }
 
   // STOCK FILTER
-  if(stock==="inStock"){
-    query.stock={$gt:0};
-  }
+if(stock==="inStock"){
+  query.stock = { $gt: 5 };
+}
 
-  else if(stock==="outOfStock"){
-    query.stock=0;
-  }
+else if(stock==="lowStock"){
+  query.stock = {$gt: 0,$lte: 5};
+}
+
+else if(stock==="outOfStock"){
+  query.stock = 0;
+}
+
 
   // STATUS FILTER
   if(status==="archived"){
