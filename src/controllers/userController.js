@@ -609,3 +609,22 @@ exports.cancelOrder=async(req,res,next)=>{
     next(error);
   }
 };
+
+
+//RETURN ORDER
+
+exports.returnOrder=async(req,res,next)=>{
+  try{
+
+    await userOrderService.returnOrder(
+      req.params.id,
+      req.body.reason
+    );
+
+    res.redirect("/orders/"+req.params.id);
+
+  }catch(error){
+
+    next(error);
+  }
+};

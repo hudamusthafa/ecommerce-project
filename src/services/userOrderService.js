@@ -145,7 +145,7 @@ exports.getOrderDetails=async(orderId,userId)=>{
 
 
 
-// cancel order
+// CANCEL ORDER
 
 exports.cancelOrder = async(orderId,reason)=>{
 
@@ -183,4 +183,56 @@ exports.cancelOrder = async(orderId,reason)=>{
 
   return order;
 
+};
+
+
+// RETURN ORDER
+
+exports.returnOrder=async(orderId,reason)=>{
+
+  const order=await Order.findById(orderId);
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  if(order.orderStatus!=="Delivered"){
+    throw new Error(
+      "Only delivered orders can be returned"
+    );
+  }
+
+  if(!reason || !reason.trim()){
+    throw new Error(
+      "Return reason is required"
+    );
+  }
+
+  if(order.isReturned){
+    throw new Error(
+      "Order already returned"
+    );
+  }
+
+  // RESTORE STOCK
+  for(const item of order.items){
+
+    await Product.findByIdAndUpdate(
+      item.product,
+      {
+        $inc:{
+          stock:item.quantity
+        }
+      }
+    );
+
+  }
+
+  order.orderStatus="Returned";
+  order.isReturned=true;
+  order.returnReason=reason;
+
+  await order.save();
+
+  return order;
 };

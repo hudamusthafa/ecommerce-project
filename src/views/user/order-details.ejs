@@ -115,15 +115,84 @@
 
   </div>
 
-<!-- CANCEL ORDER -->
 
-<% if(order.orderStatus !== "Cancelled"){ %>
+<!-- ORDER ACTIONS(CANCEL/RETURN) -->
+
+<% if(order.orderStatus === "Cancelled"){ %>
 
   <div class="cancel-order-card">
 
-    <h3>
-      Cancel Order
-    </h3>
+    <h3>Order Cancelled</h3>
+
+    <p>
+      Status : <strong>Cancelled</strong>
+    </p>
+
+    <% if(order.cancelReason){ %>
+
+      <p>
+        Reason :
+        <%= order.cancelReason %>
+      </p>
+
+    <% } %>
+
+  </div>
+
+<% } else if(order.orderStatus === "Returned"){ %>
+
+  <div class="cancel-order-card">
+
+    <h3>Order Returned</h3>
+
+    <p>
+      Status : <strong>Returned</strong>
+    </p>
+
+    <% if(order.returnReason){ %>
+
+      <p>
+        Reason :
+        <%= order.returnReason %>
+      </p>
+
+    <% } %>
+
+  </div>
+
+<% } else if(order.orderStatus === "Delivered"){ %>
+
+  <div class="cancel-order-card">
+
+    <h3>Return Order</h3>
+
+    <form
+      action="/orders/<%= order._id %>/return"
+      method="POST"
+    >
+
+      <textarea
+        name="reason"
+        placeholder="Reason for return"
+        required
+      ></textarea>
+
+      <button
+        type="submit"
+        class="cancel-btn"
+      >
+        Return Order
+      </button>
+
+    </form>
+
+  </div>
+
+<% } else { %>
+
+  <div class="cancel-order-card">
+
+    <h3>Cancel Order</h3>
 
     <form
       action="/orders/<%= order._id %>/cancel"
@@ -146,31 +215,7 @@
 
   </div>
 
-<% } else { %>
-
-  <div class="cancel-order-card">
-
-    <h3>
-      Order Cancelled
-    </h3>
-
-    <p>
-      Status : <strong>Cancelled</strong>
-    </p>
-
-    <% if(order.cancelReason){ %>
-
-      <p>
-        Reason :
-        <%= order.cancelReason %>
-      </p>
-
-    <% } %>
-
-  </div>
-
 <% } %>
-
 
   <!-- ADDRESS -->
 

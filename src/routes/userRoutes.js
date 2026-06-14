@@ -62,10 +62,11 @@ router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders
 // ORDER DETAILS
 router.get("/orders/:id",cacheMiddleware.noCache,isLoggedIn,userController.getOrderDetails);
 
-
 // CANCEL ORDER
 router.post("/orders/:id/cancel",cacheMiddleware.noCache,isLoggedIn,userController.cancelOrder);
 
+// RETURN ORDER
+router.post("/orders/:id/return",cacheMiddleware.noCache,isLoggedIn,userController.returnOrder);
 
 // LOGOUT
 router.get("/logout",isLoggedIn,(req,res,next)=>{
