@@ -232,6 +232,13 @@
             Cancelled
           </option>
 
+          <option
+            value="Returned"
+            <%= order.orderStatus==="Returned" ? "selected" : "" %>
+          >
+            Returned
+          </option>
+
         </select>
 
         <button
