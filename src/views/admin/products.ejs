@@ -184,41 +184,46 @@
                 <tr>
 
                   <!-- PRODUCT -->
-                  <td>
+                   
+                  
+                    <td>
 
-                    <div class="product-info">
+                      <div class="product-info">
 
-                      <% if(product.images.length > 0){ %>
+                        <% if(product.images.length > 0){ %>
 
-                        <img
-                          src="/images/<%= product.images[0] %>"
-                          class="product-image"
-                        >
+                          <img
+                            src="/images/<%= product.images[0] %>"
+                            class="product-image"
+                          >
 
-                      <% } else { %>
+                        <% } else { %>
 
-                        <div class="category-image">
+                          <div class="category-image">
 
-                          <i class="fa-regular fa-image"></i>
+                            <i class="fa-regular fa-image"></i>
 
-                        </div>
+                          </div>
 
-                      <% } %>
+                        <% } %>
 
-                      <span>
-                        <%= product.name %>
-                      </span>
+                        <span>
+                          <%= product.name %>
+                        </span>
 
-                    </div>
+                      </div>
 
-                  </td>
+                    </td>
 
-                  <!-- CATEGORY -->
-                  <td>
+                    <!-- CATEGORY -->
+                    <td>
 
-                    <%= product.category ? product.category.name : "No Category" %>
+                      <%= product.category
+                          ? product.category.name
+                          : "No Category" %>
 
-                  </td>
+                    </td>
+
 
                   <!-- PRICE -->
                   <td>
@@ -228,12 +233,32 @@
                   </td>
 
                   <!-- STOCK -->
-                  <td>
+                
+                      <td>
 
-                    <%= product.stock %>
+                        <%= product.stock %>
 
-                  </td>
+                        <% if(product.stock === 0){ %>
 
+                          <span class="stock-badge out-stock">
+                            Out Of Stock
+                          </span>
+
+                        <% } else if(product.stock <= 5){ %>
+
+                          <span class="stock-badge low-stock">
+                            Low Stock
+                          </span>
+
+                        <% } else { %>
+
+                          <span class="stock-badge in-stock">
+                            In Stock
+                          </span>
+
+                        <% } %>
+
+                      </td>
                   <!-- DATE -->
                   <td>
 

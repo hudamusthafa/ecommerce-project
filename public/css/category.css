@@ -571,3 +571,27 @@ td{
   font-size:14px;
   min-width:180px;
 }
+
+.stock-badge{
+  display:inline-block;
+  margin-left:8px;
+  padding:4px 8px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.in-stock{
+  background:#e8f8ee;
+  color:#1e7e34;
+}
+
+.low-stock{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.out-stock{
+  background:#f8d7da;
+  color:#721c24;
+}
