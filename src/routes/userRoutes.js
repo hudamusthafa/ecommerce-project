@@ -68,6 +68,10 @@ router.post("/orders/:id/cancel",cacheMiddleware.noCache,isLoggedIn,userControll
 // RETURN ORDER
 router.post("/orders/:id/return",cacheMiddleware.noCache,isLoggedIn,userController.returnOrder);
 
+// DOWNLOAD INVOICE
+router.get("/orders/:id/invoice",cacheMiddleware.noCache,isLoggedIn,userController.downloadInvoice);
+
+
 // LOGOUT
 router.get("/logout",isLoggedIn,(req,res,next)=>{
   req.logout(err=>{

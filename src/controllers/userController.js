@@ -7,7 +7,8 @@ const userCartService=require("../services/userCartService");
 const userWishlistService=require("../services/userWishlistService");
 const userCheckoutService = require("../services/userCheckoutService");
 const userOrderService = require("../services/userOrderService");
-
+const PDFDocument = require("pdfkit");
+const Order = require("../models/Order");
 // ADD ADDRESS
 
 
@@ -629,6 +630,71 @@ exports.returnOrder=async(req,res,next)=>{
     );
 
     res.redirect("/orders/"+req.params.id);
+
+  }catch(error){
+
+    next(error);
+  }
+};
+
+//DOWNLOAD INVOICE
+
+exports.downloadInvoice=async(req,res,next)=>{
+  try{
+
+    const order=await Order.findOne({
+      _id:req.params.id,
+      user:req.user._id
+    }).populate("items.product");
+
+    if(!order){
+      return res.status(404).send("Order not found");
+    }
+
+    const doc=new PDFDocument({margin:50});
+
+    res.setHeader("Content-Type","application/pdf");
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Invoice-${order.orderId}.pdf`
+    );
+
+    doc.pipe(res);
+
+    doc.fontSize(22).text("INVOICE",{align:"center"});
+    doc.moveDown();
+    doc.fontSize(12);
+
+    doc.text(`Order ID: ${order.orderId}`);
+    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString()}`);
+    doc.text(`Status: ${order.orderStatus}`);
+
+    doc.moveDown();
+
+    doc.text("Customer Details");
+    doc.text(order.address.fullName);
+    doc.text(order.address.phone);
+    doc.text(`${order.address.house}, ${order.address.area}`);
+    doc.text(`${order.address.city}, ${order.address.state}`);
+    doc.text(order.address.pincode);
+
+    doc.moveDown();
+
+    doc.text("Products");
+
+    order.items.forEach(item=>{
+      doc.text(`${item.product.name} | Qty: ${item.quantity} | ₹${item.price} | Total: ₹${item.quantity*item.price}`);
+    });
+
+    doc.moveDown();
+
+    doc.text(`Subtotal: ₹${order.subtotal}`);
+    doc.text(`Shipping: ₹${order.shipping}`);
+    doc.text(`Discount: ₹${order.discount}`);
+    doc.fontSize(14).text(`Grand Total: ₹${order.total}`);
+
+    doc.end();
 
   }catch(error){
 
