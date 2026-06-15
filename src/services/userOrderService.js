@@ -115,22 +115,41 @@ return order;
 
 
 // get user orders
-exports.getOrders=async(userId,search)=>{
+exports.getOrders = async(userId, search)=>{
 
-  let query={user:userId};
+  let query = {
+    user:userId
+  };
 
-  if(search){
-    query.orderId={
-      $regex:search,
-      $options:"i"
-    };
-  }
-
-  const orders=await Order.find(query)
+  let orders = await Order.find(query)
     .populate("items.product")
     .sort({createdAt:-1});
 
+  if(search){
+
+    const searchText = search.toLowerCase();
+
+    orders = orders.filter(order => {
+
+      const orderMatch =
+        order.orderId.toLowerCase().includes(searchText);
+
+      const productMatch =
+        order.items.some(item =>
+          item.product &&
+          item.product.name
+            .toLowerCase()
+            .includes(searchText)
+        );
+
+      return orderMatch || productMatch;
+
+    });
+
+  }
+
   return orders;
+
 };
 
 
