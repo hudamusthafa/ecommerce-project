@@ -562,17 +562,24 @@ exports.getOrderSuccess=async(req,res,next)=>{
 exports.getOrders=async(req,res,next)=>{
   try{
 
+    const search=req.query.search||"";
+
     const orders=await userOrderService.getOrders(
-      req.user._id
+      req.user._id,
+      search
     );
 
-    res.render("user/orders",{orders,user:req.user});
+    res.render("user/orders",{
+      orders,
+      user:req.user,
+      search
+    });
 
   }catch(error){
+
     next(error);
   }
 };
-
 
 //get order details
 exports.getOrderDetails=async(req,res,next)=>{

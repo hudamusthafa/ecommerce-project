@@ -115,9 +115,18 @@ return order;
 
 
 // get user orders
-exports.getOrders=async(userId)=>{
+exports.getOrders=async(userId,search)=>{
 
-  const orders=await Order.find({user:userId})
+  let query={user:userId};
+
+  if(search){
+    query.orderId={
+      $regex:search,
+      $options:"i"
+    };
+  }
+
+  const orders=await Order.find(query)
     .populate("items.product")
     .sort({createdAt:-1});
 

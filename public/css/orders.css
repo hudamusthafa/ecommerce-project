@@ -146,3 +146,50 @@
 .status.delivered{
   color:green;
 }
+/* SEARCH */
+
+.order-search{
+  margin:20px 0 30px;
+}
+
+.order-search form{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.order-search input{
+  width:320px;
+  max-width:100%;
+  padding:12px 15px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:15px;
+  outline:none;
+}
+
+.order-search input:focus{
+  border-color:#9c6b3f;
+}
+
+.order-search button{
+  padding:12px 22px;
+  border:none;
+  border-radius:8px;
+  background:#9c6b3f;
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.order-search button:hover{
+  opacity:0.9;
+}
+
+.order-search a{
+  text-decoration:none;
+  color:#d9534f;
+  font-weight:600;
+}

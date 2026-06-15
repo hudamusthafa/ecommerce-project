@@ -20,6 +20,36 @@
     My Orders
   </h2>
 
+<!-- search -->
+
+<div class="order-search">
+
+  <form action="/orders" method="GET">
+
+    <input
+      type="text"
+      name="search"
+      placeholder="Search Order ID"
+      value="<%= search || '' %>"
+    >
+
+    <button type="submit">
+      Search
+    </button>
+
+    <% if(search){ %>
+
+      <a href="/orders">
+        Clear
+      </a>
+
+    <% } %>
+
+  </form>
+
+</div>
+
+
   <% if(orders.length > 0){ %>
 
     <div class="orders-list">
@@ -144,8 +174,13 @@
     <div class="empty-orders">
 
       <h3>
-        No Orders Found
-      </h3>
+
+      <%= search
+          ? "No matching orders found"
+          : "No Orders Found"
+      %>
+
+    </h3>
 
       <a
         href="/products"
