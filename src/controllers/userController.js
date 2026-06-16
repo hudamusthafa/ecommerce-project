@@ -476,11 +476,13 @@ exports.moveWishlistToCart = async(req,res,next)=>{
 
   try{
 
+    //product aded to cart
     await userCartService.addToCart(
       req.user._id,
       req.params.productId
     );
 
+    //product removed from wishlist
     await userWishlistService.removeWishlistItem(
       req.user._id,
       req.params.productId
@@ -558,7 +560,7 @@ exports.getOrderSuccess=async(req,res,next)=>{
 
 
 
-//get orders 
+//view orders list
 
 exports.getOrders=async(req,res,next)=>{
   try{
@@ -581,6 +583,8 @@ exports.getOrders=async(req,res,next)=>{
     next(error);
   }
 };
+
+
 
 //get order details
 exports.getOrderDetails=async(req,res,next)=>{
@@ -651,6 +655,7 @@ exports.downloadInvoice=async(req,res,next)=>{
       return res.status(404).send("Order not found");
     }
 
+    //Creates a new PDF document.
     const doc=new PDFDocument({margin:50});
 
     res.setHeader("Content-Type","application/pdf");

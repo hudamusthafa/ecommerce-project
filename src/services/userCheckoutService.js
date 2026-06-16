@@ -20,9 +20,7 @@ exports.getCheckoutData = async(userId) => {
   }
 
   // REMOVE INVALID PRODUCTS
-  cart.items = cart.items.filter(
-    item => item.product
-  );
+  
 
   const originalLength = cart.items.length;
 

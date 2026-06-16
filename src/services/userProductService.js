@@ -26,7 +26,7 @@ exports.getProducts=async(query)=>{
   // PAGINATION
   const page=parseInt(query.page) || 1;
 
-  const limit=6;
+  const limit= 4 ;
 
   const skip=(page-1)*limit;
 
@@ -149,7 +149,7 @@ exports.getProductDetails=async(productId,userId)=>{
     category:product.category._id,
     isDeleted:false
   })
-  .limit(6);
+  .limit(4);
 
 
   let isWishlisted = false;

@@ -14,6 +14,7 @@ exports.addToWishlist=async(userId,productId)=>{
     throw error;
   }
 
+  
   let wishlist=await Wishlist.findOne({
     user:userId
   });
@@ -30,7 +31,7 @@ exports.addToWishlist=async(userId,productId)=>{
 
   else{
 
-    const exists=wishlist.products.some(
+    const exists = wishlist.products.some(
       item=>item.toString()===productId.toString()
     );
 

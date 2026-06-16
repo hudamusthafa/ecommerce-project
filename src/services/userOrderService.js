@@ -9,7 +9,7 @@ exports.placeOrder = async(userId,addressId)=>{
 const user = await User.findById(userId);
 const cart = await Cart.findOne({user:userId}).populate("items.product");
 
-
+//Remove Invalid Products
 cart.items = cart.items.filter( item => item.product);
 await cart.save();
 
@@ -21,7 +21,7 @@ if(!selectedAddress){
   throw new Error("Address not found");
 }
 
-
+//checking stock
 for(const item of cart.items){
 
   if(item.quantity > item.product.stock){
@@ -33,15 +33,12 @@ for(const item of cart.items){
 
 }
 
-//coverting cart items
+//coverting cart items to a format
 const orderItems=cart.items.map(item=>({
   product:item.product._id,
   quantity:item.quantity,
   price:item.product.price
 }));
-
-
-
 
 
 const subtotal=cart.items.reduce(
@@ -54,11 +51,8 @@ const discount=0;
 
 const total=subtotal+shipping-discount;
 
+//generate a new orderid
 const orderId="ORD"+Date.now();
-
-//console.log("ORDER ID =",orderId);
-
-
 
 
 //create order
@@ -88,7 +82,8 @@ await order.save();
 
 
 
-//reduce the stock after user order
+//Stock Reduction After Successful Order
+
 for(const item of cart.items){
 
   await Product.findByIdAndUpdate(
@@ -114,7 +109,7 @@ return order;
 
 
 
-// get user orders
+// view user orders list
 exports.getOrders = async(userId, search)=>{
 
   let query = {
@@ -131,9 +126,12 @@ exports.getOrders = async(userId, search)=>{
 
     orders = orders.filter(order => {
 
+
+      //serch by orderId
       const orderMatch =
         order.orderId.toLowerCase().includes(searchText);
-
+     
+         //search by name
       const productMatch =
         order.items.some(item =>
           item.product &&
@@ -256,6 +254,8 @@ exports.returnOrder=async(orderId,reason)=>{
 
   }
 
+  //update return information
+  
   order.orderStatus="Returned";
   order.isReturned=true;
   order.returnReason=reason;
