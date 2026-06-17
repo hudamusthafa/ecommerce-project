@@ -33,7 +33,7 @@ exports.getProducts=async(query)=>{
   // FILTER OBJECT
   let filter={
 
-    isDeleted:false,
+    isListed:true,
 
     name:{
       $regex:search,
@@ -112,6 +112,8 @@ exports.getProducts=async(query)=>{
 
   });
 
+
+ 
   return{
 
     products: activeProducts,
@@ -138,7 +140,7 @@ exports.getProductDetails=async(productId,userId)=>{
   .populate("category");
 
   // PRODUCT NOT FOUND
-  if(!product || product.isDeleted || !product.category || product.category.isDeleted){
+  if(!product || !product.isListed || !product.category || product.category.isDeleted){
     return null;
   }
 
@@ -147,7 +149,7 @@ exports.getProductDetails=async(productId,userId)=>{
 
     _id:{ $ne:productId },
     category:product.category._id,
-    isDeleted:false
+    isListed:true
   })
   .limit(4);
 
