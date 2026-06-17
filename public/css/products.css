@@ -310,3 +310,23 @@ body{
   background:#e63946;
   color:#fff;
 }
+.top-bar{
+  margin-bottom:20px;
+}
+
+.search-sort-wrapper{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.search-form{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.sort-form select{
+  height:40px;
+  padding:0 10px;
+}

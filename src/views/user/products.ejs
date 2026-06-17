@@ -117,147 +117,148 @@
         Products
       </h1>
 
-      <!-- TOP BAR -->
+     <!-- TOP BAR -->
 
-      <div class="top-bar">
+<div class="top-bar">
 
-        <!-- SEARCH -->
+  <div class="search-sort-wrapper">
 
-        <form
-          action="/products"
-          method="GET"
-          class="search-form"
-        >
+    <!-- SEARCH -->
 
-          <input
-            type="text"
-            name="search"
-            placeholder="Search products"
-            value="<%= search %>"
+    <form
+      action="/products"
+      method="GET"
+      class="search-form"
+    >
+
+      <input
+        type="text"
+        name="search"
+        placeholder="Search products"
+        value="<%= search %>"
+      >
+
+      <input
+        type="hidden"
+        name="category"
+        value="<%= category %>"
+      >
+
+      <input
+        type="hidden"
+        name="sort"
+        value="<%= sort %>"
+      >
+
+      <input
+        type="hidden"
+        name="minPrice"
+        value="<%= minPrice %>"
+      >
+
+      <input
+        type="hidden"
+        name="maxPrice"
+        value="<%= maxPrice %>"
+      >
+
+      <button type="submit">
+        Search
+      </button>
+
+      <% if(search){ %>
+
+        <a href="/products">
+
+          <button
+            type="button"
+            class="clear-btn"
           >
-
-          <input
-            type="hidden"
-            name="category"
-            value="<%= category %>"
-          >
-
-          <input
-            type="hidden"
-            name="sort"
-            value="<%= sort %>"
-          >
-
-          <input
-          type="hidden"
-          name="minPrice"
-          value="<%= minPrice %>"
-          >
-
-          <input 
-          type="hidden"
-          name="maxPrice"
-          value="<%= maxPrice %>"
-          >
-
-          <button type="submit">
-            Search
+            Clear
           </button>
 
-          <% if(search){ %>
+        </a>
 
-            <a href="/products">
+      <% } %>
 
-              <button
-                type="button"
-                class="clear-btn"
-              >
-                Clear
-              </button>
+    </form>
 
-            </a>
+    <!-- SORT -->
 
-          <% } %>
+    <form
+      action="/products"
+      method="GET"
+      class="sort-form"
+    >
 
-        </form>
+      <input
+        type="hidden"
+        name="search"
+        value="<%= search %>"
+      >
 
-        <!-- SORT -->
+      <input
+        type="hidden"
+        name="category"
+        value="<%= category %>"
+      >
 
-        <form action="/products" method="GET">
+      <input
+        type="hidden"
+        name="minPrice"
+        value="<%= minPrice %>"
+      >
 
-          <input
-            type="hidden"
-            name="search"
-            value="<%= search %>"
-          >
+      <input
+        type="hidden"
+        name="maxPrice"
+        value="<%= maxPrice %>"
+      >
 
-          <input
-            type="hidden"
-            name="category"
-            value="<%= category %>"
-          >
-          <input
-            type="hidden"
-            name="minPrice"
-            value="<%= minPrice %>"
-          >
+      <select
+        name="sort"
+        onchange="this.form.submit()"
+      >
 
-          <input
-            type="hidden"
-            name="maxPrice"
-            value="<%= maxPrice %>"
-          >
+        <option value="">
+          Sort
+        </option>
 
-          <select
-            name="sort"
-            onchange="this.form.submit()"
-          >
+        <option
+          value="lowToHigh"
+          <%= sort==="lowToHigh" ? "selected" : "" %>
+        >
+          Price Low To High
+        </option>
 
-            <option value="">
-              Sort
-            </option>
+        <option
+          value="highToLow"
+          <%= sort==="highToLow" ? "selected" : "" %>
+        >
+          Price High To Low
+        </option>
 
-            <option
-              value="lowToHigh"
-              <%= sort==="lowToHigh"
-              ? "selected"
-              : "" %>
-            >
-              Price Low To High
-            </option>
+        <option
+          value="aToZ"
+          <%= sort==="aToZ" ? "selected" : "" %>
+        >
+          A-Z
+        </option>
 
-            <option
-              value="highToLow"
-              <%= sort==="highToLow"
-              ? "selected"
-              : "" %>
-            >
-              Price High To Low
-            </option>
+        <option
+          value="zToA"
+          <%= sort==="zToA" ? "selected" : "" %>
+        >
+          Z-A
+        </option>
 
-            <option
-              value="aToZ"
-              <%= sort==="aToZ"
-              ? "selected"
-              : "" %>
-            >
-              A-Z
-            </option>
+      </select>
 
-            <option
-              value="zToA"
-              <%= sort==="zToA"
-              ? "selected"
-              : "" %>
-            >
-              Z-A
-            </option>
+    </form>
 
-          </select>
+  </div>
 
-        </form>
-
-      </div>
+</div>
 
       <!-- PRODUCTS GRID -->
             <div class="products-grid">
