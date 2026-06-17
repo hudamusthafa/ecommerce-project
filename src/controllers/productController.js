@@ -130,8 +130,15 @@ exports.addProduct=async(req,res)=>{
 
       images.push(filename);
 
-      // DELETE TEMP FILE
-      fs.unlinkSync(file.path);
+
+try{
+
+  fs.unlinkSync(file.path);
+
+}catch(error){
+
+
+}
     }
 
     // SAVE PRODUCT
@@ -239,8 +246,15 @@ exports.updateProduct=async(req,res)=>{
 
         images.push(filename);
 
-        // DELETE TEMP FILE
-        fs.unlinkSync(file.path);
+    
+
+try{
+
+  fs.unlinkSync(file.path);
+
+}catch(error){
+
+}
       }
     }
 
@@ -279,11 +293,16 @@ exports.updateProduct=async(req,res)=>{
 exports.deleteProduct=async(req,res)=>{
   try{
 
-    await productService.softDeleteProduct(req.params.id);
-    res.redirect("/admin/products");
+    await productService.toggleProductStatus(req.params.id);
+
+    const page = req.query.page || 1;
+
+    res.redirect("/admin/products?page=" + page);
 
   }catch(error){
+
     console.log(error);
+
     res.redirect("/admin/products");
   }
 };

@@ -213,15 +213,16 @@ td{
 }
 
 .listed{
-  background: #dff5e4;
-  color: #2f8b4e;
+  background: #198754;
+  color: white;
+  font-weight: 600;
 }
 
 .archived{
-  background: #efefef;
-  color: #666;
+  background: #c82333;
+  color: white;
+  font-weight: 600;
 }
-
 /* ===== ACTIONS ===== */
 
 .actions{
