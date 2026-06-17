@@ -130,8 +130,16 @@ exports.addProduct=async(req,res)=>{
 
       images.push(filename);
 
-      // DELETE TEMP FILE
-      fs.unlinkSync(file.path);
+      images.push(filename);
+
+try{
+
+  fs.unlinkSync(file.path);
+
+}catch(error){
+
+
+}
     }
 
     // SAVE PRODUCT
@@ -239,8 +247,15 @@ exports.updateProduct=async(req,res)=>{
 
         images.push(filename);
 
-        // DELETE TEMP FILE
-        fs.unlinkSync(file.path);
+       images.push(filename);
+
+try{
+
+  fs.unlinkSync(file.path);
+
+}catch(error){
+
+}
       }
     }
 
