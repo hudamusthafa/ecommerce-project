@@ -111,10 +111,10 @@
     </option>
 
     <option
-      value="archived"
-      <%= status==="archived" ? "selected" : "" %>
+      value="unlisted"
+      <%= status==="unlisted" ? "selected" : "" %>
     >
-      Archived
+      Unlisted
     </option>
 
   </select>
@@ -245,20 +245,19 @@
                   <!-- STATUS -->
                   <td>
 
-                    <% if(product.isDeleted){ %>
+                   <% if(product.isListed){ %>
 
-                      <span class="status archived">
-                        Archived
-                      </span>
+                    <span class="status listed">
+                      Listed
+                    </span>
 
-                    <% } else { %>
+                  <% } else { %>
 
-                      <span class="status listed">
-                        Listed
-                      </span>
+                    <span class="status archived">
+                      Unlisted
+                    </span>
 
-                    <% } %>
-
+                  <% } %>
                   </td>
 
                   <!-- ACTION -->
@@ -290,10 +289,10 @@
                                 <i class="fa-regular fa-eye"></i>
                               </button>
                       <!-- DELETE -->
-                      <button
+                     <button
                         type="button"
                         class="icon-btn"
-                        onclick="openDeleteModal('<%= product._id %>')"
+                        onclick="openDeleteModal('<%= product._id %>', <%= product.isListed %>)"
                       >
                         🗑️
                       </button>
@@ -368,7 +367,7 @@
 
   <div class="modal-box">
 
-    <p>Delete this product?</p>
+    <p id="modalText"></p>
 
     <button
       class="confirm-btn"
@@ -455,10 +454,16 @@
 
 let deleteId = "";
 
-function openDeleteModal(id){
-  deleteId = id;
-  document.getElementById("deleteModal" ).style.display = "flex";
+function openDeleteModal(id,isListed){
 
+  deleteId = id;
+
+  document.getElementById("modalText").innerText =
+    isListed
+      ? "Unlist this product?"
+      : "List this product?";
+
+  document.getElementById("deleteModal").style.display="flex";
 }
 
 function closeDeleteModal(){
@@ -466,12 +471,10 @@ function closeDeleteModal(){
 }
 
 function confirmDelete(){
+
   const form = document.getElementById("deleteForm");
 
-  form.action =
-    "/admin/delete-product/" +
-    deleteId +
-    "?_method=DELETE";
+  form.action = "/admin/delete-product/" + deleteId + "?page=<%= currentPage %>&_method=DELETE";
 
   form.submit();
 

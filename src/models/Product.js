@@ -32,6 +32,10 @@ const productSchema = new mongoose.Schema({
   images: [{
     type: String
   }],
+  isListed:{
+  type:Boolean,
+  default:true
+},
 
   isDeleted: {
     type: Boolean,

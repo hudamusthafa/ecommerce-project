@@ -12,7 +12,7 @@ exports.getProducts=async(
 )=>{
 
   // FILTER OBJECT
-  let query={isDeleted:false};
+  let query={};
 
   // SEARCH
   if(search && search.trim()!==""){
@@ -37,12 +37,12 @@ exports.getProducts=async(
   }
 
   // STATUS FILTER
-  if(status==="archived"){
-    query.isDeleted=true;
+  if(status==="listed"){
+    query.isListed=true;
   }
 
-  else if(status==="listed"){
-    query.isDeleted=false;
+  else if(status==="unlisted"){
+    query.isListed=false;
   }
 
   // PAGINATION
@@ -90,10 +90,17 @@ exports.updateProduct=async(id,data)=>{
 
 // ================= SOFT DELETE PRODUCT ====================
 
-exports.softDeleteProduct=async(id)=>{
-  return await Product.findByIdAndUpdate(
-    id,
-    {isDeleted:true},
-    {returnDocument:"after"}
-  );
+exports.toggleProductStatus = async(id)=>{
+
+  const product = await Product.findById(id);
+
+  if(!product){
+    throw new Error("Product not found");
+  }
+
+  product.isListed = !product.isListed;
+
+  await product.save();
+
+  return product;
 };

@@ -130,7 +130,6 @@ exports.addProduct=async(req,res)=>{
 
       images.push(filename);
 
-      images.push(filename);
 
 try{
 
@@ -247,7 +246,7 @@ exports.updateProduct=async(req,res)=>{
 
         images.push(filename);
 
-       images.push(filename);
+    
 
 try{
 
@@ -294,11 +293,16 @@ try{
 exports.deleteProduct=async(req,res)=>{
   try{
 
-    await productService.softDeleteProduct(req.params.id);
-    res.redirect("/admin/products");
+    await productService.toggleProductStatus(req.params.id);
+
+    const page = req.query.page || 1;
+
+    res.redirect("/admin/products?page=" + page);
 
   }catch(error){
+
     console.log(error);
+
     res.redirect("/admin/products");
   }
 };
