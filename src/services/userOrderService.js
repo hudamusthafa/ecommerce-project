@@ -157,10 +157,14 @@ exports.getOrders = async(userId, search)=>{
 
 exports.getOrderDetails=async(orderId,userId)=>{
 
+
+
   const order=await Order.findOne({
-    _id:orderId,
-    user:userId
-  }).populate("items.product");
+  _id:orderId,
+  user:userId
+}).populate("items.product");
+
+
 
   if(!order){
     throw new Error("Order not found");
