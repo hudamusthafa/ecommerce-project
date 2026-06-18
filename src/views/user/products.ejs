@@ -260,8 +260,8 @@
 
 </div>
 
-      <!-- PRODUCTS GRID -->
-     <!-- PRODUCTS GRID -->
+     
+    <!-- PRODUCTS GRID -->
 
 <div class="products-grid">
 
@@ -278,6 +278,7 @@
 
           <img
             src="/images/<%= product.images[0] %>"
+            alt="<%= product.name %>"
           >
 
           <h3>
@@ -310,6 +311,17 @@
 
                 <p class="cart-success">
                   ✓ Added to cart
+                </p>
+
+              <% } %>
+
+              <% if(
+                wishlistedProduct &&
+                wishlistedProduct === product._id.toString()
+              ){ %>
+
+                <p class="wishlist-success">
+                  ✓ Added to wishlist
                 </p>
 
               <% } %>
@@ -349,9 +361,8 @@
   <% } %>
 
 </div>
-
-  //  PAGINATION 
-
+  
+<!-- PAGINATION -->
 
   <div class="pagination">
 

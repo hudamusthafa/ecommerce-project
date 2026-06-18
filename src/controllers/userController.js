@@ -255,12 +255,15 @@ exports.getProductsPage=async(req,res,next)=>{
       req.query
     );
    const addedProduct = req.query.added || "";
+   const wishlistedProduct = req.query.wishlisted || "";
+
 
     res.render( "user/products",
        { 
         ...data, 
         user:req.user || null,
-      addedProduct} );
+      addedProduct,
+      wishlistedProduct} );
   }
 
   catch(error){
@@ -440,7 +443,7 @@ exports.addToWishlist=async(req,res,next)=>{
       req.params.productId
     );
 
-    res.redirect("/wishlist");
+    res.redirect( "/products?wishlisted=" +req.params.productId);
 
   }catch(error){
 

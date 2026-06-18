@@ -343,3 +343,18 @@ body{
   text-align:center;
   letter-spacing:0.5px;
 }
+
+.wishlist-section{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.wishlist-success{
+  color:#00c853 !important;
+  font-size:16px;
+  font-weight:700;
+  margin-top:6px;
+  text-align:center;
+  white-space:nowrap;
+}
