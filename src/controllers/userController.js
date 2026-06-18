@@ -254,14 +254,13 @@ exports.getProductsPage=async(req,res,next)=>{
     const data=await userProductService.getProducts(
       req.query
     );
+   const addedProduct = req.query.added || "";
 
-    res.render(
-      "user/products",
-      {
-        ...data,
-        user:req.user || null
-      }
-    );
+    res.render( "user/products",
+       { 
+        ...data, 
+        user:req.user || null,
+      addedProduct} );
   }
 
   catch(error){
@@ -317,7 +316,8 @@ exports.addToCart=async(req,res,next)=>{
       req.user._id,
       req.params.productId
     );
-    res.redirect("/cart");
+
+    res.redirect( "/products?added=" + req.params.productId);
   }
 
   catch(error){

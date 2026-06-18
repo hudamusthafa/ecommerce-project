@@ -261,82 +261,97 @@
 </div>
 
       <!-- PRODUCTS GRID -->
-            <div class="products-grid">
+     <!-- PRODUCTS GRID -->
 
-              <% if(products.length > 0){ %>
+<div class="products-grid">
 
-                <% products.forEach(function(product){ %>
+  <% if(products.length > 0){ %>
 
-                 <div class="product-card">
+    <% products.forEach(function(product){ %>
 
-                    <a
-                      href="/products/<%= product._id %>"
-                      class="product-link"
-                    >
+      <div class="product-card">
 
-                      <img
-                        src="/images/<%= product.images[0] %>"
-                      >
+        <a
+          href="/products/<%= product._id %>"
+          class="product-link"
+        >
 
-                      <h3>
-                        <%= product.name %>
-                      </h3>
+          <img
+            src="/images/<%= product.images[0] %>"
+          >
 
-                      <p>
-                        ₹ <%= product.price %>
-                      </p>
+          <h3>
+            <%= product.name %>
+          </h3>
 
-                    </a>
+          <p>
+            ₹ <%= product.price %>
+          </p>
 
-                  <div class="product-actions">
+        </a>
 
-                    <% if(product.stock > 0){ %>
+        <div class="product-actions">
 
-                      <a
-                        href="/cart/add/<%= product._id %>"
-                        class="cart-btn"
-                      >
-                        Add To Cart
-                      </a>
+          <% if(product.stock > 0){ %>
 
-                    <% } else { %>
+            <div class="cart-section">
 
-                      <button
-                        class="out-stock-btn"
-                        disabled
-                      >
-                        Out Of Stock
-                      </button>
+              <a
+                href="/cart/add/<%= product._id %>"
+                class="cart-btn"
+              >
+                Add To Cart
+              </a>
 
-                    <% } %>
+              <% if(
+                addedProduct &&
+                addedProduct === product._id.toString()
+              ){ %>
 
-                    <a
-                      href="/wishlist/add/<%= product._id %>"
-                      class="wishlist-btn"
-                    >
-                      <i class="fa-regular fa-heart"></i>
-                    </a>
-
-                  </div>
-                  </div>
-
-                <% }) %>
-
-              <% } else { %>
-
-                <h2 class="no-products">
-                  No products found
-                </h2>
+                <p class="cart-success">
+                  ✓ Added to cart
+                </p>
 
               <% } %>
 
             </div>
 
-            </div>
+          <% } else { %>
 
-            </div>
+            <button
+              class="out-stock-btn"
+              disabled
+            >
+              Out Of Stock
+            </button>
 
-  <!-- PAGINATION -->
+          <% } %>
+
+          <a
+            href="/wishlist/add/<%= product._id %>"
+            class="wishlist-btn"
+          >
+            <i class="fa-regular fa-heart"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+    <% }) %>
+
+  <% } else { %>
+
+    <h2 class="no-products">
+      No products found
+    </h2>
+
+  <% } %>
+
+</div>
+
+  //  PAGINATION 
+
 
   <div class="pagination">
 

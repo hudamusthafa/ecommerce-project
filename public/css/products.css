@@ -330,3 +330,16 @@ body{
   height:40px;
   padding:0 10px;
 }
+.cart-section{
+  display:flex;
+  flex-direction:column;
+}
+
+.cart-success{
+  color:#00c853 !important;
+  font-size:20px !important;
+  font-weight:700 !important;
+  margin-top:8px;
+  text-align:center;
+  letter-spacing:0.5px;
+}
