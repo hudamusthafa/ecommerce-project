@@ -15,7 +15,7 @@ require("./src/config/passport");
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
-  
+const Cart = require("./src/models/Cart");  
 
 const app = express();
 
@@ -49,25 +49,60 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Global user middleware
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
 
-  //  If session exists but user is missing (blocked/deleted)
-if (req.session &&req.session.passport && !req.user && !req.originalUrl.startsWith("/admin")) {    
-  
-       return req.logout(() => {
+  try{
+
+    if (
+      req.session &&
+      req.session.passport &&
+      !req.user &&
+      !req.originalUrl.startsWith("/admin")
+    ) {
+
+      return req.logout(() => {
         req.session.destroy(() => {
-        res.clearCookie("connect.sid");
+          res.clearCookie("connect.sid");
 
-      return res.redirect(
-        "/login?message=" + encodeURIComponent("Your account has been blocked by admin")
-      );     
-     });
-    });
+          return res.redirect(
+            "/login?message=" +
+            encodeURIComponent(
+              "Your account has been blocked by admin"
+            )
+          );
+        });
+      });
+    }
+
+    res.locals.user = req.user || null;
+    res.locals.cartCount = 0;
+
+    if(req.user){
+
+      const cart = await Cart.findOne({
+        user:req.user._id
+      });
+
+      if(cart){
+
+        res.locals.cartCount =
+          cart.items.reduce(
+            (total,item)=>total + item.quantity,
+            0
+          );
+
+      }
+
+    }
+
+    next();
+
+  }catch(error){
+
+    next(error);
+
   }
 
-  // normal flow
-  res.locals.user = req.user || null;
-  next();
 });
 
 app.get("/", (req, res) => {

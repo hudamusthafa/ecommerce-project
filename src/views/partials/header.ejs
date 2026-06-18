@@ -41,8 +41,16 @@
         title="Cart"
       >
         <i class="fa-solid fa-cart-shopping"></i>
-      </a>
 
+        <% if(cartCount > 0){ %>
+
+          <span class="cart-badge">
+            <%= cartCount %>
+          </span>
+
+        <% } %>
+
+      </a>
       <!-- LOGOUT -->
       <a href="/logout" class="logout">
         Log Out

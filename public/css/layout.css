@@ -352,3 +352,30 @@ input {
   color:#fff;
   transform:scale(1.08);
 }
+
+.cart-icon{
+  position:relative;
+}
+
+.cart-badge{
+  position:absolute;
+  top:-8px;
+  right:-10px;
+
+  width:18px;
+  height:18px;
+
+  background:#000;
+  color:#fff;
+
+  border-radius:50%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:11px;
+  font-weight:700;
+
+  line-height:1;
+}
