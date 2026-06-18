@@ -24,6 +24,50 @@
     Order Details
   </h2>
 
+
+  <h2 class="page-title">
+  Order Details
+</h2>
+
+<!-- ORDER TRACKER -->
+
+<% if(
+  order.orderStatus !== "Cancelled" &&
+  order.orderStatus !== "Returned"
+){ %>
+
+<div class="order-tracker">
+
+  <div class="step <%= ["Placed","Processing","Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+    <span>1</span>
+    <p>Placed</p>
+  </div>
+
+  <div class="line"></div>
+
+  <div class="step <%= ["Processing","Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+    <span>2</span>
+    <p>Processing</p>
+  </div>
+
+  <div class="line"></div>
+
+  <div class="step <%= ["Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+    <span>3</span>
+    <p>Shipped</p>
+  </div>
+
+  <div class="line"></div>
+
+  <div class="step <%= order.orderStatus==="Delivered" ? "completed" : "" %>">
+    <span>4</span>
+    <p>Delivered</p>
+  </div>
+
+</div>
+
+<% } %>
+
  <!-- PRODUCTS -->
 
   <div class="products-card">

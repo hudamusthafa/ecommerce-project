@@ -26,7 +26,7 @@ exports.getProducts=async(query)=>{
   // PAGINATION
   const page=parseInt(query.page) || 1;
 
-  const limit= 4 ;
+  const limit= 12 ;
 
   const skip=(page-1)*limit;
 
