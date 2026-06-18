@@ -239,6 +239,15 @@ td{
   font-size: 15px;
   text-decoration: none;
 }
+.delete-btn{
+  color: #dc3545;
+   font-size: 18px;
+}
+
+.delete-btn:hover{
+  color: #bb2d3b;
+   opacity: 0.8;
+}
 
 /* ===== EMPTY ===== */
 
@@ -582,17 +591,31 @@ td{
   font-weight:600;
 }
 
+/* ===== STOCK STATUS ===== */
+
 .in-stock{
-  background:#e8f8ee;
-  color:#1e7e34;
+  background: #198754;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .low-stock{
-  background:#fff3cd;
-  color:#856404;
+  background: #ffc107;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .out-stock{
-  background:#f8d7da;
-  color:#721c24;
+  background: #dc3545;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
 }

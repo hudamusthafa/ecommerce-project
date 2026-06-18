@@ -242,32 +242,29 @@
                   </td>
 
                   <!-- STOCK -->
-                
-                      <td>
+                <td>
 
-                        <%= product.stock %>
+                    <% if(product.stock === 0){ %>
 
-                        <% if(product.stock === 0){ %>
+                      <span class="out-stock">
+                        Out Of Stock
+                      </span>
 
-                          <span class="stock-badge out-stock">
-                            Out Of Stock
-                          </span>
+                    <% } else if(product.stock <= 5){ %>
 
-                        <% } else if(product.stock <= 5){ %>
+                      <span class="low-stock">
+                        Low Stock
+                      </span>
 
-                          <span class="stock-badge low-stock">
-                            Low Stock
-                          </span>
+                    <% } else { %>
 
-                        <% } else { %>
+                      <span class="in-stock">
+                        In Stock
+                      </span>
 
-                          <span class="stock-badge in-stock">
-                            In Stock
-                          </span>
+                    <% } %>
 
-                        <% } %>
-
-                      </td>
+                  </td>
                   <!-- DATE -->
                   <td>
 
@@ -325,10 +322,10 @@
                       <!-- DELETE -->
                      <button
                         type="button"
-                        class="icon-btn"
+                        class="icon-btn delete-btn"
                         onclick="openDeleteModal('<%= product._id %>', <%= product.isListed %>)"
                       >
-                        🗑️
+                        <i class="fa-solid fa-trash"></i>
                       </button>
 
                     </div>
