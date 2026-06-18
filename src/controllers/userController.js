@@ -597,10 +597,12 @@ exports.getOrderDetails=async(req,res,next)=>{
       req.params.id,
       req.user._id
     );
+ const cancelled = req.query.cancelled;
 
     res.render("user/order-details",{
       order,
-      user:req.user
+      user:req.user,
+      cancelled
     });
 
   }catch(error){
@@ -617,7 +619,11 @@ exports.cancelOrder=async(req,res,next)=>{
       req.body.reason
     );
 
-    res.redirect("/orders/"+req.params.id);
+   res.redirect(
+  "/orders/" +
+  req.params.id +
+  "?cancelled=true"
+);
 
   }catch(error){
 
