@@ -16,23 +16,35 @@ const orderSchema = new mongoose.Schema({
 
   items:[{
 
-    product:{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"Product",
-      required:true
-    },
+  product:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Product"
+  },
 
-    quantity:{
-      type:Number,
-      required:true
-    },
+  quantity:Number,
 
-    price:{
-      type:Number,
-      required:true
-    }
+  price:Number,
 
-  }],
+  status:{
+    type:String,
+    enum:[
+      "Placed",
+      "Cancelled",
+      "Returned"
+    ],
+    default:"Placed"
+  },
+
+ cancelReason:{
+    type:String,
+    default:""
+  },
+
+  returnReason:{
+    type:String,
+    default:""
+  }
+}],
 
   address:{
 

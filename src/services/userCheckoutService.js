@@ -10,6 +10,8 @@ exports.getCheckoutData = async(userId) => {
   })
   .populate("items.product");
 
+
+  
   // CART NOT FOUND
   if(!cart){
 
@@ -28,6 +30,9 @@ exports.getCheckoutData = async(userId) => {
       item => item.product
     );
 
+
+
+
     if(cart.items.length !== originalLength){
       await cart.save();
     }
@@ -38,7 +43,7 @@ exports.getCheckoutData = async(userId) => {
   if(cart.items.length === 0){
 
     const error = new Error(
-      "No valid products in cart"
+      "Your cart is empty"
     );
 
     error.statusCode = 400;

@@ -25,7 +25,7 @@
   </h2>
 
   <!-- error msg -->
-   
+
   <% if(cancelled){ %>
 
   <div class="success-message">
@@ -75,51 +75,118 @@
 
  <!-- PRODUCTS -->
 
-  <div class="products-card">
+<div class="products-card">
 
-    <h3>
-      Ordered Products
-    </h3>
+  <h3>
+    Ordered Products
+  </h3>
 
-    <% order.items.forEach(function(item){ %>
+  <% order.items.forEach(function(item){ %>
 
-      <div class="product-row">
+    <div class="product-row">
 
-        <img
-          src="/images/<%= item.product.images[0] %>"
-          alt="<%= item.product.name %>"
-        >
+      <img
+        src="/images/<%= item.product.images[0] %>"
+        alt="<%= item.product.name %>"
+      >
 
-        <div class="product-info">
+      <div class="product-info">
 
-          <h4>
-            <%= item.product.name %>
-          </h4>
+        <h4>
+          <%= item.product.name %>
+        </h4>
+
+        <p>
+          Quantity :
+          <%= item.quantity %>
+        </p>
+
+        <p>
+          Price :
+          ₹<%= item.price %>
+        </p>
+
+        <p>
+          Status :
+          <strong class="<%= item.status.toLowerCase() %>">
+            <%= item.status %>
+          </strong>
+        </p>
+
+        <% if(item.cancelReason){ %>
 
           <p>
-            Quantity :
-            <%= item.quantity %>
+            Reason :
+            <%= item.cancelReason %>
           </p>
 
-          <p>
-            Price :
-            ₹<%= item.price %>
-          </p>
+        <% } %>
 
-        </div>
+        <% if(
+          item.status === "Placed" &&
+          order.orderStatus !== "Delivered" &&
+          order.orderStatus !== "Cancelled"
+        ){ %>
 
-        <div class="product-total">
+         <form
+  action="/orders/<%= order._id %>/product/<%= item.product._id %>/cancel"
+  method="POST"
+  class="cancel-product-form"
+>
 
-          ₹<%= item.price * item.quantity %>
+  
 
-        </div>
+</form>
+        <% } %>
 
       </div>
 
-    <% }) %>
+     <div class="product-total">
+
+  <div class="price-action">
+
+    <span class="product-price">
+     <% if(item.status === "Cancelled"){ %>
+
+        <span class="cancelled-price">
+          Cancelled
+        </span>
+
+      <% } else { %>
+
+        ₹<%= item.price * item.quantity %>
+
+      <% } %>
+    </span>
+
+    <% if(
+      item.status === "Placed" &&
+      ["Placed","Processing"].includes(order.orderStatus)
+    ){ %>
+
+      <button
+        type="button"
+        class="cancel-btn"
+        onclick="openCancelModal(
+          '<%= order._id %>',
+          '<%= item.product._id %>'
+        )"
+      >
+        <i class="fa-solid fa-ban"></i>
+        Cancel
+      </button>
+
+    <% } %>
 
   </div>
 
+</div>
+
+    </div>
+
+  <% }) %>
+
+</div>
 
 
   <!-- ORDER INFO -->
@@ -175,7 +242,9 @@
 
   <div class="cancel-order-card">
 
-    <h3>Order Cancelled</h3>
+    <h3>
+      All Products Cancelled
+    </h3>
 
     <p>
       Status : <strong>Cancelled</strong>
@@ -235,33 +304,6 @@
         class="cancel-btn"
       >
         Return Order
-      </button>
-
-    </form>
-
-  </div>
-
-<% } else { %>
-
-  <div class="cancel-order-card">
-
-    <h3>Cancel Order</h3>
-
-    <form
-      action="/orders/<%= order._id %>/cancel"
-      method="POST"
-    >
-
-      <textarea
-        name="reason"
-        placeholder="Reason for cancellation (optional)"
-      ></textarea>
-
-      <button
-        type="submit"
-        class="cancel-btn"
-      >
-        Cancel Order
       </button>
 
     </form>
@@ -365,7 +407,93 @@
 
 </div>
 
+<div id="cancelModal" class="modal">
+
+  <div class="modal-content">
+
+    <h3>Cancel Product</h3>
+
+    <form
+      id="cancelForm"
+      method="POST"
+    >
+
+      <textarea
+        name="reason"
+        placeholder="Reason for cancellation (optional)"
+      ></textarea>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="close-btn"
+          onclick="closeCancelModal()"
+        >
+          Close
+        </button>
+
+        <button
+          type="submit"
+          class="cancel-btn"
+        >
+          Confirm Cancellation
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+
+function openCancelModal(
+  orderId,
+  productId
+){
+
+  document.getElementById(
+    "cancelForm"
+  ).action =
+    "/orders/" +
+    orderId +
+    "/product/" +
+    productId +
+    "/cancel";
+
+  document.getElementById(
+    "cancelModal"
+  ).style.display = "block";
+}
+
+function closeCancelModal(){
+
+  document.getElementById(
+    "cancelModal"
+  ).style.display = "none";
+}
+
+window.onclick = function(event){
+
+  const modal =
+    document.getElementById(
+      "cancelModal"
+    );
+
+  if(event.target === modal){
+    closeCancelModal();
+  }
+};
+
+</script>
+
 <%- include("../partials/footer") %>
+
+
+
 
 </body>
 </html>

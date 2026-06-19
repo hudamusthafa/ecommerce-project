@@ -37,9 +37,9 @@ for(const item of cart.items){
 const orderItems=cart.items.map(item=>({
   product:item.product._id,
   quantity:item.quantity,
-  price:item.product.price
+  price:item.product.price,
+  status:"Placed"
 }));
-
 
 const subtotal=cart.items.reduce(
   (total,item)=>total+(item.product.price*item.quantity),
@@ -215,6 +215,77 @@ exports.cancelOrder = async(orderId,reason)=>{
 
 };
 
+
+//cancel each product
+exports.cancelProduct = async (
+  orderId,
+  productId,
+  reason
+) => {
+
+  const order = await Order.findById(orderId);
+
+  if(!order){
+    throw new Error("Order not found");
+  }
+
+  const item = order.items.find(
+    item => item.product.toString() === productId
+  );
+
+  if(!item){
+    throw new Error("Product not found");
+  }
+
+  if(item.status === "Cancelled"){
+    throw new Error("Product already cancelled");
+  }
+
+  await Product.findByIdAndUpdate(
+    productId,
+    {
+      $inc:{
+        stock:item.quantity
+      }
+    }
+  );
+
+  item.status = "Cancelled";
+  item.cancelReason = reason || "";
+
+  const allCancelled = order.items.every(
+    item => item.status === "Cancelled"
+  );
+
+  if(allCancelled){
+    order.orderStatus = "Cancelled";
+  }
+
+// Recalculate subtotal after cancellation
+
+const activeItems = order.items.filter(
+  item => item.status !== "Cancelled"
+);
+
+order.subtotal = activeItems.reduce(
+  (total, item) =>
+    total + (item.price * item.quantity),
+  0
+);
+
+const shipping = order.shipping || 0;
+const discount = order.discount || 0;
+
+order.total =
+  order.subtotal +
+  shipping -
+  discount;
+
+
+  await order.save();
+
+  return order;
+};
 
 // RETURN ORDER
 

@@ -63,8 +63,7 @@ router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders
 router.get("/orders/:id",cacheMiddleware.noCache,isLoggedIn,userController.getOrderDetails);
 
 // CANCEL ORDER
-router.post("/orders/:id/cancel",cacheMiddleware.noCache,isLoggedIn,userController.cancelOrder);
-
+router.post("/orders/:orderId/product/:productId/cancel",cacheMiddleware.noCache,isLoggedIn,userController.cancelProduct);
 // RETURN ORDER
 router.post("/orders/:id/return",cacheMiddleware.noCache,isLoggedIn,userController.returnOrder);
 

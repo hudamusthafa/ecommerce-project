@@ -610,6 +610,26 @@ exports.getOrderDetails=async(req,res,next)=>{
   }
 };
 
+//cancel each product
+exports.cancelProduct = async(req,res,next)=>{
+  try{
+
+    await userOrderService.cancelProduct(
+      req.params.orderId,
+      req.params.productId,
+      req.body.reason
+    );
+
+    res.redirect(
+      "/orders/" + req.params.orderId
+    );
+
+  }catch(error){
+
+    next(error);
+
+  }
+};
 //cancel order
 exports.cancelOrder=async(req,res,next)=>{
   try{
