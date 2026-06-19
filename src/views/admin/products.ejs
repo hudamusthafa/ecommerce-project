@@ -176,7 +176,7 @@
               <th>Category</th>
               <th>Price</th>
               <th>Stock</th>
-              <th>Added</th>
+              <th>Date</th>
               <th>Status</th>
               <th>Action</th>
 
@@ -241,30 +241,18 @@
 
                   </td>
 
-                  <!-- STOCK -->
-                <td>
+                 <!-- STOCK -->
+                    <td>
+                        <% if(product.stock === 0){ %>
+                          <span class="out-stock">Out Of Stock (0)</span>
+                        <% } else if(product.stock <= 5){ %>
+                          <span class="low-stock">Low Stock (<%= product.stock %>)</span>
+                        <% } else { %>
+                          <span class="in-stock">In Stock (<%= product.stock %>)</span>
+                        <% } %>
+                    </td>
 
-                    <% if(product.stock === 0){ %>
-
-                      <span class="out-stock">
-                        Out Of Stock
-                      </span>
-
-                    <% } else if(product.stock <= 5){ %>
-
-                      <span class="low-stock">
-                        Low Stock
-                      </span>
-
-                    <% } else { %>
-
-                      <span class="in-stock">
-                        In Stock
-                      </span>
-
-                    <% } %>
-
-                  </td>
+                    
                   <!-- DATE -->
                   <td>
 

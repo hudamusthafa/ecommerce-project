@@ -73,7 +73,7 @@
 
 <% } %>
 
- <!-- PRODUCTS -->
+ <!-- PRODUCTS -->  
 
 <div class="products-card">
 
@@ -143,20 +143,33 @@
 
      <div class="product-total">
 
-  <div class="price-action">
+ <div class="price-action">
+
+
+  <!--REORDER--> 
+
+
+  <% if(item.status === "Cancelled"){ %>
+
+  
+    <form
+      action="/orders/reorder/<%= item.product._id %>"
+      method="POST"
+      class="reorder-form"
+    >
+      <button
+        type="submit"
+        class="reorder-btn"
+      >
+        <i class="fa-solid fa-rotate-right"></i>
+        Reorder
+      </button>
+    </form>
+
+  <% } else { %>
 
     <span class="product-price">
-     <% if(item.status === "Cancelled"){ %>
-
-        <span class="cancelled-price">
-          Cancelled
-        </span>
-
-      <% } else { %>
-
-        ₹<%= item.price * item.quantity %>
-
-      <% } %>
+      ₹<%= item.price * item.quantity %>
     </span>
 
     <% if(
@@ -178,7 +191,9 @@
 
     <% } %>
 
-  </div>
+  <% } %>
+
+</div>
 
 </div>
 

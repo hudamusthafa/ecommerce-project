@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const Product = require("../models/Product"); 
 
 exports.getOrders = async(search,status,page,limit)=>{
 
@@ -55,16 +56,44 @@ exports.getOrderDetails = async(orderId)=>{
 
 
 //update orderstatus
-exports.updateOrderStatus = async(orderId,status)=>{
 
-  const order = await Order.findById(orderId);
 
-  if(!order){
+exports.updateOrderStatus = async (orderId, status) => {
+
+  // Fetch order with product details
+  const order = await Order.findById(orderId)
+    .populate("items.product");
+
+  if (!order) {
     throw new Error("Order not found");
   }
 
-  order.orderStatus = status;
+  const previousStatus = order.orderStatus;
 
+  // STOCK RESTORE — when admin cancels or approves return
+  const shouldRestoreStock =
+    (status === "Cancelled" || status === "Returned") &&
+    previousStatus !== "Cancelled" &&
+    previousStatus !== "Returned";
+
+  if (shouldRestoreStock) {
+
+    for (const item of order.items) {
+
+      // Skip already cancelled items (stock already restored)
+      if (item.status === "Cancelled") continue;
+
+      await Product.findByIdAndUpdate(
+        item.product._id,
+        { $inc: { stock: item.quantity } }
+      );
+
+    }
+
+  }
+
+  // Update the order status
+  order.orderStatus = status;
   await order.save();
 
   return order;

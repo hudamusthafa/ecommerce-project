@@ -349,3 +349,17 @@
   color:#dc3545;
   font-weight:600;
 }
+.reorder-btn{
+  padding:8px 16px;
+  border:none;
+  border-radius:8px;
+  background:#28a745;
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+
+.reorder-btn:hover{
+  background:#218838;
+}

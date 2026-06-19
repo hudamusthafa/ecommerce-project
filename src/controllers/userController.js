@@ -662,6 +662,28 @@ exports.cancelOrder=async(req,res,next)=>{
 };
 
 
+//RE-ORDER
+exports.reorderProduct = async(
+  req,
+  res,
+  next
+)=>{
+  try{
+
+    await userOrderService.reorderProduct(
+      req.user._id,
+      req.params.productId
+    );
+
+    res.redirect("back");
+
+  }catch(error){
+
+    next(error);
+
+  }
+};
+
 //RETURN ORDER
 
 exports.returnOrder=async(req,res,next)=>{

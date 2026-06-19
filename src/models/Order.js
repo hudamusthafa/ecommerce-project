@@ -100,6 +100,7 @@ const orderSchema = new mongoose.Schema({
       "Shipped",
       "Delivered",
       "Cancelled",
+      "Return Requested",
       "Returned"
     ],
     default:"Placed"

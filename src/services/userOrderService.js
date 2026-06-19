@@ -287,55 +287,77 @@ order.total =
   return order;
 };
 
+//RE-ORDER
+
+
+
+exports.reorderProduct=async(userId,productId)=>{
+
+  const product=await Product.findById(productId);
+
+  if(!product){
+    throw new Error("Product not found");
+  }
+
+  if(product.stock<1){
+    throw new Error("Product is out of stock");
+  }
+
+  let cart=await Cart.findOne({user:userId});
+
+  if(!cart){
+    cart=new Cart({
+      user:userId,
+      items:[]
+    });
+  }
+
+  const existingItem=cart.items.find(
+    item=>item.product.toString()===productId
+  );
+
+  if(existingItem){
+    existingItem.quantity+=1;
+  }else{
+    cart.items.push({
+      product:productId,
+      quantity:1
+    });
+  }
+
+  await cart.save();
+
+  return cart;
+};
+
 // RETURN ORDER
 
-exports.returnOrder=async(orderId,reason)=>{
+exports.returnOrder = async (orderId, reason) => {
 
-  const order=await Order.findById(orderId);
+  const order = await Order.findById(orderId);
 
-  if(!order){
+  if (!order) {
     throw new Error("Order not found");
   }
 
-  if(order.orderStatus!=="Delivered"){
-    throw new Error(
-      "Only delivered orders can be returned"
-    );
+  if (order.orderStatus !== "Delivered") {
+    throw new Error("Only delivered orders can be returned");
   }
 
-  if(!reason || !reason.trim()){
-    throw new Error(
-      "Return reason is required"
-    );
+  if (!reason || !reason.trim()) {
+    throw new Error("Return reason is required");
   }
 
-  if(order.isReturned){
-    throw new Error(
-      "Order already returned"
-    );
+  if (order.isReturned) {
+    throw new Error("Order already returned");
   }
 
-  // RESTORE STOCK
-  for(const item of order.items){
-
-    await Product.findByIdAndUpdate(
-      item.product,
-      {
-        $inc:{
-          stock:item.quantity
-        }
-      }
-    );
-
-  }
-
-  //update return information
-  
-  order.orderStatus="Returned";
-  order.isReturned=true;
-  order.returnReason=reason;
+  //  request return — admin will approve and restore stock
+  order.orderStatus = "Return Requested";
+  order.returnReason = reason;
 
   await order.save();
 
   return order;
+
 };
