@@ -520,6 +520,16 @@ exports.getCheckout=async(req,res,next)=>{
     });
 
   }catch(error){
+if(error.message === "Your cart is empty"){
+
+    return res.render(
+      "user/empty-cart",
+      {
+        title:"Cart Empty"
+      }
+    );
+
+  }
 
     next(error);
   }

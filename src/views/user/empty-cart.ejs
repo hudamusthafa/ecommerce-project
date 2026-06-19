@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Cart Empty</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/cart.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+</head>
+
+<body>
+
+  <%- include("../partials/header") %>
+
+  <div class="empty-cart-page">
+
+    <div class="empty-cart-card">
+
+      <i class="fa-solid fa-cart-arrow-down"></i>
+
+<h2>Your Cart Is Empty</h2>
+
+<p>
+  Your shopping cart is currently empty.
+  Browse our collection and find something you'll love.
+</p>
+
+      <a href="/products" class="shop-btn">
+        <i class="fa-solid fa-bag-shopping"></i>
+        Continue Shopping
+      </a>
+
+    </div>
+
+  </div>
+
+  <%- include("../partials/footer") %>
+
+</body>
+</html>
