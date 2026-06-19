@@ -680,24 +680,32 @@ exports.returnOrder=async(req,res,next)=>{
   }
 };
 
-//DOWNLOAD INVOICE
 
-exports.downloadInvoice=async(req,res,next)=>{
-  try{
+// DOWNLOAD INVOICE
 
-    const order=await Order.findOne({
-      _id:req.params.id,
-      user:req.user._id
+exports.downloadInvoice = async (req, res, next) => {
+
+  try {
+
+    const order = await Order.findOne({
+      _id: req.params.id,
+      user: req.user._id
     }).populate("items.product");
 
-    if(!order){
+    if (!order) {
       return res.status(404).send("Order not found");
     }
 
-    //Creates a new PDF document.
-    const doc=new PDFDocument({margin:50});
+    const PDFDocument = require("pdfkit");
 
-    res.setHeader("Content-Type","application/pdf");
+    const doc = new PDFDocument({
+      margin: 50
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/pdf"
+    );
 
     res.setHeader(
       "Content-Disposition",
@@ -706,42 +714,295 @@ exports.downloadInvoice=async(req,res,next)=>{
 
     doc.pipe(res);
 
-    doc.fontSize(22).text("INVOICE",{align:"center"});
+    /* =========================
+       HEADER
+    ========================= */
+
+    doc
+      .fontSize(28)
+      .fillColor("#9a6434")
+      .font("Helvetica-Bold")
+      .text("AURA", {
+        align: "center"
+      });
+
+    doc
+      .fontSize(11)
+      .fillColor("gray")
+      .font("Helvetica")
+      .text("Jewellery Store", {
+        align: "center"
+      });
+
     doc.moveDown();
-    doc.fontSize(12);
 
-    doc.text(`Order ID: ${order.orderId}`);
-    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString()}`);
-    doc.text(`Status: ${order.orderStatus}`);
+    doc
+      .fontSize(24)
+      .fillColor("black")
+      .font("Helvetica-Bold")
+      .text("INVOICE", {
+        align: "center"
+      });
+
+    doc.moveDown(2);
+
+    /* =========================
+       ORDER INFORMATION
+    ========================= */
+
+    doc
+      .fontSize(15)
+      .fillColor("#9a6434")
+      .font("Helvetica-Bold")
+      .text("Order Information");
+
+    doc.moveDown(0.5);
+
+    doc
+      .fontSize(12)
+      .fillColor("black")
+      .font("Helvetica");
+
+    doc.text(`Order ID : ${order.orderId}`);
+
+    doc.text(
+      `Order Date : ${new Date(
+        order.createdAt
+      ).toLocaleDateString()}`
+    );
+
+    doc.text(
+      `Status : ${order.orderStatus}`
+    );
 
     doc.moveDown();
 
-    doc.text("Customer Details");
+    doc
+      .moveTo(50, doc.y)
+      .lineTo(550, doc.y)
+      .stroke();
+
+    doc.moveDown();
+
+    /* =========================
+       CUSTOMER DETAILS
+    ========================= */
+
+    doc
+      .fontSize(15)
+      .fillColor("#9a6434")
+      .font("Helvetica-Bold")
+      .text("Customer Details");
+
+    doc.moveDown(0.5);
+
+    doc
+      .fontSize(12)
+      .fillColor("black")
+      .font("Helvetica");
+
     doc.text(order.address.fullName);
     doc.text(order.address.phone);
-    doc.text(`${order.address.house}, ${order.address.area}`);
-    doc.text(`${order.address.city}, ${order.address.state}`);
+    doc.text(order.address.house);
+    doc.text(order.address.area);
+
+    doc.text(
+      `${order.address.city}, ${order.address.state}`
+    );
+
     doc.text(order.address.pincode);
 
     doc.moveDown();
 
-    doc.text("Products");
-
-    order.items.forEach(item=>{
-      doc.text(`${item.product.name} | Qty: ${item.quantity} | ₹${item.price} | Total: ₹${item.quantity*item.price}`);
-    });
+    doc
+      .moveTo(50, doc.y)
+      .lineTo(550, doc.y)
+      .stroke();
 
     doc.moveDown();
 
-    doc.text(`Subtotal: ₹${order.subtotal}`);
-    doc.text(`Shipping: ₹${order.shipping}`);
-    doc.text(`Discount: ₹${order.discount}`);
-    doc.fontSize(14).text(`Grand Total: ₹${order.total}`);
+    /* =========================
+       PRODUCTS
+    ========================= */
+
+    doc
+      .fontSize(15)
+      .fillColor("#9a6434")
+      .font("Helvetica-Bold")
+      .text("Products");
+
+    doc.moveDown();
+
+    const tableTop = doc.y;
+
+    // Table Header Background
+
+    doc
+      .rect(
+        50,
+        tableTop - 5,
+        500,
+        22
+      )
+      .fill("#9a6434");
+
+    doc
+      .fillColor("white")
+      .font("Helvetica-Bold")
+      .fontSize(12);
+
+    doc.text(
+      "Product",
+      60,
+      tableTop
+    );
+
+    doc.text(
+      "Qty",
+      300,
+      tableTop
+    );
+
+    doc.text(
+      "Price",
+      360,
+      tableTop
+    );
+
+    doc.text(
+      "Total",
+      460,
+      tableTop
+    );
+
+    let y = tableTop + 30;
+
+    doc
+      .fillColor("black")
+      .font("Helvetica");
+
+    order.items.forEach(item => {
+
+      const productName =
+        item.status === "Cancelled"
+          ? `${item.product.name} - CANCELLED`
+          : item.product.name;
+
+      doc.text(
+        productName,
+        50,
+        y,
+        {
+          width: 220
+        }
+      );
+
+      doc.text(
+        item.quantity.toString(),
+        300,
+        y
+      );
+
+      doc.text(
+        `₹${item.price}`,
+        360,
+        y
+      );
+
+      doc.text(
+        `₹${item.quantity * item.price}`,
+        460,
+        y
+      );
+
+      y += 25;
+
+    });
+
+    doc.y = y + 10;
+
+    doc
+      .moveTo(50, doc.y)
+      .lineTo(550, doc.y)
+      .stroke();
+
+    doc.moveDown(2);
+
+    /* =========================
+       TOTALS
+    ========================= */
+
+    doc
+      .fontSize(12)
+      .fillColor("black")
+      .font("Helvetica");
+
+    doc.text(
+      `Subtotal : ₹${order.subtotal}`,
+      {
+        align: "right"
+      }
+    );
+
+    doc.text(
+      `Shipping : ₹${order.shipping}`,
+      {
+        align: "right"
+      }
+    );
+
+    doc.text(
+      `Discount : ₹${order.discount}`,
+      {
+        align: "right"
+      }
+    );
+
+    doc.moveDown();
+
+    doc
+      .fontSize(18)
+      .fillColor("#9a6434")
+      .font("Helvetica-Bold");
+
+    doc.text(
+      `Grand Total : ₹${order.total}`,
+      {
+        align: "right"
+      }
+    );
+
+    doc.moveDown(2);
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    doc
+      .fontSize(10)
+      .fillColor("gray")
+      .font("Helvetica");
+
+    doc.text(
+      "Thank you for shopping with Aura",
+      {
+        align: "center"
+      }
+    );
+
+    doc.text(
+      "This invoice was generated electronically.",
+      {
+        align: "center"
+      }
+    );
 
     doc.end();
 
-  }catch(error){
+  } catch (error) {
 
     next(error);
+
   }
+
 };
