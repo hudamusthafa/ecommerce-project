@@ -5,17 +5,23 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 const errorMiddleware = require("./src/middleware/errorMiddleware");
 
+const MongoStore = require("connect-mongo").default;
+
+
 dotenv.config();
 
 const connectDB = require("./src/config/db");
 const passport = require("passport");
 require("./src/config/passport");
 
+
+//const MongoStore = require("connect-mongo")(session);
+
 // Routes
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
-const Cart = require("./src/models/Cart");  
+const Cart = require("./src/models/Cart");
 
 const app = express();
 
@@ -23,7 +29,6 @@ const app = express();
 connectDB();
 
 // Middleware
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -32,77 +37,70 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
 
-// Session configuration
+//  Session configuration with MongoDB store
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-   cookie: {
-    maxAge: 1000 * 60 * 60, // 1 hour
+
+store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: "sessions"
+  }),
+
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true
   }
 }));
 
+  
+  
+
 app.use(methodOverride("_method"));
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Global user middleware
-app.use(async (req, res, next) => {
+ app.use(async (req, res, next) => {
+  try {
 
-  try{
-
-    if (
-      req.session &&
-      req.session.passport &&
-      !req.user &&
-      !req.originalUrl.startsWith("/admin")
-    ) {
-
-      return req.logout(() => {
-        req.session.destroy(() => {
-          res.clearCookie("connect.sid");
-
-          return res.redirect(
-            "/login?message=" +
-            encodeURIComponent(
-              "Your account has been blocked by admin"
-            )
-          );
-        });
-      });
-    }
+//     if (
+//       req.session &&
+//       req.session.passport &&
+//       !req.user &&
+//       !req.originalUrl.startsWith("/admin")
+//     ) {
+//       return req.logout(() => {
+//         req.session.destroy(() => {
+//           res.clearCookie("connect.sid");
+//           return res.redirect(
+//             "/login?message=" +
+//             encodeURIComponent("Your account has been blocked by admin")
+//           );
+//         });
+//       });
+//     }
 
     res.locals.user = req.user || null;
     res.locals.cartCount = 0;
 
-    if(req.user){
-
-      const cart = await Cart.findOne({
-        user:req.user._id
-      });
-
-      if(cart){
-
-        res.locals.cartCount =
-          cart.items.reduce(
-            (total,item)=>total + item.quantity,
-            0
-          );
-
+    if (req.user) {
+      const cart = await Cart.findOne({ user: req.user._id });
+      if (cart) {
+        res.locals.cartCount = cart.items.reduce(
+          (total, item) => total + item.quantity, 0
+        );
       }
-
     }
 
     next();
 
-  }catch(error){
-
+  } catch (error) {
     next(error);
-
   }
-
 });
 
 app.get("/", (req, res) => {
@@ -112,14 +110,10 @@ app.get("/", (req, res) => {
   res.redirect("/login");
 });
 
-
-
-
 // Routes
 app.use("/", authRoutes);
-app.use("/", userRoutes);   //  All page routes here
+app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
-
 
 // Error middleware
 app.use(errorMiddleware);
