@@ -4,107 +4,138 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 
-exports.placeOrder = async(userId,addressId)=>{
+exports.placeOrder=async(userId,addressId,buyNow=null)=>{
 
-const user = await User.findById(userId);
-const cart = await Cart.findOne({user:userId}).populate("items.product");
+  const user=await User.findById(userId);
+  const selectedAddress=user.address.id(addressId);
 
-//Remove Invalid Products
-cart.items = cart.items.filter( item => item.product);
-await cart.save();
-
-//console.log("VALID ITEMS =",cart.items.length);
-
-const selectedAddress=user.address.id(addressId);
-
-if(!selectedAddress){
-  throw new Error("Address not found");
-}
-
-//checking stock
-for(const item of cart.items){
-
-  if(item.quantity > item.product.stock){
-
-    throw new Error(item.product.name +" has only " +
-                    item.product.stock +" item(s) left");
-
+  if(!selectedAddress){
+    throw new Error("Address not found");
   }
 
-}
+  // BUY NOW ORDER
+  if(buyNow){
 
-//coverting cart items to a format
-const orderItems=cart.items.map(item=>({
-  product:item.product._id,
-  quantity:item.quantity,
-  price:item.product.price,
-  status:"Placed"
-}));
+    const product=await Product.findById(buyNow.productId);
 
-const subtotal=cart.items.reduce(
-  (total,item)=>total+(item.product.price*item.quantity),
-  0
-);
+    if(!product) throw new Error("Product not found");
+    if(product.stock<buyNow.quantity) throw new Error("Product is out of stock");
 
-const shipping=0;
-const discount=0;
+    const subtotal=product.price*buyNow.quantity;
+    const orderId="ORD"+Date.now();
 
-const total=subtotal+shipping-discount;
+    const order=new Order({
+      user:userId,
+      orderId,
+      items:[{
+        product:product._id,
+        quantity:buyNow.quantity,
+        price:product.price,
+        status:"Placed"
+      }],
+      address:{
+        fullName:selectedAddress.fullName,
+        phone:selectedAddress.phone,
+        house:selectedAddress.house,
+        area:selectedAddress.area,
+        city:selectedAddress.city,
+        state:selectedAddress.state,
+        pincode:selectedAddress.pincode
+      },
+      subtotal,
+      shipping:0,
+      discount:0,
+      total:subtotal,
+      paymentMethod:"COD"
+    });
 
-//generate a new orderid
-const orderId="ORD"+Date.now();
+    await order.save();
 
+    await Product.findByIdAndUpdate(
+      product._id,
+      {$inc:{stock:-buyNow.quantity}}
+    );
 
-//create order
+    return order;
+  }
 
-const order=new Order({
-  user:userId,
-  orderId,
-  items:orderItems,
-  address:{
-    fullName:selectedAddress.fullName,
-    phone:selectedAddress.phone,
-    house:selectedAddress.house,
-    area:selectedAddress.area,
-    city:selectedAddress.city,
-    state:selectedAddress.state,
-    pincode:selectedAddress.pincode
-  },
-  subtotal,
-  shipping,
-  discount,
-  total,
-  paymentMethod:"COD"
-});
+  // CART ORDER
+  const cart=await Cart.findOne({user:userId})
+    .populate("items.product");
 
-await order.save();
+  if(!cart) throw new Error("Cart is empty");
 
+  cart.items=cart.items.filter(item=>item.product);
+  await cart.save();
 
+  if(cart.items.length===0){
+    throw new Error("Cart is empty");
+  }
 
+  for(const item of cart.items){
+    if(item.quantity>item.product.stock){
+      throw new Error(
+        item.product.name+" has only "+
+        item.product.stock+" item(s) left"
+      );
+    }
+  }
+
+  const orderItems=cart.items.map(item=>({
+    product:item.product._id,
+    quantity:item.quantity,
+    price:item.product.price,
+    status:"Placed"
+  }));
+
+  const subtotal=cart.items.reduce(
+    (total,item)=>total+(item.product.price*item.quantity),
+    0
+  );
+
+  const shipping=0;
+  const discount=0;
+  const total=subtotal+shipping-discount;
+  const orderId="ORD"+Date.now();
+
+  const order=new Order({
+    user:userId,
+    orderId,
+    items:orderItems,
+    address:{
+      fullName:selectedAddress.fullName,
+      phone:selectedAddress.phone,
+      house:selectedAddress.house,
+      area:selectedAddress.area,
+      city:selectedAddress.city,
+      state:selectedAddress.state,
+      pincode:selectedAddress.pincode
+    },
+    subtotal,
+    shipping,
+    discount,
+    total,
+    paymentMethod:"COD"
+  });
+
+  await order.save();
 
 //Stock Reduction After Successful Order
 
-for(const item of cart.items){
+  for(const item of cart.items){
+    await Product.findByIdAndUpdate(
+      item.product._id,
+      {$inc:{stock:-item.quantity}}
+    );
+  }
 
-  await Product.findByIdAndUpdate(
-    item.product._id,
-    {
-      $inc:{
-        stock:-item.quantity
-      }
-    }
-  );
+  cart.items=[];
+  await cart.save();
 
-}
-
-cart.items = [];
-await cart.save();
-//console.log("CART CLEARED");
-//console.log("ORDER CREATED =",order.orderId);
-
-return order;
-
+  return order;
 };
+
+
 
 
 

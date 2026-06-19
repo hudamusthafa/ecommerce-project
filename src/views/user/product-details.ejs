@@ -216,7 +216,14 @@
 
   <% if(product.stock > 0){ %>
 
-    <button class="buy-btn">Buy Now </button>
+<!-- buynow button -->
+
+    <a
+  href="/buy-now/<%= product._id %>"
+  class="buy-now-btn"
+>
+  Buy Now
+</a>
 
     <a
       href="/cart/add/<%= product._id %>"class="cart-btn">

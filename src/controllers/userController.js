@@ -413,6 +413,33 @@ exports.removeCartProduct=async(req,res,next)=>{
 
 //=====================week3=================
 
+// exports.buyNow = async (req, res, next) => {
+//   try {
+
+//     const productId = req.params.productId;
+
+//     res.redirect(`/checkout?productId=${productId}`);
+
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
+exports.buyNow = async (req, res, next) => {
+  try {
+
+    req.session.buyNow = {
+      productId: req.params.productId,
+      quantity: 1
+    };
+
+    res.redirect("/checkout");
+
+  } catch (error) {
+    next(error);
+  }
+};
 //GET WISHLIST
 
 exports.getWishlist=async(req,res,next)=>{
@@ -505,10 +532,11 @@ exports.moveWishlistToCart = async(req,res,next)=>{
 exports.getCheckout=async(req,res,next)=>{
   try{
 
-    const data=await userCheckoutService.getCheckoutData(
-      req.user._id
-    );
-
+   const data =
+      await userCheckoutService.getCheckoutData(
+        req.user._id,
+        req.session.buyNow
+      );
     res.render("user/checkout",{
       user:data.user,
       cart:data.cart,
@@ -543,9 +571,11 @@ exports.placeOrder=async(req,res,next)=>{
 
     const order=await userOrderService.placeOrder(
       req.user._id,
-      req.body.selectedAddress
+      req.body.selectedAddress,
+        req.session.buyNow
     );
 
+   delete req.session.buyNow;
   res.redirect("/order-success/" + order.orderId);
 
   }catch(error){

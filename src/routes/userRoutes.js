@@ -29,6 +29,10 @@ router.get("/address/edit/:id",cacheMiddleware.noCache,isLoggedIn,userController
 router.get("/products",cacheMiddleware.noCache,isLoggedIn,userController.getProductsPage);
 router.get("/products/:id",cacheMiddleware.noCache,isLoggedIn,userController.getProductDetails);
 
+// BUY NOW
+
+router.get("/buy-now/:productId",cacheMiddleware.noCache,isLoggedIn,userController.buyNow);
+
 // CART
 router.get("/cart/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToCart);
 router.get("/cart",cacheMiddleware.noCache,isLoggedIn,userController.getCart);

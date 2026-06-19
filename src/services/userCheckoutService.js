@@ -1,9 +1,51 @@
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 
-exports.getCheckoutData = async(userId) => {
+exports.getCheckoutData = async(userId,buyNow = null) => {
 
   const user = await User.findById(userId);
+
+  if(buyNow){
+
+  const Product = require("../models/Product");
+
+  const product = await Product.findById(
+    buyNow.productId
+  );
+
+  if(!product){
+
+    throw new Error("Product not found");
+
+  }
+
+  const subtotal =
+    product.price * buyNow.quantity;
+
+  return {
+
+    user,
+
+    cart:{
+      items:[
+        {
+          product,
+          quantity:buyNow.quantity
+        }
+      ]
+    },
+
+    subtotal,
+
+    shipping:0,
+
+    discount:0,
+
+    total:subtotal
+
+  };
+
+}
 
   const cart = await Cart.findOne({
     user: userId
