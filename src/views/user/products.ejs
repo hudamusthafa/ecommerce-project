@@ -22,6 +22,14 @@
 
   <%- include("../partials/header",{ user:user }) %>
 
+  <!-- sidebar -->
+  <div class="page-layout">
+
+  <%- include('../partials/user-sidebar') %>
+
+  <div class="page-content">
+
+
   <div class="products-page">
 
     <!-- LEFT FILTER -->
@@ -399,6 +407,10 @@
     <% } %>
 
   </div>
+
+   </div>
+
+</div>
 
   <%- include("../partials/footer") %>
 

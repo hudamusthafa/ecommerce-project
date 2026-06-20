@@ -17,57 +17,69 @@
   </div>
 
   <!-- RIGHT -->
-  <div class="nav-right">
+<div class="nav-right">
 
-    <% if(user){ %>
+  <% if(user){ %>
 
-      <span class="welcome">
-        Welcome <%= user.name %>
-      </span>
+    <span class="welcome">
+      Welcome <%= user.name %>
+    </span>
 
-      <!-- WISHLIST -->
-      <a
-        href="/wishlist"
-        class="wishlist-icon"
-        title="Wishlist"
-      >
-        <i class="fa-regular fa-heart"></i>
-      </a>
+    <!-- ACCOUNT DROPDOWN -->
+    <div class="account-dropdown">
 
-      <!-- CART -->
-      <a
-        href="/cart"
-        class="cart-icon"
-        title="Cart"
-      >
-        <i class="fa-solid fa-cart-shopping"></i>
+     <button class="account-btn">
+        <i class="fa-solid fa-user"></i>
+      </button>
 
-        <% if(cartCount > 0){ %>
+      <div class="account-menu">
+        <a href="/profile">Profile</a>
+        <a href="/orders">Orders</a>
+      </div>
 
-          <span class="cart-badge">
-            <%= cartCount %>
-          </span>
+    </div>
 
-        <% } %>
+    <!-- WISHLIST -->
+    <a
+      href="/wishlist"
+      class="wishlist-icon"
+      title="Wishlist"
+    >
+      <i class="fa-regular fa-heart"></i>
+    </a>
 
-      </a>
-      <!-- LOGOUT -->
-      <a href="/logout" class="logout">
-        Log Out
-      </a>
+    <!-- CART -->
+    <a
+      href="/cart"
+      class="cart-icon"
+      title="Cart"
+    >
+      <i class="fa-solid fa-cart-shopping"></i>
 
-    <% }else{ %>
+      <% if(cartCount > 0){ %>
+        <span class="cart-badge">
+          <%= cartCount %>
+        </span>
+      <% } %>
 
-      <a href="/login" class="login-btn">
-        Login
-      </a>
+    </a>
 
-      <a href="/register" class="signup-btn">
-        Sign Up
-      </a>
+    <!-- LOGOUT -->
+    <a href="/logout" class="logout">
+      Log Out
+    </a>
 
-    <% } %>
+  <% } else { %>
 
-  </div>
+    <a href="/login" class="login-btn">
+      Login
+    </a>
 
+    <a href="/register" class="signup-btn">
+      Sign Up
+    </a>
+
+  <% } %>
+
+</div>
 </nav>
