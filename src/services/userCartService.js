@@ -48,10 +48,8 @@ exports.addToCart=async(userId,productId)=>{
 
     // PRODUCT ALREADY IN CART
     if(itemIndex > -1){
-      cart.items[itemIndex].quantity += 1;
-
-    }
-
+  throw new Error("Already in cart");
+}
      // NEW PRODUCT
     else{
 

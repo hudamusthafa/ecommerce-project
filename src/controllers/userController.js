@@ -325,6 +325,11 @@ exports.addToCart=async(req,res,next)=>{
 
   catch(error){
    
+    if(error.message === "Already in cart"){
+    return res.redirect(
+      "/products?alreadyCart=" + req.params.productId
+    );
+  }
       next(error);
   }
 
@@ -474,6 +479,11 @@ exports.addToWishlist=async(req,res,next)=>{
 
   }catch(error){
 
+     if(error.message === "Already in wishlist"){
+    return res.redirect(
+      "/products?alreadyWishlist=" + req.params.productId
+    );
+  }
       next(error);
 
   }

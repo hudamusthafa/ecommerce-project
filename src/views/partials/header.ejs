@@ -16,6 +16,73 @@
 
   </div>
 
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="toast hidden">
+  <span id="toast-msg"></span>
+</div>
+
+<style>
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  background: #2e7d32;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: opacity 0.4s ease;
+}
+
+.toast.success {
+  background: #2e7d32;
+}
+.toast.warning {
+  background: #e65100; 
+}
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
+
+<script>
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  const toastMsg = document.getElementById("toast-msg");
+
+  toastMsg.innerText = message;
+  toast.className = "toast " + type;
+
+  // Auto hide after 3 seconds
+  setTimeout(() => {
+    toast.className = "toast hidden";
+  }, 3000);
+}
+
+//  Auto trigger on page load if added or wishlisted
+window.addEventListener("DOMContentLoaded", function () {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("added")) {
+    showToast("✓ Added to cart!");
+  }
+
+  if (params.get("wishlisted")) {
+    showToast("✓ Added to wishlist!");
+  }
+  if(params.get("alreadyCart")){
+    showToast("Already in cart!","warning")
+  }
+   if (params.get("alreadyWishlist")) {
+    showToast("⚠ Already in wishlist!", "warning");
+  }
+});
+</script>
+
   <!-- RIGHT -->
 <div class="nav-right">
 

@@ -35,9 +35,11 @@ exports.addToWishlist=async(userId,productId)=>{
       item=>item.toString()===productId.toString()
     );
 
-    if(!exists){
-      wishlist.products.push(productId);
+    if(exists){
+      throw new Error("Already in wishlist")
+      
     }
+    wishlist.products.push(productId);
 
   }
 
