@@ -91,6 +91,16 @@ exports.addProduct=async(req,res)=>{
       category
     }=req.body;
 
+ if(parseInt(stock) < 0){
+      req.session.error = "Stock cannot be negative";
+      return res.redirect("/admin/edit-product/" + req.params.id);
+    }
+
+    if(parseInt(price) < 0){
+      req.session.error = "Price cannot be negative";
+      return res.redirect("/admin/edit-product/" + req.params.id);
+    }
+
     // VALIDATION
     if(!name || !description || !price || !stock || !category){
 
@@ -145,6 +155,8 @@ try{
     await productService.addProduct({
       name,
       description,
+      price: parseFloat(price),
+      stock: parseInt(stock),
       price,
       stock,
       category,
@@ -191,13 +203,16 @@ exports.getEditProduct=async(req,res)=>{
 exports.updateProduct=async(req,res)=>{
   try{
 
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category
-    }=req.body;
+    const {name, description, price, stock, category} = req.body;
+
+    if(parseInt(stock) < 0){
+      req.session.error = "Stock cannot be negative";
+      return res.redirect("/admin/edit-product/" + req.params.id);
+    }
+    if(parseInt(price) < 0){
+      req.session.error = "Price cannot be negative";
+      return res.redirect("/admin/edit-product/" + req.params.id);
+    }
 
     // EMPTY VALIDATION
     if(!name || !description || !price || !stock || !category){
@@ -274,6 +289,8 @@ try{
       {
         name,
         description,
+        price: parseFloat(price),
+        stock: parseInt(stock),
         price,
         stock,
         category,
