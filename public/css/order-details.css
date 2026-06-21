@@ -363,3 +363,35 @@
 .reorder-btn:hover{
   background:#218838;
 }
+
+/* RETURN BUTTON */
+.return-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #e65100;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.return-btn:hover {
+  background-color: #bf360c;
+}
+
+.return-btn i {
+  font-size: 13px;
+}
+/* RETURN FULL ORDER BUTTON */
+.cancel-order-card .cancel-btn {
+  background: #e65100;
+  margin-top: 15px;
+}
+
+.cancel-order-card .cancel-btn:hover {
+  background: #bf360c;
+}

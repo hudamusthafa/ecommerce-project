@@ -742,6 +742,22 @@ exports.returnOrder=async(req,res,next)=>{
   }
 };
 
+// RETURN SINGLE PRODUCT
+exports.returnProduct = async (req, res, next) => {
+  try {
+
+    await userOrderService.returnProduct(
+      req.params.orderId,
+      req.params.productId,
+      req.body.reason
+    );
+
+    res.redirect("/orders/" + req.params.orderId);
+
+  } catch (error) {
+    next(error);
+  }
+};
 
 // DOWNLOAD INVOICE
 

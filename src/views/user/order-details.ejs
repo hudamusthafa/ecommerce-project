@@ -50,28 +50,28 @@
 
 <div class="order-tracker">
 
-  <div class="step <%= ["Placed","Processing","Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+  <div class="step <%= ['Placed','Processing','Shipped','Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
     <span>1</span>
     <p>Placed</p>
   </div>
 
   <div class="line"></div>
 
-  <div class="step <%= ["Processing","Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+  <div class="step <%= ['Processing','Shipped','Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
     <span>2</span>
     <p>Processing</p>
   </div>
 
   <div class="line"></div>
 
-  <div class="step <%= ["Shipped","Delivered"].includes(order.orderStatus) ? "completed" : "" %>">
+  <div class="step <%= ['Shipped','Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
     <span>3</span>
     <p>Shipped</p>
   </div>
 
   <div class="line"></div>
 
-  <div class="step <%= order.orderStatus==="Delivered" ? "completed" : "" %>">
+  <div class="step <%= order.orderStatus === 'Delivered' ? 'completed' : '' %>">
     <span>4</span>
     <p>Delivered</p>
   </div>
@@ -129,80 +129,71 @@
 
         <% } %>
 
-        <% if(
-          item.status === "Placed" &&
-          order.orderStatus !== "Delivered" &&
-          order.orderStatus !== "Cancelled"
-        ){ %>
-
-         <form
-  action="/orders/<%= order._id %>/product/<%= item.product._id %>/cancel"
-  method="POST"
-  class="cancel-product-form"
->
-
-  
-
-</form>
-        <% } %>
-
       </div>
 
-     <div class="product-total">
+      <div class="product-total">
 
- <div class="price-action">
+        <div class="price-action">
 
+          <!-- REORDER -->
 
-  <!--REORDER--> 
+          <% if(item.status === "Cancelled"){ %>
 
+            <form
+              action="/orders/reorder/<%= item.product._id %>"
+              method="POST"
+              class="reorder-form"
+            >
+              <button
+                type="submit"
+                class="reorder-btn"
+              >
+                <i class="fa-solid fa-rotate-right"></i>
+                Reorder
+              </button>
+            </form>
 
-  <% if(item.status === "Cancelled"){ %>
+          <% } else { %>
 
-  
-    <form
-      action="/orders/reorder/<%= item.product._id %>"
-      method="POST"
-      class="reorder-form"
-    >
-      <button
-        type="submit"
-        class="reorder-btn"
-      >
-        <i class="fa-solid fa-rotate-right"></i>
-        Reorder
-      </button>
-    </form>
+            <span class="product-price">
+              ₹<%= item.price * item.quantity %>
+            </span>
 
-  <% } else { %>
+            <!-- INDIVIDUAL CANCEL -->
+            <% if(
+              item.status === "Placed" &&
+              ["Placed","Processing"].includes(order.orderStatus)
+            ){ %>
+              <button
+                type="button"
+                class="cancel-btn"
+                onclick="openCancelModal('<%= order._id %>', '<%= item.product._id %>')"
+              >
+                <i class="fa-solid fa-ban"></i>
+                Cancel
+              </button>
+            <% } %>
 
-    <span class="product-price">
-      ₹<%= item.price * item.quantity %>
-    </span>
+            <!-- INDIVIDUAL RETURN -->
+            <% if(
+              item.status === "Placed" &&
+              order.orderStatus === "Delivered"
+            ){ %>
+              <button
+                type="button"
+                class="return-btn"
+                onclick="openReturnModal('<%= order._id %>', '<%= item.product._id %>')"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
+                Return
+              </button>
+            <% } %>
 
-    <% if(
-      item.status === "Placed" &&
-      ["Placed","Processing"].includes(order.orderStatus)
-    ){ %>
+          <% } %>
 
-      <button
-        type="button"
-        class="cancel-btn"
-        onclick="openCancelModal(
-          '<%= order._id %>',
-          '<%= item.product._id %>'
-        )"
-      >
-        <i class="fa-solid fa-ban"></i>
-        Cancel
-      </button>
+        </div>
 
-    <% } %>
-
-  <% } %>
-
-</div>
-
-</div>
+      </div>
 
     </div>
 
@@ -216,43 +207,23 @@
   <div class="order-info-card">
 
     <div>
-
       <h4>Order ID</h4>
-
-      <p>
-        <%= order.orderId %>
-      </p>
-
+      <p><%= order.orderId %></p>
     </div>
 
     <div>
-
       <h4>Order Date</h4>
-
-      <p>
-        <%= new Date(order.createdAt).toLocaleDateString() %>
-      </p>
-
+      <p><%= new Date(order.createdAt).toLocaleDateString() %></p>
     </div>
 
     <div>
-
       <h4>Status</h4>
-
-      <p class="order-status">
-        <%= order.orderStatus %>
-      </p>
-
+      <p class="order-status"><%= order.orderStatus %></p>
     </div>
 
     <div>
-
       <h4>Total</h4>
-
-      <p>
-        ₹<%= order.total %>
-      </p>
-
+      <p>₹<%= order.total %></p>
     </div>
 
   </div>
@@ -263,73 +234,57 @@
 <% if(order.orderStatus === "Cancelled"){ %>
 
   <div class="cancel-order-card">
-
-    <h3>
-      All Products Cancelled
-    </h3>
-
-    <p>
-      Status : <strong>Cancelled</strong>
-    </p>
-
+    <h3>All Products Cancelled</h3>
+    <p>Status : <strong>Cancelled</strong></p>
     <% if(order.cancelReason){ %>
-
-      <p>
-        Reason :
-        <%= order.cancelReason %>
-      </p>
-
+      <p>Reason : <%= order.cancelReason %></p>
     <% } %>
-
   </div>
 
 <% } else if(order.orderStatus === "Returned"){ %>
 
   <div class="cancel-order-card">
-
     <h3>Order Returned</h3>
-
-    <p>
-      Status : <strong>Returned</strong>
-    </p>
-
+    <p>Status : <strong>Returned</strong></p>
     <% if(order.returnReason){ %>
-
-      <p>
-        Reason :
-        <%= order.returnReason %>
-      </p>
-
+      <p>Reason : <%= order.returnReason %></p>
     <% } %>
+  </div>
 
+<% } else if(order.orderStatus === "Return Requested"){ %>
+
+  <div class="cancel-order-card">
+    <h3>Return Requested</h3>
+    <p>Your return request is pending admin approval.</p>
   </div>
 
 <% } else if(order.orderStatus === "Delivered"){ %>
 
+  <!-- BULK RETURN -->
   <div class="cancel-order-card">
-
-    <h3>Return Order</h3>
-
-    <form
-      action="/orders/<%= order._id %>/return"
-      method="POST"
-    >
-
-      <textarea
-        name="reason"
-        placeholder="Reason for return"
-        required
-      ></textarea>
-
-      <button
-        type="submit"
-        class="cancel-btn"
-      >
-        Return Order
+    <h3>Return Entire Order</h3>
+    <form action="/orders/<%= order._id %>/return" method="POST">
+      <textarea name="reason" placeholder="Reason for return" required></textarea>
+      <button type="submit" class="cancel-btn">
+        <i class="fa-solid fa-rotate-left"></i>
+        Return Full Order
       </button>
-
     </form>
+  </div>
 
+<% } else if(["Placed","Processing"].includes(order.orderStatus)){ %>
+
+  <!-- BULK CANCEL -->
+  <div class="cancel-order-card">
+    <h3>Cancel Entire Order</h3>
+    <button
+      type="button"
+      class="cancel-btn"
+      onclick="openBulkCancelModal('<%= order._id %>')"
+    >
+      <i class="fa-solid fa-ban"></i>
+      Cancel Full Order
+    </button>
   </div>
 
 <% } %>
@@ -338,176 +293,135 @@
 
   <div class="address-card">
 
-    <h3>
-      Delivery Address
-    </h3>
+    <h3>Delivery Address</h3>
 
-    <p>
-      <strong>
-        <%= order.address.fullName %>
-      </strong>
-    </p>
-
-    <p>
-      <%= order.address.house %>
-    </p>
-
-    <p>
-      <%= order.address.area %>
-    </p>
-
-    <p>
-      <%= order.address.city %>,
-      <%= order.address.state %>
-    </p>
-
-    <p>
-      PIN : <%= order.address.pincode %>
-    </p>
-
-    <p>
-      Phone : <%= order.address.phone %>
-    </p>
+    <p><strong><%= order.address.fullName %></strong></p>
+    <p><%= order.address.house %></p>
+    <p><%= order.address.area %></p>
+    <p><%= order.address.city %>, <%= order.address.state %></p>
+    <p>PIN : <%= order.address.pincode %></p>
+    <p>Phone : <%= order.address.phone %></p>
 
   </div>
 
- 
 
   <!-- PRICE SUMMARY -->
 
   <div class="summary-card">
 
     <div class="summary-row">
-
-      <span>
-        Subtotal
-      </span>
-
-      <span>
-        ₹<%= order.subtotal %>
-      </span>
-
+      <span>Subtotal</span>
+      <span>₹<%= order.subtotal %></span>
     </div>
 
     <div class="summary-row">
-
-      <span>
-        Shipping
-      </span>
-
-      <span>
-        ₹<%= order.shipping %>
-      </span>
-
+      <span>Shipping</span>
+      <span>₹<%= order.shipping %></span>
     </div>
 
     <div class="summary-row">
-
-      <span>
-        Discount
-      </span>
-
-      <span>
-        ₹<%= order.discount %>
-      </span>
-
+      <span>Discount</span>
+      <span>₹<%= order.discount %></span>
     </div>
 
     <div class="summary-row total-row">
-
-      <span>
-        Total
-      </span>
-
-      <span>
-        ₹<%= order.total %>
-      </span>
-
+      <span>Total</span>
+      <span>₹<%= order.total %></span>
     </div>
 
   </div>
 
 </div>
 
+<!-- INDIVIDUAL CANCEL MODAL -->
 <div id="cancelModal" class="modal">
-
   <div class="modal-content">
-
     <h3>Cancel Product</h3>
-
-    <form
-      id="cancelForm"
-      method="POST"
-    >
-
+    <form id="cancelForm" method="POST">
       <textarea
         name="reason"
         placeholder="Reason for cancellation (optional)"
       ></textarea>
-
       <div class="modal-actions">
-
-        <button
-          type="button"
-          class="close-btn"
-          onclick="closeCancelModal()"
-        >
-          Close
-        </button>
-
-        <button
-          type="submit"
-          class="cancel-btn"
-        >
-          Confirm Cancellation
-        </button>
-
+        <button type="button" class="close-btn" onclick="closeCancelModal()">Close</button>
+        <button type="submit" class="cancel-btn">Confirm Cancellation</button>
       </div>
-
     </form>
-
   </div>
+</div>
 
+<!-- BULK CANCEL MODAL -->
+<div id="bulkCancelModal" class="modal">
+  <div class="modal-content">
+    <h3>Cancel Entire Order</h3>
+    <form id="bulkCancelForm" method="POST">
+      <textarea
+        name="reason"
+        placeholder="Reason for cancellation (optional)"
+      ></textarea>
+      <div class="modal-actions">
+        <button type="button" class="close-btn" onclick="closeBulkCancelModal()">Close</button>
+        <button type="submit" class="cancel-btn">Confirm Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- INDIVIDUAL RETURN MODAL -->
+<div id="returnModal" class="modal">
+  <div class="modal-content">
+    <h3>Return Product</h3>
+    <form id="returnForm" method="POST">
+      <textarea
+        name="reason"
+        placeholder="Reason for return"
+        required
+      ></textarea>
+      <div class="modal-actions">
+        <button type="button" class="close-btn" onclick="closeReturnModal()">Close</button>
+        <button type="submit" class="cancel-btn">Confirm Return</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
 
-function openCancelModal(
-  orderId,
-  productId
-){
-
-  document.getElementById(
-    "cancelForm"
-  ).action =
-    "/orders/" +
-    orderId +
-    "/product/" +
-    productId +
-    "/cancel";
-
-  document.getElementById(
-    "cancelModal"
-  ).style.display = "block";
+// INDIVIDUAL CANCEL
+function openCancelModal(orderId, productId) {
+  document.getElementById("cancelForm").action =
+    "/orders/" + orderId + "/product/" + productId + "/cancel";
+  document.getElementById("cancelModal").style.display = "block";
+}
+function closeCancelModal() {
+  document.getElementById("cancelModal").style.display = "none";
 }
 
-function closeCancelModal(){
-
-  document.getElementById(
-    "cancelModal"
-  ).style.display = "none";
+// BULK CANCEL
+function openBulkCancelModal(orderId) {
+  document.getElementById("bulkCancelForm").action =
+    "/orders/" + orderId + "/cancel";
+  document.getElementById("bulkCancelModal").style.display = "block";
+}
+function closeBulkCancelModal() {
+  document.getElementById("bulkCancelModal").style.display = "none";
 }
 
-window.onclick = function(event){
+// INDIVIDUAL RETURN
+function openReturnModal(orderId, productId) {
+  document.getElementById("returnForm").action =
+    "/orders/" + orderId + "/product/" + productId + "/return";
+  document.getElementById("returnModal").style.display = "block";
+}
+function closeReturnModal() {
+  document.getElementById("returnModal").style.display = "none";
+}
 
-  const modal =
-    document.getElementById(
-      "cancelModal"
-    );
-
-  if(event.target === modal){
-    closeCancelModal();
-  }
+// CLOSE ON OUTSIDE CLICK
+window.onclick = function(event) {
+  if (event.target === document.getElementById("cancelModal")) closeCancelModal();
+  if (event.target === document.getElementById("bulkCancelModal")) closeBulkCancelModal();
+  if (event.target === document.getElementById("returnModal")) closeReturnModal();
 };
 
 </script>
@@ -516,11 +430,7 @@ window.onclick = function(event){
 
 </div>
 
-
 <%- include("../partials/footer") %>
-
-
-
 
 </body>
 </html>

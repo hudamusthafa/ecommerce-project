@@ -392,3 +392,47 @@ exports.returnOrder = async (orderId, reason) => {
   return order;
 
 };
+
+// RETURN SINGLE PRODUCT
+exports.returnProduct = async (orderId, productId, reason) => {
+
+  const order = await Order.findById(orderId);
+
+  if (!order) throw new Error("Order not found");
+
+  if (order.orderStatus !== "Delivered") {
+    throw new Error("Only delivered orders can be returned");
+  }
+
+  const item = order.items.find(
+    item => item.product.toString() === productId
+  );
+
+  if (!item) throw new Error("Product not found");
+
+  if (item.status === "Returned") {
+    throw new Error("Product already returned");
+  }
+
+  if (!reason || !reason.trim()) {
+    throw new Error("Return reason is required");
+  }
+
+  // Request return for this item only
+  item.status = "Returned";
+  item.returnReason = reason;
+
+  // Check if all items are returned
+  const allReturned = order.items.every(
+    item => item.status === "Returned"
+  );
+
+  if (allReturned) {
+    order.orderStatus = "Return Requested";
+    order.returnReason = reason;
+  }
+
+  await order.save();
+  return order;
+
+};

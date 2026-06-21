@@ -66,14 +66,18 @@ router.get("/orders",cacheMiddleware.noCache,isLoggedIn,userController.getOrders
 // ORDER DETAILS
 router.get("/orders/:id",cacheMiddleware.noCache,isLoggedIn,userController.getOrderDetails);
 
-// CANCEL ORDER
+// INDVIDUAL ITEM CANCEL
 router.post("/orders/:orderId/product/:productId/cancel",cacheMiddleware.noCache,isLoggedIn,userController.cancelProduct);
+// Bulk  order cancel
+router.post("/orders/:id/cancel", cacheMiddleware.noCache, isLoggedIn, userController.cancelOrder);
+
 // REORDER PRODUCT
 router.post("/orders/reorder/:productId",cacheMiddleware.noCache,isLoggedIn,userController.reorderProduct);
 
 // RETURN ORDER
 router.post("/orders/:id/return",cacheMiddleware.noCache,isLoggedIn,userController.returnOrder);
-
+// Individual item return
+router.post("/orders/:orderId/product/:productId/return", cacheMiddleware.noCache, isLoggedIn, userController.returnProduct);
 // DOWNLOAD INVOICE
 router.get("/orders/:id/invoice",cacheMiddleware.noCache,isLoggedIn,userController.downloadInvoice);
 
