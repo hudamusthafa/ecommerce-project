@@ -379,7 +379,10 @@ exports.updateCartQuantity=async(req,res,next)=>{
   }
 
   catch(error){
-if(error.message==="Stock limit reached"){
+if(
+    error.message === "Stock limit reached" ||
+    error.message === "Maximum quantity reached"
+  ){
 
     return res.redirect(
       "/cart?error=" +

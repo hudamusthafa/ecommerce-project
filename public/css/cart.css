@@ -353,3 +353,23 @@ body{
   }
 
 }
+/* REMOVE BUTTON */
+.remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #dc3545;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #dc3545;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: #dc3545;
+  color: white;
+}

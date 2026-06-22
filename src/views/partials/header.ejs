@@ -80,6 +80,10 @@ window.addEventListener("DOMContentLoaded", function () {
    if (params.get("alreadyWishlist")) {
     showToast("⚠ Already in wishlist!", "warning");
   }
+  // Cart errors
+if(params.get("error")){
+  showToast("⚠ " + params.get("error"), "warning");
+}
 });
 </script>
 

@@ -68,14 +68,13 @@ exports.addToCart=async(userId,productId)=>{
 
 // GET CART PRODUCTS
 
-exports.getCart=async(userId)=>{
+exports.getCart = async (userId) => {
 
-  return await Cart.findOne({
-    user:userId
-  })
-  .populate("items.product");
+  const cart = await Cart.findOne({ user: userId })
+    .populate("items.product");
 
-   if(cart){
+ 
+  if(cart){
     cart.items = cart.items.filter(
       item => item.product
     );
@@ -83,7 +82,6 @@ exports.getCart=async(userId)=>{
 
   return cart;
 };
-
 
 // UPDATE QUANTITY
 
