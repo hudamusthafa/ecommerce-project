@@ -199,7 +199,7 @@ exports.getEditProduct=async(req,res)=>{
 
 // UPDATE PRODUCT
 exports.updateProduct=async(req,res)=>{
-  console.log("req.body =",req.body)
+
   try{
 
     const {name, description, price, stock, category} = req.body;

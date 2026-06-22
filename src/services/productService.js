@@ -95,13 +95,11 @@ exports.getProductById=async(id)=>{
 
 exports.updateProduct=async(id,data)=>{
 
-  const updatedProduct =
-    await Product.findByIdAndUpdate(
-      id,
-       { $set: data }, 
-      { new:true }
-    );
-
+  const updatedProduct = await Product.findOneAndUpdate(
+  { _id: id },
+  data,
+  { returnDocument: 'after' } 
+)
   return updatedProduct;
 };
 
