@@ -373,3 +373,14 @@ body{
   background: #dc3545;
   color: white;
 }
+/* OUT OF STOCK MESSAGE IN CART */
+.out-stock-msg {
+  color: #fff;
+  background: #dc3545;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 4px;
+}

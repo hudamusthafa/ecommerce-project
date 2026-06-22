@@ -305,27 +305,24 @@
 
             <div class="cart-section">
 
-              <a
-                href="/cart/add/<%= product._id %>"
-                class="cart-btn"
+                <button
+                  class="cart-btn"
+                  onclick="addToCart('<%= product._id %>', this)"
+                >
+                  Add To Cart
+                </button>
+              </div>
+
+            <% } else { %>
+
+              <button
+                class="out-stock-btn"
+                disabled
               >
-                Add To Cart
-              </a>
-
-
-            </div>
-
-          <% } else { %>
-
-            <button
-              class="out-stock-btn"
-              disabled
-            >
-              Out Of Stock
-            </button>
-
-          <% } %>
-
+                Out Of Stock
+              </button>
+              
+            <% } %>
           <a
             href="/wishlist/add/<%= product._id %>"
             class="wishlist-btn"

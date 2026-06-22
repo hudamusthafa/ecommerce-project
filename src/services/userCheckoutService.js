@@ -69,7 +69,7 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
   const originalLength = cart.items.length;
 
     cart.items = cart.items.filter(
-      item => item.product
+      item => item.product && item.product.stock > 0
     );
 
 
@@ -96,14 +96,11 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
   const subtotal = cart.items.reduce(
 
     (total,item) => {
-
-      return total + (
-        item.product.price *
-        item.quantity
-      );
-
-    },
-
+       if(item.product && item.product.stock > 0){
+      return total + (item.product.price * item.quantity);
+    }
+    return total;
+  },
     0
 
   );

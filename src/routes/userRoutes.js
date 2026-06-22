@@ -34,7 +34,7 @@ router.get("/products/:id",cacheMiddleware.noCache,isLoggedIn,userController.get
 router.get("/buy-now/:productId",cacheMiddleware.noCache,isLoggedIn,userController.buyNow);
 
 // CART
-router.get("/cart/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToCart);
+router.post("/cart/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToCart);
 router.get("/cart",cacheMiddleware.noCache,isLoggedIn,userController.getCart);
 router.get("/cart/update/:productId",cacheMiddleware.noCache,isLoggedIn,userController.updateCartQuantity);
 router.get("/cart/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeCartProduct);
