@@ -61,10 +61,9 @@
         action="/admin/edit-product/<%= product._id %>?_method=PUT"
         method="POST"
         enctype="multipart/form-data"
-        onsubmit="return validateProductForm()"
+        onsubmit="return handleSubmit()"
         novalidate
       >
-
         <!-- PRODUCT NAME -->
         <div class="form-group">
 
@@ -152,10 +151,11 @@
           </label>
 
           <input
-            type="number"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
             name="stock"
             value="<%= product.stock %>"
-            min="0"
           >
 
         </div>
@@ -447,6 +447,27 @@ if(totalImages<3){
 <!-- CROPPER SCRIPT -->
 <script>
 
+  // GLOBAL variables - accessible everywhere
+ let uploadedFiles=[];
+  let removedImages=[];
+ let isSubmitting = false; // ← guard variable
+
+function handleSubmit(){
+  // prevent double submit
+  if(isSubmitting) return false;
+
+  // run validation
+  const valid = validateProductForm();
+
+  if(valid){
+    isSubmitting = true; // ← lock form
+  }
+
+  return valid;
+}
+
+
+
 window.addEventListener("load",function(){
 
   const imageInput=document.getElementById("imageInput");
@@ -457,8 +478,10 @@ window.addEventListener("load",function(){
   const cropBtn=document.getElementById("cropBtn");
 
   let cropper;
-  let uploadedFiles=[];
-  let removedImages=[];
+ 
+
+
+
 
   // REMOVE EXISTING IMAGE
   document.querySelectorAll(

@@ -85,12 +85,24 @@ exports.getProductById=async(id)=>{
 
 // ================= UPDATE PRODUCT ====================
 
+// exports.updateProduct=async(id,data)=>{
+//   return await Product.findByIdAndUpdate(
+//     id,
+//     data,
+//     {returnDocument:"after"}
+//   );
+// };
+
 exports.updateProduct=async(id,data)=>{
-  return await Product.findByIdAndUpdate(
-    id,
-    data,
-    {returnDocument:"after"}
-  );
+
+  const updatedProduct =
+    await Product.findByIdAndUpdate(
+      id,
+       { $set: data }, 
+      { new:true }
+    );
+
+  return updatedProduct;
 };
 
 // ================= SOFT DELETE PRODUCT ====================

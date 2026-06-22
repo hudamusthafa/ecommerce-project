@@ -157,8 +157,6 @@ try{
       description,
       price: parseFloat(price),
       stock: parseInt(stock),
-      price,
-      stock,
       category,
       images
     });
@@ -178,12 +176,12 @@ exports.getEditProduct=async(req,res)=>{
   try{
 
     const product=await productService.getProductById(req.params.id);
-
     const categories=await categoryService.getActiveCategories();
-
     const error=req.session.error;
-
     req.session.error=null;
+
+// Save page number in session
+     req.session.returnPage = req.query.page || 1;
 
     res.render("admin/edit-product",{
       product,
@@ -201,9 +199,11 @@ exports.getEditProduct=async(req,res)=>{
 
 // UPDATE PRODUCT
 exports.updateProduct=async(req,res)=>{
+  console.log("req.body =",req.body)
   try{
 
     const {name, description, price, stock, category} = req.body;
+
 
     if(parseInt(stock) < 0){
       req.session.error = "Stock cannot be negative";
@@ -291,14 +291,15 @@ try{
         description,
         price: parseFloat(price),
         stock: parseInt(stock),
-        price,
-        stock,
         category,
         images
       }
     );
 
-    res.redirect("/admin/products");
+    // Go back to the page admin came from
+const returnPage = req.session.returnPage || 1;
+req.session.returnPage = null;
+res.redirect("/admin/products?page=" + returnPage);
 
   }catch(error){
     console.log(error);
