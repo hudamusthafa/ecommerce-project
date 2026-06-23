@@ -70,6 +70,30 @@ exports.updateOrderStatus = async (orderId, status) => {
 
   const previousStatus = order.orderStatus;
 
+
+// ================= ADMIN WORKFLOW CONTROLS =================
+  
+ 
+  if (previousStatus === "Delivered" || previousStatus === "Cancelled" || previousStatus === "Returned") {
+    throw new Error("This order is already finalized and cannot be changed.");
+  }
+
+
+  if (previousStatus === "Placed" && status !== "Processing" && status !== "Cancelled") {
+    throw new Error("From Placed, order can only go to Processing or Cancelled.");
+  }
+
+  
+  if (previousStatus === "Processing" && status !== "Shipped" && status !== "Cancelled") {
+    throw new Error("From Processing, order can only go to Shipped or Cancelled.");
+  }
+
+  
+  if (previousStatus === "Shipped" && status !== "Delivered") {
+    throw new Error("Shipped orders can only be updated to Delivered.");
+  }
+
+
   // STOCK RESTORE — when admin cancels or approves return
   const shouldRestoreStock =
     (status === "Cancelled" || status === "Returned") &&

@@ -619,3 +619,51 @@ td{
   font-size: 12px;
   font-weight: 600;
 }
+/* ================= ORDER STATUS BADGES ================= */
+
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700; 
+  border-radius: 20px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: capitalize; 
+}
+
+
+.status-placed {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+
+.status-processing {
+  background-color: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+
+.status-shipped {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+}
+
+
+.status-delivered {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}

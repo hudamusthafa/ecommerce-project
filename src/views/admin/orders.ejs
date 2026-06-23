@@ -209,14 +209,18 @@
 
                   </td>
 
-                  <td>
+                  <!-- <td>
 
                     <span class="status listed">
-
                       <%= order.orderStatus %>
-
                     </span>
 
+                  </td> -->
+
+                  <td>
+                    <span class="status-badge status-<%= order.orderStatus.toLowerCase() %>">
+                      <%= order.orderStatus %>
+                    </span>
                   </td>
 
                   <td>
