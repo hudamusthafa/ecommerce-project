@@ -215,6 +215,8 @@
 </div>
 
 
+
+<%- include("../partials/footer") %>
 <script>
   // Prevent back button showing cached cart
   window.addEventListener("pageshow", function(event) {
@@ -224,7 +226,15 @@
   });
 </script>
 
-<%- include("../partials/footer") %>
+<script>
+window.addEventListener("DOMContentLoaded", function(){
+  const params = new URLSearchParams(window.location.search);
+
+  if(params.get("msg") === "alreadyInCart"){
+    showToast("⚠ Already in cart!", "warning");
+  }
+});
+</script>
 
 </body>
 </html>

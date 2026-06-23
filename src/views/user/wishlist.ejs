@@ -141,6 +141,21 @@
 
 <%- include("../partials/footer") %>
 
+
+<script>
+window.addEventListener("DOMContentLoaded", function(){
+  const params = new URLSearchParams(window.location.search);
+
+  if(params.get("msg") === "addedToCart"){
+    showToast("✓ Moved to cart!", "success");
+  }
+
+  if(params.get("msg") === "alreadyInCart"){
+    showToast("⚠ Already in cart!", "warning");
+  }
+});
+</script>
+
 </body>
 
 </html>

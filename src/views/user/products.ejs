@@ -326,11 +326,11 @@
 
             <!-- icon -->
            <button
-  class="wishlist-btn"
-  onclick="addToWishlist('<%= product._id %>', this)"
->
-  <i class="fa-regular fa-heart"></i>
-</button>
+            class="wishlist-btn"
+            onclick="addToWishlist('<%= product._id %>', this)"
+          >
+            <i class="fa-regular fa-heart"></i>
+          </button>
         </div>
 
       </div>
@@ -397,6 +397,7 @@
 // ADD TO CART
 function addToCart(productId, btn) {
 
+
  
   fetch("/cart/add/" + productId, {
     method: "POST"
@@ -411,7 +412,8 @@ function addToCart(productId, btn) {
       
       showToast("✓ Added to cart!", "success");
 
-  
+   btn.innerText = "Added ✓";
+  btn.style.background = "#2e7d32";
    
       
 

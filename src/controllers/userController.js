@@ -539,10 +539,26 @@ exports.moveWishlistToCart = async(req,res,next)=>{
       req.params.productId
     );
 
-    res.redirect("/wishlist");
+   return res.redirect("/wishlist?msg=addedToCart");
   }
 
   catch(error){
+
+ //  Already in cart -  remove from wishlist
+    if(error.message === "Already in cart"){
+      await userWishlistService.removeWishlistItem(
+        req.user._id,
+        req.params.productId
+      );
+      return res.redirect("/cart?msg=alreadyInCart");
+    }
+
+
+    // Product unavailable - redirect back 
+    if(error.message === "Product unavailable"){
+      return res.redirect("/wishlist");
+    }
+
     next(error);
   }
 
@@ -552,6 +568,14 @@ exports.moveWishlistToCart = async(req,res,next)=>{
 // CHECKOUT
 exports.getCheckout=async(req,res,next)=>{
   try{
+
+//  Buy Now from wishlist
+    if(req.query.product){
+      req.session.buyNow = {
+        productId: req.query.product,
+        quantity: 1
+      };
+    }
 
    const data =
       await userCheckoutService.getCheckoutData(

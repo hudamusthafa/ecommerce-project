@@ -82,9 +82,9 @@ exports.removeWishlistItem=async(
       throw error;
   }
 
-  wishlist.products=wishlist.products.filter(
-    item=>item.toString()!==productId
-  );
+  wishlist.products = wishlist.products.filter(
+  item => item.toString() !== productId.toString()
+);
 
   await wishlist.save();
 
