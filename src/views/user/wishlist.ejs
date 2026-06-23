@@ -85,20 +85,28 @@
             <!-- BUTTONS -->
             <div class="wishlist-actions">
 
-              <a
-                href="/wishlist/move-to-cart/<%= product._id %>"
-                class="cart-btn"
-              >
-                Add To Cart
-              </a>
 
-              <a
-                href="/checkout?product=<%= product._id %>"
-                class="buy-btn"
-              >
-                Buy Now
-              </a>
+            <% if(product.stock > 0){ %>
 
+            <a href="/wishlist/move-to-cart/<%= product._id %>" class="cart-btn">
+              Add To Cart
+            </a>
+
+            <a href="/checkout?product=<%= product._id %>" class="buy-btn">
+              Buy Now
+            </a>
+
+          <% } else { %>
+
+              <button
+               class="out-stock-btn"
+              disabled
+              >
+              Out Of Stock
+            </button>
+
+            <% } %>
+             
             </div>
 
           </div>

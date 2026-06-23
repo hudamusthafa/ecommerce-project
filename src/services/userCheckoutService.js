@@ -5,6 +5,8 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
 
   const user = await User.findById(userId);
 
+  // buyNow section
+
   if(buyNow){
 
   const Product = require("../models/Product");
@@ -19,6 +21,10 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
 
   }
 
+
+  if(product.stock <= 0){
+    throw new Error(product.name + "Out Of Stock")
+  }
   const subtotal =
     product.price * buyNow.quantity;
 

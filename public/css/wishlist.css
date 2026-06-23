@@ -168,3 +168,15 @@
 .wishlist-card {
   position: relative;
 }
+/* OUT OF STOCK BUTTON IN WISHLIST */
+.out-stock-btn {
+  width: 100%;
+  padding: 10px;
+  background: #e0e0e0;
+  color: #888;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
