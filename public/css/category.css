@@ -667,3 +667,16 @@ td{
   color: #b91c1c;
   border: 1px solid #fecaca;
 }
+/* DATE INPUT */
+.date-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.date-input:focus {
+  border-color: #8b5e3c;
+}

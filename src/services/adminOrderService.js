@@ -1,42 +1,53 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product"); 
 
-exports.getOrders = async(search,status,page,limit)=>{
+exports.getOrders = async (search, status, page, limit, dateFrom, dateTo) => {
 
   const skip = (page - 1) * limit;
 
-
   let query = {};
 
-if(search){
+  // SEARCH
 
-  query.orderId = {
-    $regex: search,
-    $options: "i"
-  };
-}
-if(status){
+  if(search){
+    query.orderId = { $regex: search, $options: "i" };
+  }
 
-  query.orderStatus = status;
+  // STATUS FILTER
 
-}
+  if(status){
+    query.orderStatus = status;
+  }
+
+  //  DATE FILTER
+
+  if(dateFrom || dateTo){
+    query.createdAt = {};
+    if(dateFrom){
+      query.createdAt.$gte = new Date(dateFrom);
+    }
+
+    if(dateTo){
+      const endDate = new Date(dateTo);
+      endDate.setDate(endDate.getDate() + 1);
+      query.createdAt.$lte = endDate;
+    }
+  }
 
   const orders = await Order.find(query)
+
     .populate("user")
-    .sort({createdAt:-1})
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
-
   const total = await Order.countDocuments(query);
 
   return {
     orders,
     total,
-    totalPages:Math.ceil(total/limit)
+    totalPages: Math.ceil(total / limit)
   };
-
 };
-
 
 //GET ORDER DETAILS
 
@@ -71,7 +82,7 @@ exports.updateOrderStatus = async (orderId, status) => {
   const previousStatus = order.orderStatus;
 
 
-// ================= ADMIN WORKFLOW CONTROLS =================
+// ADMIN WORKFLOW CONTROLS 
   
  
   if (previousStatus === "Delivered" || previousStatus === "Cancelled" || previousStatus === "Returned") {

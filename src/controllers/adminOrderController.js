@@ -9,12 +9,11 @@ exports.getOrders=async(req,res,next)=>{
     const limit=10;
     const search = req.query.search || "";
     const status = req.query.status || "";
+    const dateFrom = req.query.dateFrom || "";  
+    const dateTo = req.query.dateTo || "";      
 
-    const result=await adminOrderService.getOrders(
-      search,
-      status,
-      page,
-      limit
+     const result = await adminOrderService.getOrders(
+      search, status, page, limit, dateFrom, dateTo  
     );
 
     res.render("admin/orders",{
@@ -23,7 +22,9 @@ exports.getOrders=async(req,res,next)=>{
       totalPages:result.totalPages,
       currentPage:page,
       search,
-      status
+      status,
+       dateFrom, 
+       dateTo 
     });
 
   }catch(error){
