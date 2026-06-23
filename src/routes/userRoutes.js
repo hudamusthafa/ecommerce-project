@@ -43,7 +43,7 @@ router.get("/cart/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userCont
 // WISHLIST
 
 router.get("/wishlist",cacheMiddleware.noCache,isLoggedIn,userController.getWishlist);
-router.get("/wishlist/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToWishlist);
+router.post("/wishlist/add/:productId",cacheMiddleware.noCache,isLoggedIn,userController.addToWishlist);
 router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,userController.removeWishlistItem);
 
 // MOVE WISHLIST TO CART

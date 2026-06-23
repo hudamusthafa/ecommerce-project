@@ -39,11 +39,12 @@
 
             <!-- REMOVE -->
             <a
-              href="/wishlist/remove/<%= product._id %>"
-              class="wishlist-remove"
-            >
-              ♥
-            </a>
+             href="/wishlist/remove/<%= product._id %>"
+            class="wishlist-remove"
+            title="Remove from wishlist"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </a>
 
             <!-- IMAGE -->
             <a href="/products/<%= product._id %>">

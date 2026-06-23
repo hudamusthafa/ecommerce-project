@@ -141,3 +141,30 @@
   padding:12px 24px;
   border-radius:8px;
 }
+/* REMOVE BUTTON */
+.wishlist-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc3545;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.wishlist-remove:hover {
+  background: #dc3545;
+  color: #fff;
+}
+
+
+.wishlist-card {
+  position: relative;
+}

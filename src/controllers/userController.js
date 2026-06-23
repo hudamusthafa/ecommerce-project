@@ -320,16 +320,20 @@ exports.addToCart=async(req,res,next)=>{
       req.params.productId
     );
 
-    res.redirect( "/products?added=" + req.params.productId);
+ res.json({
+      success: true,
+      message: "Added to cart"
+    });
   }
 
   catch(error){
    
     if(error.message === "Already in cart"){
-    return res.redirect(
-      "/products?alreadyCart=" + req.params.productId
-    );
-  }
+      return res.json({
+        success: false,
+        message: "Already in cart"
+      });
+    }
       next(error);
   }
 
@@ -478,15 +482,19 @@ exports.addToWishlist=async(req,res,next)=>{
       req.params.productId
     );
 
-    res.redirect( "/products?wishlisted=" +req.params.productId);
+    res.json({
+      success: true,
+      message: "Added to wishlist"
+    });
 
   }catch(error){
 
      if(error.message === "Already in wishlist"){
-    return res.redirect(
-      "/products?alreadyWishlist=" + req.params.productId
-    );
-  }
+      return res.json({
+        success: false,
+        message: "Already in wishlist"
+      });
+    }
       next(error);
 
   }

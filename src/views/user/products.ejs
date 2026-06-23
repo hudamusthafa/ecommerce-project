@@ -321,15 +321,16 @@
               >
                 Out Of Stock
               </button>
-              
-            <% } %>
-          <a
-            href="/wishlist/add/<%= product._id %>"
-            class="wishlist-btn"
-          >
-            <i class="fa-regular fa-heart"></i>
-          </a>
 
+            <% } %>
+
+            <!-- icon -->
+           <button
+  class="wishlist-btn"
+  onclick="addToWishlist('<%= product._id %>', this)"
+>
+  <i class="fa-regular fa-heart"></i>
+</button>
         </div>
 
       </div>
@@ -390,6 +391,88 @@
 
   <%- include("../partials/footer") %>
 
+
+  <script>
+
+// ADD TO CART
+function addToCart(productId, btn) {
+
+ 
+  fetch("/cart/add/" + productId, {
+    method: "POST"
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(data) {
+
+    if(data.success) {
+
+      
+      showToast("✓ Added to cart!", "success");
+
+  
+   
+      
+
+      // Update cart count in header
+      const badge = document.querySelector(".cart-badge");
+      if(badge){
+        badge.innerText = parseInt(badge.innerText) + 1;
+      } else {
+        const cartIcon = document.querySelector(".cart-icon");
+        if(cartIcon){
+          const newBadge = document.createElement("span");
+          newBadge.className = "cart-badge";
+          newBadge.innerText = "1";
+          cartIcon.appendChild(newBadge);
+        }
+      }
+
+    } else {
+
+      
+      showToast("⚠ " + data.message, "warning");
+      btn.innerText = "Add To Cart";
+      btn.disabled = false;
+
+    }
+
+  });
+
+}
+
+// ADD TO WISHLIST
+function addToWishlist(productId, btn) {
+
+  fetch("/wishlist/add/" + productId, {
+    method: "POST"
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(data) {
+
+    if(data.success) {
+
+    
+      showToast("✓ Added to wishlist!", "success");
+
+     
+      btn.style.background = "#e63946";
+      btn.style.color = "#fff";
+
+    } else {
+
+      showToast("⚠ " + data.message, "warning");
+
+    }
+
+  });
+
+}
+
+</script>
 </body>
 
 </html>
