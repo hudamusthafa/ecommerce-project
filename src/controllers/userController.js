@@ -446,7 +446,7 @@ exports.buyNow = async (req, res, next) => {
       quantity: 1
     };
 
-    res.redirect("/checkout");
+    res.redirect("/checkout?buyNow=true");
 
   } catch (error) {
     next(error);
@@ -577,10 +577,15 @@ exports.getCheckout=async(req,res,next)=>{
       };
     }
 
+      // Coming from cart - clear buyNow
+    if(!req.query.product && !req.query.buyNow){
+      delete req.session.buyNow;
+    }
+
    const data =
       await userCheckoutService.getCheckoutData(
         req.user._id,
-        req.session.buyNow
+        req.session.buyNow || null
       );
     res.render("user/checkout",{
       user:data.user,
@@ -614,13 +619,17 @@ if(error.message === "Your cart is empty"){
 exports.placeOrder=async(req,res,next)=>{
   try{
 
-    const order=await userOrderService.placeOrder(
-      req.user._id,
-      req.body.selectedAddress,
-        req.session.buyNow
-    );
+    const buyNow = req.session.buyNow || null;
 
-   delete req.session.buyNow;
+const order = await userOrderService.placeOrder(
+  req.user._id,
+  req.body.selectedAddress,
+  buyNow
+);
+
+//  clear after order
+delete req.session.buyNow;
+
   res.redirect("/order-success/" + order.orderId);
 
   }catch(error){
@@ -796,23 +805,22 @@ exports.returnProduct = async (req, res, next) => {
 
 // DOWNLOAD INVOICE
 
-exports.downloadInvoice = async (req, res, next) => {
+exports.downloadInvoice=async(req,res,next)=>{
+  try{
 
-  try {
-
-    const order = await Order.findOne({
-      _id: req.params.id,
-      user: req.user._id
+    const order=await Order.findOne({
+      _id:req.params.id,
+      user:req.user._id
     }).populate("items.product");
 
-    if (!order) {
+    if(!order){
       return res.status(404).send("Order not found");
     }
 
-    const PDFDocument = require("pdfkit");
+    const PDFDocument=require("pdfkit");
 
-    const doc = new PDFDocument({
-      margin: 50
+    const doc=new PDFDocument({
+      margin:50
     });
 
     res.setHeader(
@@ -827,90 +835,66 @@ exports.downloadInvoice = async (req, res, next) => {
 
     doc.pipe(res);
 
-    /* =========================
-       HEADER
-    ========================= */
+    // HEADER
 
-    doc
-      .fontSize(28)
+    doc.fontSize(28)
       .fillColor("#9a6434")
       .font("Helvetica-Bold")
-      .text("AURA", {
-        align: "center"
-      });
+      .text("AURA",{align:"center"});
 
-    doc
-      .fontSize(11)
+    doc.fontSize(11)
       .fillColor("gray")
       .font("Helvetica")
-      .text("Jewellery Store", {
-        align: "center"
-      });
+      .text("Jewellery Store",{align:"center"});
 
     doc.moveDown();
 
-    doc
-      .fontSize(24)
+    doc.fontSize(24)
       .fillColor("black")
       .font("Helvetica-Bold")
-      .text("INVOICE", {
-        align: "center"
-      });
+      .text("INVOICE",{align:"center"});
 
     doc.moveDown(2);
 
-    /* =========================
-       ORDER INFORMATION
-    ========================= */
+    // ORDER INFORMATION
 
-    doc
-      .fontSize(15)
+    doc.fontSize(15)
       .fillColor("#9a6434")
       .font("Helvetica-Bold")
       .text("Order Information");
 
     doc.moveDown(0.5);
 
-    doc
-      .fontSize(12)
+    doc.fontSize(12)
       .fillColor("black")
       .font("Helvetica");
 
     doc.text(`Order ID : ${order.orderId}`);
 
     doc.text(
-      `Order Date : ${new Date(
-        order.createdAt
-      ).toLocaleDateString()}`
+      `Order Date : ${new Date(order.createdAt).toLocaleDateString()}`
     );
 
-    doc.text(
-      `Status : ${order.orderStatus}`
-    );
+    doc.text(`Status : ${order.orderStatus}`);
 
     doc.moveDown();
 
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
+    doc.moveTo(50,doc.y)
+      .lineTo(550,doc.y)
       .stroke();
 
     doc.moveDown();
 
-    /* =========================
-       CUSTOMER DETAILS
-    ========================= */
+    // CUSTOMER DETAILS
 
-    doc
-      .fontSize(15)
+    doc.fontSize(15)
       .fillColor("#9a6434")
       .font("Helvetica-Bold")
       .text("Customer Details");
 
     doc.moveDown(0.5);
 
-    doc
-      .fontSize(12)
+    doc.fontSize(12)
       .fillColor("black")
       .font("Helvetica");
 
@@ -918,204 +902,119 @@ exports.downloadInvoice = async (req, res, next) => {
     doc.text(order.address.phone);
     doc.text(order.address.house);
     doc.text(order.address.area);
-
-    doc.text(
-      `${order.address.city}, ${order.address.state}`
-    );
-
+    doc.text(`${order.address.city}, ${order.address.state}`);
     doc.text(order.address.pincode);
 
     doc.moveDown();
 
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
+    doc.moveTo(50,doc.y)
+      .lineTo(550,doc.y)
       .stroke();
 
     doc.moveDown();
 
-    /* =========================
-       PRODUCTS
-    ========================= */
+    // PRODUCTS
 
-    doc
-      .fontSize(15)
+    doc.fontSize(15)
       .fillColor("#9a6434")
       .font("Helvetica-Bold")
       .text("Products");
 
     doc.moveDown();
 
-    const tableTop = doc.y;
+    const tableTop=doc.y;
 
-    // Table Header Background
-
-    doc
-      .rect(
-        50,
-        tableTop - 5,
-        500,
-        22
-      )
+    doc.rect(50,tableTop-5,500,22)
       .fill("#9a6434");
 
-    doc
-      .fillColor("white")
+    doc.fillColor("white")
       .font("Helvetica-Bold")
       .fontSize(12);
 
-    doc.text(
-      "Product",
-      60,
-      tableTop
-    );
+    doc.text("Product",60,tableTop);
+    doc.text("Qty",300,tableTop);
+    doc.text("Price",360,tableTop);
+    doc.text("Total",460,tableTop);
 
-    doc.text(
-      "Qty",
-      300,
-      tableTop
-    );
+    let y=tableTop+30;
 
-    doc.text(
-      "Price",
-      360,
-      tableTop
-    );
-
-    doc.text(
-      "Total",
-      460,
-      tableTop
-    );
-
-    let y = tableTop + 30;
-
-    doc
-      .fillColor("black")
+    doc.fillColor("black")
       .font("Helvetica");
 
-    order.items.forEach(item => {
+    order.items.forEach(item=>{
 
-      const productName =
-        item.status === "Cancelled"
-          ? `${item.product.name} - CANCELLED`
-          : item.product.name;
+      if(item.status==="Cancelled") return;
 
-      doc.text(
-        productName,
-        50,
-        y,
-        {
-          width: 220
-        }
-      );
+const productName=item.product?.name || "Product";
 
-      doc.text(
-        item.quantity.toString(),
-        300,
-        y
-      );
+ doc.text(item.product.name, 50, y, { width: 220 });
+  doc.text(item.quantity.toString(), 300, y);
+  doc.text(`₹${item.price}`, 360, y);
+  doc.text(`₹${item.quantity * item.price}`, 460, y);
 
-      doc.text(
-        `₹${item.price}`,
-        360,
-        y
-      );
-
-      doc.text(
-        `₹${item.quantity * item.price}`,
-        460,
-        y
-      );
-
-      y += 25;
+      y+=25;
 
     });
 
-    doc.y = y + 10;
+    doc.y=y+10;
 
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
+    doc.moveTo(50,doc.y)
+      .lineTo(550,doc.y)
       .stroke();
 
     doc.moveDown(2);
 
-    /* =========================
-       TOTALS
-    ========================= */
+    // TOTALS
 
-    doc
-      .fontSize(12)
+    doc.fontSize(12)
       .fillColor("black")
       .font("Helvetica");
 
-    doc.text(
-      `Subtotal : ₹${order.subtotal}`,
-      {
-        align: "right"
-      }
-    );
+    doc.text(`Subtotal : ₹${order.subtotal}`,{
+      align:"right"
+    });
 
-    doc.text(
-      `Shipping : ₹${order.shipping}`,
-      {
-        align: "right"
-      }
-    );
+    doc.text(`Shipping : ₹${order.shipping}`,{
+      align:"right"
+    });
 
-    doc.text(
-      `Discount : ₹${order.discount}`,
-      {
-        align: "right"
-      }
-    );
+    doc.text(`Discount : ₹${order.discount}`,{
+      align:"right"
+    });
 
     doc.moveDown();
 
-    doc
-      .fontSize(18)
+    doc.fontSize(18)
       .fillColor("#9a6434")
       .font("Helvetica-Bold");
 
-    doc.text(
-      `Grand Total : ₹${order.total}`,
-      {
-        align: "right"
-      }
-    );
+    doc.text(`Grand Total : ₹${order.total}`,{
+      align:"right"
+    });
 
     doc.moveDown(2);
 
-    /* =========================
-       FOOTER
-    ========================= */
+    // FOOTER
 
-    doc
-      .fontSize(10)
+    doc.fontSize(10)
       .fillColor("gray")
       .font("Helvetica");
 
     doc.text(
       "Thank you for shopping with Aura",
-      {
-        align: "center"
-      }
+      {align:"center"}
     );
 
     doc.text(
       "This invoice was generated electronically.",
-      {
-        align: "center"
-      }
+      {align:"center"}
     );
 
     doc.end();
 
-  } catch (error) {
+  }catch(error){
 
     next(error);
 
   }
-
 };
