@@ -6,7 +6,12 @@ const userController=require("../controllers/userController");
 const upload=require("../middleware/upload");
 
 // HOME
-router.get("/home",cacheMiddleware.noCache,(req,res)=>{res.render("user/home",{user:req.user||null});});
+// router.get("/home",cacheMiddleware.noCache,(req,res)=>{res.render("user/home",{user:req.user||null});});
+router.get(
+  "/home",
+  cacheMiddleware.noCache,
+  userController.loadHome
+);
 
 // PROFILE
 router.get("/profile",cacheMiddleware.noCache,isLoggedIn,userController.getProfile);

@@ -432,3 +432,32 @@ input {
   flex:1;
   padding:30px;
 }
+
+.login-btn{
+  text-decoration:none;
+  color:#8b5e3c;
+  border:1px solid #8b5e3c;
+  padding:10px 18px;
+  border-radius:8px;
+  font-weight:600;
+  transition:.3s;
+}
+
+.login-btn:hover{
+  background:#8b5e3c;
+  color:#fff;
+}
+
+.signup-btn{
+  text-decoration:none;
+  background:#8b5e3c;
+  color:#fff;
+  padding:10px 18px;
+  border-radius:8px;
+  font-weight:600;
+  transition:.3s;
+}
+
+.signup-btn:hover{
+  background:#6d4529;
+}

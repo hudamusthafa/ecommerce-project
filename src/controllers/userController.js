@@ -13,6 +13,31 @@ const Order = require("../models/Order");
 
 
 
+exports.loadHome = async (req, res) => {
+
+  try {
+
+    const products = await Product.find({
+      isDeleted: false,
+      isListed: true
+    })
+    .sort({ createdAt: -1 })
+    .limit(8);
+
+    res.render("user/home", {
+      user: req.user || null,
+      products
+    });
+
+  } catch (error) {
+
+    console.log(error);
+    res.redirect("/pageNotFound");
+
+  }
+
+};
+
 exports.getAddressPage = async (req, res) => {
   const user = await userService.getUserById(req.user._id);
 
