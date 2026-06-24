@@ -135,16 +135,49 @@
   font-weight:600;
 }
 
-.status.placed{
-  color:#8b5e3c;
+/* BASE STATUS STYLE */
+.status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
 }
 
-.status.cancelled{
-  color:red;
+.status.placed {
+  background: #e3f2fd;
+  color: #1565c0;
 }
 
-.status.delivered{
-  color:green;
+.status.processing {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status.shipped {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.status.delivered {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.status.returned {
+  background: #fce4ec;
+  color: #880e4f;
+}
+
+.status.return-requested {
+  background: #fff8e1;
+  color: #f57f17;
 }
 /* SEARCH */
 

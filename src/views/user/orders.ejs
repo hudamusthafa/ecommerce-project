@@ -142,7 +142,7 @@
                 Status
               </h4>
 
-             <p class="status <%= order.orderStatus.toLowerCase() %>">
+          <p class="status <%= order.orderStatus.toLowerCase().replace(/ /g, '-') %>">
               <%= order.orderStatus %>
             </p>
 

@@ -218,8 +218,9 @@
 
     <div>
       <h4>Status</h4>
-      <p class="order-status"><%= order.orderStatus %></p>
-    </div>
+<p class="order-status <%= order.orderStatus.toLowerCase().replace(/ /g, '-') %>">
+  <%= order.orderStatus %>
+</p>    </div>
 
     <div>
       <h4>Total</h4>

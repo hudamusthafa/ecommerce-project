@@ -42,8 +42,49 @@
   font-weight:600;
 }
 
-.order-status{
-  color:#8b5e3c;
+/* ORDER STATUS BADGE */
+.order-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.order-status.placed {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.order-status.processing {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.order-status.shipped {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.order-status.delivered {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.order-status.cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.order-status.returned {
+  background: #fce4ec;
+  color: #880e4f;
+}
+
+.order-status.return-requested {
+  background: #fff8e1;
+  color: #f57f17;
 }
 
 
