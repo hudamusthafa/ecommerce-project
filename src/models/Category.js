@@ -11,9 +11,9 @@ const categorySchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  isDeleted: {
+  isListed: {
     type: Boolean,
-    default: false
+    default: true  
   }
 }, {
   timestamps: true

@@ -78,14 +78,14 @@
 
           <div class="summary-item">
             Listed:
-            <strong><%= categories.filter(c => !c.isDeleted).length %></strong>
+            <strong><%= categories.filter(c => c.isListed).length %></strong>
           </div>
 
           <div class="divider"></div>
 
           <div class="summary-item">
-            Archived (Soft Deleted):
-            <strong><%= categories.filter(c => c.isDeleted).length %></strong>
+            Unlisted:
+            <strong><%= categories.filter(c => !c.isListed).length %></strong>
           </div>
 
         </div>
@@ -158,18 +158,10 @@
               <!-- STATUS -->
               <td>
 
-                <% if(category.isDeleted){ %>
-
-                  <span class="status archived">
-                    archived
-                  </span>
-
+               <% if(category.isListed){ %>
+                  <span class="status listed">Listed</span>
                 <% } else { %>
-
-                  <span class="status listed">
-                    listed
-                  </span>
-
+                  <span class="status archived">Unlisted</span>
                 <% } %>
 
               </td>
@@ -197,7 +189,7 @@
                       month: "short",
                       year: "numeric"
                     }) %>',
-                    '<%= category.isDeleted ? "Archived" : "Listed" %>'
+                    '<%= category.isListed ? "Listed" : "Unlisted" %>'
                   )"
                 >
                   <i class="fa-regular fa-eye"></i>
@@ -213,10 +205,13 @@
                     <button
                       type="button"
                       class="icon-btn"
-                      onclick="openDeleteModal('<%= category._id %>')"
+                      onclick="openDeleteModal('<%= category._id %>', <%= category.isListed  %>)"
                     >
-                      🗑️
-                    </button>
+                <% if(category.isListed){ %>
+  <i class="fa-solid fa-trash" style="color:#dc3545"></i>
+<% } else { %>
+  <i class="fa-solid fa-rotate-left" style="color:#28a745"></i>
+<% } %></button>
                   </form>
 
                 </div>
@@ -294,7 +289,7 @@
 
   <div class="modal-box">
 
-    <p>Archive this category?</p>
+  <p id="modalText">Archive this category?</p>
 
     <button
       class="confirm-btn"
@@ -353,15 +348,16 @@
 
   let deleteId = "";
 
-  function openDeleteModal(id) {
+  function openDeleteModal(id, isListed) {
+  deleteId = id;
 
-    deleteId = id;
+  
+  document.getElementById("modalText").innerText = isListed
+  ? "Unlist this category?"
+  : "List this category back?";
 
-    document.getElementById(
-      "deleteModal"
-    ).style.display = "flex";
-
-  }
+  document.getElementById("deleteModal").style.display = "flex";
+}
 
   function closeDeleteModal() {
 

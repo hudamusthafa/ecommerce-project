@@ -308,14 +308,18 @@
                                 <i class="fa-regular fa-eye"></i>
                               </button>
                       <!-- DELETE -->
-                     <button
-                        type="button"
-                        class="icon-btn delete-btn"
-                        onclick="openDeleteModal('<%= product._id %>', <%= product.isListed %>)"
-                      >
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
-
+                    
+<button
+  type="button"
+  class="icon-btn delete-btn"
+  onclick="openDeleteModal('<%= product._id %>', <%= product.isListed %>)"
+>
+  <% if(product.isListed){ %>
+    <i class="fa-solid fa-trash" style="color:#dc3545"></i>
+  <% } else { %>
+    <i class="fa-solid fa-rotate-left" style="color:#28a745"></i>
+  <% } %>
+</button>
                     </div>
 
                   </td>

@@ -37,7 +37,7 @@ exports.getCategories = async (search, page, limit) => {
 
 exports.getActiveCategories = async () => {
 
-  return await Category.find();
+  return await Category.find({ isListed: true });
 
 };
 
@@ -77,13 +77,18 @@ exports.updateCategory = async (id, data) => {
 };
 
 
-// SOFT DELETE CATEGORY
-exports.softDeleteCategory = async (id) => {
 
-  return await Category.findByIdAndUpdate(
-    id,
-    { isDeleted: true },
-    { returnDocument: "after" }
-  );
 
+//  CATEGORY STATUS (list/unlist)
+exports.toggleCategoryStatus = async (id) => {
+  const category = await Category.findById(id);
+  
+  if(!category){
+    throw new Error("Category not found");
+  }
+
+  category.isListed = !category.isListed;
+  await category.save();
+
+  return category;
 };

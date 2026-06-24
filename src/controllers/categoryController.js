@@ -159,7 +159,7 @@ exports.deleteCategory=async(req,res,next)=>{
     }
 
     // SOFT DELETE
-    await categoryService.softDeleteCategory(req.params.id);
+    await categoryService.toggleCategoryStatus(req.params.id);
 
     res.redirect("/admin/categories");
 
