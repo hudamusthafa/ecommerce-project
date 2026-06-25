@@ -397,7 +397,7 @@ exports.getCart = async (req, res) => {
 
   try {
 
-    const { cart, cartUpdated } =
+    const { cart, cartUpdated,hasUnavailableItems } =
       await userCartService.getCart(req.user._id);
 
     res.render(
@@ -405,6 +405,7 @@ exports.getCart = async (req, res) => {
       {
         cart,
         cartUpdated,
+        hasUnavailableItems,
         user: req.user || null,
         error: req.query.error,
         productId: req.query.productId

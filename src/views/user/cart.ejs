@@ -34,6 +34,19 @@
 
 <h2 class="cart-title">Cart</h2>
 
+<% if(hasUnavailableItems){ %>
+
+<div class="cart-error-banner">
+
+  <i class="fa-solid fa-circle-exclamation"></i>
+
+  Some products are no longer available.
+  Please remove them before proceeding to checkout.
+
+</div>
+
+<% } %>
+
 <% if(cartUpdated){ %>
 
 <div class="cart-warning">
@@ -67,6 +80,9 @@ Some items are now available in limited quantity.
     <span>Subtotal</span>
   </div>
 
+
+
+
   <!-- CART ITEMS -->
   <% cart.items.forEach(function(item){ %>
 
@@ -92,11 +108,20 @@ Some items are now available in limited quantity.
 
           <p>High Quality Jewellery</p>
 
-          <% if(item.product.stock <= 0){ %>
+          <% if(item.isUnavailable){ %>
+
+          <p class="cart-item-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <%= item.unavailableReason %>
+          </p>
+
+          <% } %>
+
+          <!-- <% if(item.product.stock <= 0){ %>
             <p class="out-stock-msg">
               Out Of Stock
             </p>
-          <% } %>
+          <% } %> -->
 
           <a
             href="/cart/remove/<%= item.product._id %>"
@@ -116,22 +141,37 @@ Some items are now available in limited quantity.
       </div>
 
       <!-- QUANTITY -->
-      <div class="cart-quantity">
+<div class="cart-quantity">
 
-        <a href="/cart/update/<%= item.product._id %>?action=decrease">
-          <button>-</button>
-        </a>
+  <% if(item.isUnavailable){ %>
 
-        <span><%= item.quantity %></span>
+    <!-- <span class="unavailable-text">
+      Unavailable
+    </span> -->
+    <button disabled>-</button>
 
-        <a href="/cart/update/<%= item.product._id %>?action=increase">
-          <button <% if(item.product.stock<=0){ %>disabled<% } %>>
-            +
-          </button>
-        </a>
+  <span><%= item.quantity %></span>
 
-      </div>
+  <button disabled>+</button>
 
+
+  <% } else { %>
+
+    <a href="/cart/update/<%= item.product._id %>?action=decrease">
+      <button>-</button>
+    </a>
+
+    <span><%= item.quantity %></span>
+
+    <a href="/cart/update/<%= item.product._id %>?action=increase">
+      <button <% if(item.product.stock<=0){ %>disabled<% } %>>
+        +
+      </button>
+    </a>
+
+  <% } %>
+
+</div>
       
 
       <!-- SUBTOTAL -->
@@ -153,12 +193,17 @@ Some items are now available in limited quantity.
 
   <% }) %>
 
+
+  
   <!-- AVAILABLE PRODUCT CHECK -->
-  <% const hasAvailableProducts =
-    cart.items.some(
-      item => item.product && item.product.stock > 0
-    );
-  %>
+  <%
+const canCheckout =
+  cart.items.some(item =>
+    item.product &&
+    item.product.stock > 0 &&
+    !item.isUnavailable
+  );
+%>
 
   <!-- TOTAL -->
   <div class="cart-total-box">
@@ -168,15 +213,23 @@ Some items are now available in limited quantity.
     <p>
       Total : ₹
       <%= cart.items.reduce((total,item)=>{
-        if(item.product && item.product.stock > 0){
-          return total + (item.product.price * item.quantity);
-        }
-        return total;
-      },0) %>
+
+          if(
+            item.product &&
+            item.product.stock > 0 &&
+            !item.isUnavailable
+          ){
+            return total + (item.product.price * item.quantity);
+          }
+
+          return total;
+
+        },0) %>
+
     </p>
 
     <!-- CHECKOUT BUTTON -->
-    <% if(hasAvailableProducts){ %>
+    <% if(canCheckout){ %>
 
       <a
         href="/checkout"

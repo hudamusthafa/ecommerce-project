@@ -66,7 +66,7 @@ exports.addToCart=async(userId,productId)=>{
   return cart;
 };
 
-// GET CART PRODUCTS
+
 
 // GET CART PRODUCTS
 
@@ -94,12 +94,20 @@ exports.getCart = async (userId) => {
     // Skip unavailable products
     if (!product) continue;
 
+    // Product unlisted
+if (!product.isListed) {
+
+  item.isUnavailable = true;
+  item.unavailableReason = "This product is no longer available.";
+  continue;
+
+}
+
     // If stock becomes 0, remove from cart
     if (product.stock <= 0) {
-      cart.items = cart.items.filter(
-        i => i.product._id.toString() !== product._id.toString()
-      );
-      cartUpdated = true;
+      item.isUnavailable = true;
+  item.unavailableReason = "This product is out of stock.";
+
       continue;
     }
 
@@ -115,9 +123,14 @@ exports.getCart = async (userId) => {
 
   await cart.save();
 
+const hasUnavailableItems = cart.items.some(
+  item => item.isUnavailable
+);
+
   return {
     cart,
-    cartUpdated
+    cartUpdated,
+    hasUnavailableItems
   };
 
 };

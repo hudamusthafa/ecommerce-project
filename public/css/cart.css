@@ -375,8 +375,9 @@ body{
 }
 /* OUT OF STOCK MESSAGE IN CART */
 .out-stock-msg {
-  color: #fff;
-  background: #dc3545;
+  color: #b71c1c;
+  background: #ffffff;
+  border: 1px solid #b71c1c;
   font-size: 12px;
   font-weight: 600;
   padding: 3px 10px;
@@ -416,4 +417,49 @@ body{
   color:#6b4f00;
   font-size:15px;
   line-height:1.6;
+}
+/* Product unavailable message */
+
+.cart-item-error{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:10px 0;
+    padding:10px 14px;
+    background:#fdecea;
+    border:1px solid #f5c2c7;
+    color:#c62828;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.cart-item-error i{
+    font-size:16px;
+}
+
+
+/* Top warning */
+
+.cart-error-banner{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff3cd;
+    border:1px solid #ffe69c;
+    color:#8a5a00;
+    padding:15px 18px;
+    margin:20px 0;
+    border-radius:10px;
+    font-weight:600;
+    font-size:15px;
+}
+
+.cart-error-banner i{
+    font-size:20px;
+}
+.unavailable-text{
+    color:#d32f2f;
+    font-weight:600;
+    font-size:15px;
 }

@@ -62,18 +62,38 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
   }
 
   // CART ORDER
-  const cart=await Cart.findOne({user:userId})
-    .populate("items.product");
+ const cart = await Cart.findOne({ user:userId })
+  .populate({
+    path: "items.product",
+    populate: {
+      path: "category"
+    }
+  });
 
   if(!cart) throw new Error("Cart is empty");
 
-  cart.items=cart.items.filter(item=>item.product);
+  cart.items = cart.items.filter(item => {
+
+  return (
+    item.product &&
+    item.product.isListed &&
+    item.product.stock > 0 &&
+    item.product.category &&
+    item.product.category.isListed
+  );
+
+});
+
+if(cart.items.length === 0){
+
+    throw new Error(
+      "No available products in your cart."
+    );
+
+}
   await cart.save();
 
-  if(cart.items.length===0){
-    throw new Error("Cart is empty");
-  }
-
+  
   for(const item of cart.items){
     if(item.quantity>item.product.stock){
       throw new Error(
