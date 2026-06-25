@@ -12,6 +12,7 @@ const Order = require("../models/Order");
 // ADD ADDRESS
 
 
+//==========================================================
 
 exports.loadHome = async (req, res) => {
 
@@ -37,12 +38,16 @@ exports.loadHome = async (req, res) => {
   }
 
 };
+//==========================================================
+
 
 exports.getAddressPage = async (req, res) => {
   const user = await userService.getUserById(req.user._id);
 
   res.render("user/address", { user });
 };
+
+//==========================================================
 
 exports.addAddress = async (req, res) => {
 
@@ -56,6 +61,8 @@ exports.addAddress = async (req, res) => {
     res.send("Error adding address");
   }
 };
+//==========================================================
+
 
 // DELETE ADDRESS
 exports.deleteAddress = async (req, res) => {
@@ -74,6 +81,7 @@ exports.deleteAddress = async (req, res) => {
 
   }
 };
+//==========================================================
 
 // UPDATE ADDRESS
 exports.updateAddress = async (req, res) => {
@@ -84,6 +92,9 @@ exports.updateAddress = async (req, res) => {
     res.send("Error updating address");
   }
 };
+
+
+//==========================================================
 
 // GET EDIT ADDRESS PAGE
 exports.getEditAddress = async (req, res) => {
@@ -107,9 +118,14 @@ exports.getEditAddress = async (req, res) => {
   }
 };
 
+//==========================================================
+
 // PROFILE PAGE
 exports.getProfile = (req, res) => {
 res.render("user/profile", { user: req.user, error: null, success: null });};
+
+
+//==========================================================
 
 // UPDATE PROFILE 
 exports.updateProfile = async (req, res) => {
@@ -175,6 +191,10 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
+
+//==========================================================
+
+
 // CHANGE PASSWORD (improved)
 exports.changePassword = async (req, res) => {
   try {
@@ -216,6 +236,9 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
+//==========================================================
+
 //set paswrd for googlesignin users
 exports.setPassword = async (req, res) => {
   try {
@@ -298,6 +321,7 @@ exports.getProductsPage=async(req,res,next)=>{
   }
 
 };
+//==========================================================
 
 //product details
 
@@ -332,6 +356,7 @@ exports.getProductDetails=async(req,res,next)=>{
   }
 
 };
+//==========================================================
 
 
 // add to cart
@@ -363,6 +388,7 @@ exports.addToCart=async(req,res,next)=>{
   }
 
 };
+//==========================================================
 
 //show cart page
 
@@ -392,6 +418,7 @@ exports.getCart=async(req,res)=>{
   }
 
 };
+//==========================================================
 
 
 //CART QUANTITY UPDATE
@@ -427,6 +454,7 @@ if(
 
   }
 };
+//==========================================================
 
 
 //REMOVE PRODUCT
@@ -477,6 +505,9 @@ exports.buyNow = async (req, res, next) => {
     next(error);
   }
 };
+
+//==========================================================
+
 //GET WISHLIST
 
 exports.getWishlist=async(req,res,next)=>{
@@ -496,6 +527,8 @@ exports.getWishlist=async(req,res,next)=>{
    next(error);
   }
 };
+
+//==========================================================
 
 //ADD TO WISHLIST
 
@@ -525,6 +558,7 @@ exports.addToWishlist=async(req,res,next)=>{
   }
 };
 
+//==========================================================
 
 //REMOVE FROM WISHLIST
 
@@ -544,6 +578,7 @@ exports.removeWishlistItem=async(req,res,next)=>{
 
   }
 };
+//==========================================================
 
 
 // MOVE WISHLIST TO CART 
@@ -588,7 +623,7 @@ exports.moveWishlistToCart = async(req,res,next)=>{
   }
 
 };
-
+//==========================================================
 
 // CHECKOUT
 exports.getCheckout=async(req,res,next)=>{
@@ -638,7 +673,7 @@ if(error.message === "Your cart is empty"){
   }
 };
 
-
+//==========================================================
 //PLACE ORDER
 
 exports.placeOrder=async(req,res,next)=>{
@@ -665,6 +700,7 @@ delete req.session.buyNow;
   }
 };
 
+//==========================================================
 //order success
 
 exports.getOrderSuccess=async(req,res,next)=>{
@@ -680,7 +716,7 @@ exports.getOrderSuccess=async(req,res,next)=>{
   }
 };
 
-
+//==========================================================
 
 //view orders list
 
@@ -706,7 +742,7 @@ exports.getOrders=async(req,res,next)=>{
   }
 };
 
-
+//==========================================================
 
 //get order details
 exports.getOrderDetails=async(req,res,next)=>{
@@ -729,6 +765,9 @@ exports.getOrderDetails=async(req,res,next)=>{
   }
 };
 
+
+//==========================================================
+
 //cancel each product
 exports.cancelProduct = async(req,res,next)=>{
   try{
@@ -749,6 +788,9 @@ exports.cancelProduct = async(req,res,next)=>{
 
   }
 };
+
+//==========================================================
+
 //cancel order
 exports.cancelOrder=async(req,res,next)=>{
   try{
@@ -770,6 +812,7 @@ exports.cancelOrder=async(req,res,next)=>{
   }
 };
 
+//==========================================================
 
 //RE-ORDER
 exports.reorderProduct = async(
@@ -784,7 +827,7 @@ exports.reorderProduct = async(
       req.params.productId
     );
 
-    res.redirect("back");
+    res.redirect("/cart");
 
   }catch(error){
 
@@ -792,6 +835,8 @@ exports.reorderProduct = async(
 
   }
 };
+
+//==========================================================
 
 //RETURN ORDER
 
@@ -811,6 +856,8 @@ exports.returnOrder=async(req,res,next)=>{
   }
 };
 
+//==========================================================
+
 // RETURN SINGLE PRODUCT
 exports.returnProduct = async (req, res, next) => {
   try {
@@ -827,6 +874,8 @@ exports.returnProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+//==========================================================
 
 // DOWNLOAD INVOICE
 

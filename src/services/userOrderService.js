@@ -4,6 +4,8 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 
+//==========================================================
+
 exports.placeOrder=async(userId,addressId,buyNow=null)=>{
 
   const user=await User.findById(userId);
@@ -137,7 +139,7 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
 
 
 
-
+//==========================================================
 
 
 // view user orders list
@@ -181,7 +183,7 @@ exports.getOrders = async(userId, search)=>{
 
 };
 
-
+//==========================================================
 
 
 //get order details
@@ -204,7 +206,7 @@ exports.getOrderDetails=async(orderId,userId)=>{
   return order;
 };
 
-
+//==========================================================
 
 // CANCEL ORDER
 
@@ -245,7 +247,7 @@ exports.cancelOrder = async(orderId,reason)=>{
   return order;
 
 };
-
+//==========================================================
 
 //cancel each product
 exports.cancelProduct = async (
@@ -318,6 +320,8 @@ order.total =
   return order;
 };
 
+//==========================================================
+
 //RE-ORDER
 
 
@@ -361,6 +365,8 @@ exports.reorderProduct=async(userId,productId)=>{
   return cart;
 };
 
+//==========================================================
+
 // RETURN ORDER
 
 exports.returnOrder = async (orderId, reason) => {
@@ -392,6 +398,7 @@ exports.returnOrder = async (orderId, reason) => {
   return order;
 
 };
+//==========================================================
 
 // RETURN SINGLE PRODUCT
 exports.returnProduct = async (orderId, productId, reason) => {

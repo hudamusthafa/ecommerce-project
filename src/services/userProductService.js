@@ -97,7 +97,7 @@ exports.getProducts=async(query)=>{
 
   const activeProducts = products.filter(product =>
   product.category &&
-  !product.category.isDeleted
+  product.category.isListed
 );
 
   // TOTAL PRODUCTS
@@ -108,9 +108,9 @@ exports.getProducts=async(query)=>{
 
   // CATEGORIES
   const categories=await Category.find({
-    isDeleted:false
+   isListed: true
 
-  });
+  }).sort({ name: 1 });
 
 
  
@@ -140,7 +140,7 @@ exports.getProductDetails=async(productId,userId)=>{
   .populate("category");
 
   // PRODUCT NOT FOUND
-  if(!product || !product.isListed || !product.category || product.category.isDeleted){
+  if(!product || !product.isListed || !product.category || !product.category.isListed){
     return null;
   }
 
