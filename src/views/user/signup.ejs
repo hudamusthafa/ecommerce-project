@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura | Sign Up</title>
+
+  <link rel="stylesheet" href="/css/signup.css">
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="signup-container">
+
+  <!-- LEFT FORM -->
+  <div class="signup-form">
+
+    <div class="logo">
+      <h1>Aura</h1>
+      <p>Timeless Elegance</p>
+    </div>
+
+    <h2>Create Account</h2>
+
+    <p class="subtitle">
+      Join Aura and discover timeless beauty
+    </p>
+
+    <!-- GOOGLE -->
+    <a href="/auth/google" class="google-btn">
+      <i class="fa-brands fa-google"></i>
+      Sign up with Google
+    </a>
+
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <!-- YOUR EXISTING FORM -->
+    <form action="/register" method="POST">
+
+      <div class="input-group">
+        <i class="fa-regular fa-user"></i>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="signup-btn">
+        Create Account
+      </button>
+
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a href="/login">Login</a>
+    </p>
+
+  </div>
+
+  <!-- RIGHT IMAGE -->
+  <div class="signup-image">
+
+    <img
+      src="/images/login-banner.png"
+      alt="Jewellery"
+    >
+
+  </div>
+
+</div>
+
+</body>
+</html>

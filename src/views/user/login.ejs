@@ -11,59 +11,109 @@
 </head>
 <body>
 
-<div class="container">
+<div class="login-container">
 
-  <!-- LEFT IMAGE -->
-  <div class="left">
-    <img src="/images/login-banner.png">
-  </div>
+  <!-- LEFT FORM -->
+  <div class="login-form">
 
-  <!-- RIGHT FORM -->
-  <div class="right">
-    <div class="card">
-      <h2>Sign-in</h2>
+    <div class="brand">
+      <h1>Aura</h1>
+      <p>Timeless Elegance</p>
+    </div>
 
-     
-    
-      <div class="social">
-  <button type="button" onclick="window.location.href='/google'">
-    Sign in with Google
-  </button>
-</div>
+    <h2>Welcome Back</h2>
 
-<div class="or">— OR —</div>
+    <p class="subtitle">
+      Sign in to continue your jewellery journey
+    </p>
 
-  <!--  Backend Message -->
-      <% if (typeof message !== 'undefined') { %>
-          <p class="error"><%= message %></p>
-      <% } %>
+    <div class="social">
+      <button
+        type="button"
+        class="google-btn"
+        onclick="window.location.href='/google'"
+      >
+        <i class="fab fa-google"></i>
+        Sign in with Google
+      </button>
+    </div>
 
-      <!--  FORM -->
-     <form method="POST" action="/login" onsubmit="return validateLogin()" novalidate>
+    <div class="or">OR</div>
 
-        <input type="text" name="email" id="email" placeholder="Email">
-        <p class="error" id="emailError"></p>
+    <% if(typeof message !== 'undefined'){ %>
+      <p class="backend-error">
+        <%= message %>
+      </p>
+    <% } %>
 
-        <div class="password-box">
-          <input type="password" name="password" id="password" placeholder="Password">
-          <i class="fas fa-eye" onclick="togglePassword('password', this)"></i>
-        </div>
-        <p class="error" id="passwordError"></p>
+    <form method="POST"
+          action="/login"
+          onsubmit="return validateLogin()"
+          novalidate>
 
-        <div style="text-align:right; font-size:12px; margin-top:5px;">
-          <a href="/forgot-password">Forgot password?</a>
-        </div>
+      <div class="input-group">
+        <i class="far fa-envelope"></i>
 
-        <button class="btn" type="submit">Login</button>
-
-       
-    </form>
-
-      <div class="login-link">
-        Don’t have an account? <a href="/register">Signup Here</a>
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="Email Address"
+        >
       </div>
 
+      <p class="error" id="emailError"></p>
+
+      <div class="input-group password-box">
+
+        <i class="fas fa-lock"></i>
+
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+        >
+
+        <i
+          class="fas fa-eye eye-icon"
+          onclick="togglePassword('password', this)"
+        ></i>
+
+      </div>
+
+      <p class="error" id="passwordError"></p>
+
+      <div class="forgot">
+        <a href="/forgot-password">
+          Forgot Password?
+        </a>
+      </div>
+
+      <button class="btn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <div class="login-link">
+      Don't have an account?
+      <a href="/register">
+        Create Account
+      </a>
     </div>
+
+  </div>
+
+  <!-- RIGHT IMAGE -->
+
+  <div class="login-image">
+
+    <img
+      src="/images/login-banner.png"
+      alt="Jewellery"
+    >
+
   </div>
 
 </div>

@@ -1,196 +1,314 @@
+```ejs
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Signup</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<title>Aura | Sign Up</title>
+
+<link rel="stylesheet" href="/css/signup.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-<div class="container">
+<div class="signup-container">
 
-  <!-- LEFT IMAGE -->
-  <div class="left">
-    <img src="/images/login-banner.png">
+  <!-- LEFT FORM -->
+  <div class="signup-form">
+
+    <div class="logo">
+      <h1>Aura</h1>
+      <p>Timeless Elegance</p>
+    </div>
+
+    <h2>Create Account</h2>
+
+    <p class="subtitle">
+      Join Aura and discover timeless beauty
+    </p>
+
+    <% if(typeof message !== 'undefined'){ %>
+      <p class="backend-error"><%= message %></p>
+    <% } %>
+
+    <!-- GOOGLE SIGNUP -->
+    <a href="/google" class="google-btn">
+      <i class="fa-brands fa-google"></i>
+      Sign up with Google
+    </a>
+
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <p id="message" class="error"></p>
+
+    <!-- FORM -->
+    <form id="registerForm" novalidate>
+
+      <!-- NAME -->
+      <div class="input-group">
+        <i class="fa-regular fa-user"></i>
+
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Full Name"
+        >
+      </div>
+
+      <p class="error" id="nameError"></p>
+
+      <!-- EMAIL -->
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="Email Address"
+        >
+      </div>
+
+      <p class="error" id="emailError"></p>
+
+      <!-- PASSWORD -->
+      <div class="input-group password-group">
+
+        <i class="fa-solid fa-lock"></i>
+
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+        >
+
+        <i
+          class="fa-solid fa-eye eye-icon"
+          onclick="togglePassword('password', this)"
+        ></i>
+
+      </div>
+
+      <p class="error" id="passwordError"></p>
+
+      <!-- CONFIRM PASSWORD -->
+      <div class="input-group password-group">
+
+        <i class="fa-solid fa-lock"></i>
+
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          placeholder="Confirm Password"
+        >
+
+        <i
+          class="fa-solid fa-eye eye-icon"
+          onclick="togglePassword('confirmPassword', this)"
+        ></i>
+
+      </div>
+
+      <p class="error" id="confirmPasswordError"></p>
+
+      <button
+        type="submit"
+        class="signup-btn"
+      >
+        Create Account
+      </button>
+
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a href="/login">Login</a>
+    </p>
+
   </div>
 
-  <!-- RIGHT FORM -->
-  <div class="right">
-    <div class="card">
-      <h2>Create Account</h2>
+  <!-- RIGHT IMAGE -->
+  <div class="signup-image">
 
-      <% if (typeof message !== 'undefined') { %>
-        <p style="color:red;"><%= message %></p>
-      <% } %>
+    <img
+      src="/images/login-banner.png"
+      alt="Jewellery"
+    >
 
-      <!-- GOOGLE BUTTON -->
-      <div class="social">
-        <button type="button" onclick="window.location.href='/google'">
-  Sign up with Google
-</button>
-      </div>
-
-      <div class="or">— OR —</div>
-       <p id="message" class="error"></p>
-      <!-- FORM -->
-      <form id="registerForm"  novalidate>
-
-        <input type="text" name="name" id="name" placeholder="Full Name">
-            <p class="error" id="nameError"></p>
-
-           <input type="text" name="email" id="email" placeholder="Email">
-           <p class="error" id="emailError"></p>
-
-            <div class="password-box">
-              <input type="password" name="password" id="password" placeholder="Password">
-              <i class="fas fa-eye" onclick="togglePassword('password', this)"></i>
-            </div>
-            <p class="error" id="passwordError"></p>
-  
-
-            <div class="password-box">
-              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
-              <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
-            </div>
-            <p class="error" id="confirmPasswordError"></p>
-
-
-        <button class="btn" type="submit">Create Account</button>
-      </form>
-
-      <div class="login-link">
-        Already have an account? <a href="/login">Login</a>
-      </div>
-
-    </div>
   </div>
 
 </div>
 
 <script>
-function togglePassword(id, icon) {
+
+function togglePassword(id, icon){
+
   const input = document.getElementById(id);
-  if (input.type === "password") {
+
+  if(input.type === "password"){
     input.type = "text";
-    icon.classList.replace("fa-eye", "fa-eye-slash");
-  } else {
+    icon.classList.replace("fa-eye","fa-eye-slash");
+  }else{
     input.type = "password";
-    icon.classList.replace("fa-eye-slash", "fa-eye");
+    icon.classList.replace("fa-eye-slash","fa-eye");
   }
+
 }
 
-function validateForm() {
+function validateForm(){
+
   let isValid = true;
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const confirmPassword = document.getElementById("confirmPassword").value;
-  // Clear old errors
+  const confirmPassword =
+  document.getElementById("confirmPassword").value;
+
   document.getElementById("nameError").innerText = "";
   document.getElementById("emailError").innerText = "";
   document.getElementById("passwordError").innerText = "";
   document.getElementById("confirmPasswordError").innerText = "";
 
-  // Name validation
-  if (!name) {
-    document.getElementById("nameError").innerText = "Name is required";
+  if(!name){
+    document.getElementById("nameError").innerText =
+    "Name is required";
     isValid = false;
   }
 
-  // Email validation regex
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-if (!email) {
-  document.getElementById("emailError").innerText = "Email is required";
-  isValid = false;
-} else if (!emailRegex.test(email)) {
-  document.getElementById("emailError").innerText = "Enter a valid email address";
-  isValid = false;
-}
-
-  // Password validation
-  const regex = /^(?=.*\d).{6,10}$/;
-
-  if (!password) {
-    document.getElementById("passwordError").innerText = "Password is required";
+  if(!email){
+    document.getElementById("emailError").innerText =
+    "Email is required";
     isValid = false;
-  } else if (!regex.test(password)) {
+  }
+  else if(!emailRegex.test(email)){
+    document.getElementById("emailError").innerText =
+    "Enter a valid email address";
+    isValid = false;
+  }
+
+  const regex =
+  /^(?=.*\d).{6,10}$/;
+
+  if(!password){
     document.getElementById("passwordError").innerText =
-      "Password must be 6-10 characters with at least one number";
+    "Password is required";
+    isValid = false;
+  }
+  else if(!regex.test(password)){
+    document.getElementById("passwordError").innerText =
+    "Password must be 6-10 characters with at least one number";
     isValid = false;
   }
 
-  if (!confirmPassword) {
-  document.getElementById("confirmPasswordError").innerText = "Confirm password is required";
-  isValid = false;
-} else if (password !== confirmPassword) {
-  document.getElementById("confirmPasswordError").innerText = "Passwords do not match";
-  isValid = false;
+  if(!confirmPassword){
+    document.getElementById("confirmPasswordError").innerText =
+    "Confirm password is required";
+    isValid = false;
+  }
+  else if(password !== confirmPassword){
+    document.getElementById("confirmPasswordError").innerText =
+    "Passwords do not match";
+    isValid = false;
+  }
+
+  return isValid;
 }
 
-  return isValid; //  stops form if false
+document
+.querySelector("#registerForm")
+.addEventListener("submit", async (e)=>{
 
-}
-
-//otp integration
-
-document.querySelector("#registerForm").addEventListener("submit", async (e) => {
-  if (!validateForm()) {
+  if(!validateForm()){
     e.preventDefault();
     return;
   }
 
-  e.preventDefault(); // stop normal form submit
-  
-console.log("Form submitted");
+  e.preventDefault();
 
+  const name =
+  document.getElementById("name").value;
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email =
+  document.getElementById("email").value;
 
-  console.log(name, email, password);
+  const password =
+  document.getElementById("password").value;
 
-  const res = await fetch("/send-otp", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
+  const res = await fetch("/send-otp",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
     },
-    body: JSON.stringify({ name, email, password })
+    body:JSON.stringify({
+      name,
+      email,
+      password
+    })
   });
 
   const data = await res.json();
 
-  if (res.ok) {
-    // store temporarily
-    localStorage.setItem("name", name);
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
-    localStorage.setItem("type", "register");
+  if(res.ok){
 
-    // redirect to OTP page
-    window.location.href = "/otp";
-  } else {
-    document.getElementById("message").innerText = data.message;
-     console.log("ERROR:", data.message);
-  }
-});
+    localStorage.setItem("name",name);
+    localStorage.setItem("email",email);
+    localStorage.setItem("password",password);
+    localStorage.setItem("type","register");
 
+    window.location.href="/otp";
 
-// Replace history so user cannot go back to register
-  if (window.history.replaceState) {
-    window.history.replaceState(null, null, window.location.href);
+  }else{
+
+    document.getElementById("message")
+    .innerText = data.message;
+
   }
 
-  document.getElementById("confirmPassword").addEventListener("input", () => {
-  document.getElementById("confirmPasswordError").innerText = "";
 });
+
+document.getElementById("name")
+.addEventListener("input",()=>{
+  document.getElementById("nameError").innerText="";
+});
+
+document.getElementById("email")
+.addEventListener("input",()=>{
+  document.getElementById("emailError").innerText="";
+});
+
+document.getElementById("password")
+.addEventListener("input",()=>{
+  document.getElementById("passwordError").innerText="";
+});
+
+document.getElementById("confirmPassword")
+.addEventListener("input",()=>{
+  document.getElementById("confirmPasswordError").innerText="";
+});
+
+if(window.history.replaceState){
+  window.history.replaceState(
+    null,
+    null,
+    window.location.href
+  );
+}
+
 </script>
 
 </body>
 </html>
+
