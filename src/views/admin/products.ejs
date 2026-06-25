@@ -294,20 +294,21 @@
 
                      <!-- VIEW -->
                               <button
-                                type="button"
-                                class="icon-btn"
-                                onclick='openViewModal(
-                                  "<%= product.name %>",
-                                  "<%= product.category ? product.category.name : 'No Category' %>",
-                                  "<%= product.price %>",
-                                  "<%= product.stock %>",
-                                  "<%= product.description %>",
-                                  <%- JSON.stringify(product.images) %>
-                                )'
-                              >
-                                <i class="fa-regular fa-eye"></i>
-                              </button>
-                      <!-- DELETE -->
+                                  type="button"
+                                  class="icon-btn"
+                                  onclick='openViewModal(
+                                    "<%= product.name %>",
+                                    "<%= product.category ? product.category.name : "No Category" %>",
+                                    "<%= product.variant || "N/A" %>",
+                                    "<%= product.price %>",
+                                    "<%= product.stock %>",
+                                    "<%= product.description %>",
+                                    <%- JSON.stringify(product.images) %>
+                                  )'
+                                >
+                                  <i class="fa-regular fa-eye"></i>
+                                </button>
+                                                      <!-- DELETE -->
                     
                       <button
                         type="button"
@@ -423,6 +424,11 @@
     </p>
 
     <p>
+  <strong>Variant:</strong>
+  <span id="viewVariant"></span>
+</p>
+
+    <p>
       <strong>Price:</strong>
       ₹ <span id="viewPrice"></span>
     </p>
@@ -507,6 +513,7 @@ function confirmDelete(){
 function openViewModal(
   name,
   category,
+  variant,
   price,
   stock,
   description,
@@ -515,6 +522,7 @@ function openViewModal(
 
   document.getElementById("viewTitle").innerText = name;
   document.getElementById("viewCategory").innerText = category;
+  document.getElementById("viewVariant").innerText = variant;
   document.getElementById( "viewPrice").innerText = price;
   document.getElementById("viewStock").innerText = stock;
   document.getElementById("viewDescription").innerText = description;

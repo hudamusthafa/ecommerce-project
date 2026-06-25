@@ -139,6 +139,8 @@ exports.getProductDetails=async(productId,userId)=>{
   const product=await Product.findById(productId)
   .populate("category");
 
+
+
   // PRODUCT NOT FOUND
   if(!product || !product.isListed || !product.category || !product.category.isListed){
     return null;

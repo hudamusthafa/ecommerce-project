@@ -422,3 +422,24 @@
   gap: 18px;
   margin-top: 25px;
 }
+.variant-section{
+    margin:18px 0;
+}
+
+.variant-title{
+    font-size:15px;
+    color:#666;
+    margin-bottom:8px;
+    font-weight:500;
+}
+
+.variant-badge{
+    display:inline-block;
+    padding:8px 18px;
+    border:1px solid #8b5e3c;
+    border-radius:25px;
+    background:#f8f2eb;
+    color:#8b5e3c;
+    font-weight:600;
+    font-size:14px;
+}

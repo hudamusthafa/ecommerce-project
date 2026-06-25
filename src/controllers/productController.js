@@ -4,6 +4,8 @@ const sharp=require("sharp");
 const fs=require("fs");
 const path=require("path");
 
+//=========================================================
+
 // PRODUCT LIST PAGE
 exports.getProducts=async(req,res,next)=>{
   try{
@@ -56,6 +58,8 @@ exports.getProducts=async(req,res,next)=>{
   }
 };
 
+//=========================================================
+
 // GET ADD PRODUCT PAGE
 exports.getAddProduct=async(req,res)=>{
   try{
@@ -78,6 +82,8 @@ exports.getAddProduct=async(req,res)=>{
     res.redirect("/admin/products");
   }
 };
+//=========================================================
+
 
 // ADD PRODUCT
 exports.addProduct=async(req,res)=>{
@@ -88,7 +94,8 @@ exports.addProduct=async(req,res)=>{
       description,
       price,
       stock,
-      category
+      category,
+      variant
     }=req.body;
 
  if(parseInt(stock) < 0){
@@ -158,6 +165,7 @@ try{
       price: parseFloat(price),
       stock: parseInt(stock),
       category,
+      variant,
       images
     });
 
@@ -170,6 +178,9 @@ try{
     res.redirect("/admin/products");
   }
 };
+
+
+//=========================================================
 
 // GET EDIT PRODUCT PAGE
 exports.getEditProduct=async(req,res)=>{
@@ -197,12 +208,15 @@ exports.getEditProduct=async(req,res)=>{
   }
 };
 
+//=========================================================
+
+
 // UPDATE PRODUCT
 exports.updateProduct=async(req,res)=>{
 
   try{
 
-    const {name, description, price, stock, category} = req.body;
+    const {name, description, price, stock, category,variant} = req.body;
 
 
     if(parseInt(stock) < 0){
@@ -292,6 +306,7 @@ try{
         price: parseFloat(price),
         stock: parseInt(stock),
         category,
+        variant,
         images
       }
     );
@@ -306,6 +321,9 @@ res.redirect("/admin/products?page=" + returnPage);
     res.redirect("/admin/products");
   }
 };
+
+
+//=========================================================
 
 // DELETE PRODUCT
 exports.deleteProduct=async(req,res)=>{

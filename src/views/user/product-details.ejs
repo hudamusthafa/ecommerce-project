@@ -78,28 +78,22 @@
             ];
           %>
 
-          <% product.images.forEach(function(image,index){ %>
+         <% product.images.forEach(function(image,index){ %>
 
             <div class="thumbnail-box">
 
               <img
                 src="/images/<%= image %>"
-
-                onclick="
-                  document.getElementById('mainProductImage').src=this.src
-                "
+                onclick="changeVariant(this,'<%= variantNames[index] %>')"
               >
 
               <p class="variant-name">
-
-                <%= variantNames[index] || "Variant" %>
-
+                <%= variantNames[index] %>
               </p>
 
             </div>
 
-          <% }) %>
-
+            <% }) %>
         </div>
 
       </div>
@@ -147,6 +141,21 @@
 
         </div>
 
+
+        <!-- VARIANT -->
+
+<div class="variant-section">
+
+  <p class="variant-title">
+    Finish
+  </p>
+<span
+  id="selectedVariant"
+  class="variant-badge"
+>
+  <%= product.variant %>
+</span>
+</div>
 
 <!-- STOCK STATUS -->
 
@@ -436,6 +445,15 @@ image.addEventListener("mouseleave",function(){
 
   }
 
+
+
+function changeVariant(image, variant){
+
+    document.getElementById("mainProductImage").src = image.src;
+
+    document.getElementById("selectedVariant").innerText = variant;
+
+}
 </script>
 
 </body>

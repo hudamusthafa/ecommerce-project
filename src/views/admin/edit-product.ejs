@@ -127,6 +127,35 @@
 
         </div>
 
+
+<!-- VARIANT -->
+<div class="form-group">
+
+  <label>
+    Variant
+  </label>
+
+  <select name="variant">
+
+    <option value="Gold Plated"
+      <%= product.variant === "Gold Plated" ? "selected" : "" %>>
+      Gold Plated
+    </option>
+
+    <option value="Rose Gold Plated"
+      <%= product.variant === "Rose Gold Plated" ? "selected" : "" %>>
+      Rose Gold Plated
+    </option>
+
+    <option value="Silver Plated"
+      <%= product.variant === "Silver Plated" ? "selected" : "" %>>
+      Silver Plated
+    </option>
+
+  </select>
+
+</div>
+
         <!-- PRICE -->
         <div class="form-group">
 
@@ -318,6 +347,10 @@ function validateProductForm(){
     'select[name="category"]'
   ).value;
 
+  const variant=document.querySelector(
+  'select[name="variant"]'
+).value;
+
   const price=document.querySelector(
     'input[name="price"]'
   ).value;
@@ -374,6 +407,15 @@ function validateProductForm(){
     return false;
 
   }
+// VARIANT
+if(variant===""){
+
+  error.innerText=
+    "Please select a variant";
+
+  return false;
+
+}
 
   // PRICE
   if(price===""){
