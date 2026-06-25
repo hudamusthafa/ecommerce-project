@@ -32,8 +32,30 @@
 
   <div class="cart-container">
 
-
 <h2 class="cart-title">Cart</h2>
+
+<% if(cartUpdated){ %>
+
+<div class="cart-warning">
+
+  <div class="warning-icon">
+    <i class="fa-solid fa-circle-exclamation"></i>
+  </div>
+
+  <div class="warning-text">
+
+    <h4>Your cart has been updated</h4>
+
+    <p>
+      Your cart has been updated.
+Some items are now available in limited quantity.
+    </p>
+
+  </div>
+
+</div>
+
+<% } %>
 
 <% if(cart && cart.items.length > 0){ %>
 

@@ -384,3 +384,36 @@ body{
   display: inline-block;
   margin-top: 4px;
 }
+.cart-warning{
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+
+  background:#fff3cd;
+  border:1px solid #f5c76b;
+  border-left:6px solid #f59e0b;
+
+  padding:18px 20px;
+  margin:20px 0 25px;
+
+  border-radius:10px;
+}
+
+.warning-icon i{
+  font-size:28px;
+  color:#f59e0b;
+}
+
+.warning-text h4{
+  margin:0 0 6px;
+  color:#8a5a00;
+  font-size:18px;
+  font-weight:700;
+}
+
+.warning-text p{
+  margin:0;
+  color:#6b4f00;
+  font-size:15px;
+  line-height:1.6;
+}

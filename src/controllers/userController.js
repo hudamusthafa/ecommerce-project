@@ -393,26 +393,26 @@ exports.addToCart=async(req,res,next)=>{
 //show cart page
 
 
-exports.getCart=async(req,res)=>{
+exports.getCart = async (req, res) => {
 
-  try{
-    const cart=await userCartService.getCart(
-      req.user._id
-    );
+  try {
+
+    const { cart, cartUpdated } =
+      await userCartService.getCart(req.user._id);
 
     res.render(
       "user/cart",
       {
         cart,
-        user:req.user || null,
-         error:req.query.error,
-         productId:req.query.productId
+        cartUpdated,
+        user: req.user || null,
+        error: req.query.error,
+        productId: req.query.productId
       }
     );
-  }
 
-  catch(error){
-  
+  } catch (error) {
+
     res.redirect("/products");
 
   }

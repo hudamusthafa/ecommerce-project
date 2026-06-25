@@ -84,6 +84,7 @@
 
               <img
                 src="/images/<%= image %>"
+                 class="thumbnail-img <%= index===0 ? 'active-thumbnail' : '' %>"
                 onclick="changeVariant(this,'<%= variantNames[index] %>')"
               >
 
@@ -449,10 +450,15 @@ image.addEventListener("mouseleave",function(){
 
 function changeVariant(image, variant){
 
+   
     document.getElementById("mainProductImage").src = image.src;
-
     document.getElementById("selectedVariant").innerText = variant;
+    document.querySelectorAll(".thumbnail-img").forEach(function(img){
+        img.classList.remove("active-thumbnail");
+    });
 
+   
+    image.classList.add("active-thumbnail");
 }
 </script>
 

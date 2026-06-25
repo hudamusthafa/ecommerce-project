@@ -68,19 +68,58 @@ exports.addToCart=async(userId,productId)=>{
 
 // GET CART PRODUCTS
 
+// GET CART PRODUCTS
+
 exports.getCart = async (userId) => {
 
   const cart = await Cart.findOne({ user: userId })
     .populate("items.product");
 
- 
-  if(cart){
-    cart.items = cart.items.filter(
-      item => item.product
-    );
+  if (!cart) {
+    return {
+      cart: null,
+      cartUpdated: false
+    };
   }
 
-  return cart;
+  let cartUpdated = false;
+
+  // Remove deleted products
+  cart.items = cart.items.filter(item => item.product);
+
+  for (const item of cart.items) {
+
+    const product = item.product;
+
+    // Skip unavailable products
+    if (!product) continue;
+
+    // If stock becomes 0, remove from cart
+    if (product.stock <= 0) {
+      cart.items = cart.items.filter(
+        i => i.product._id.toString() !== product._id.toString()
+      );
+      cartUpdated = true;
+      continue;
+    }
+
+    // If cart quantity is greater than stock
+    if (item.quantity > product.stock) {
+
+      item.quantity = product.stock;
+      cartUpdated = true;
+
+    }
+
+  }
+
+  await cart.save();
+
+  return {
+    cart,
+    cartUpdated
+  };
+
 };
 
 // UPDATE QUANTITY
