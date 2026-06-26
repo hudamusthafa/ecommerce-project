@@ -109,6 +109,8 @@ exports.toggleProductStatus = async(id)=>{
 
   const product = await Product.findById(id);
 
+   
+
   if(!product){
     throw new Error("Product not found");
   }
