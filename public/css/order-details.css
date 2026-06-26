@@ -436,3 +436,45 @@
 .cancel-order-card .cancel-btn:hover {
   background: #bf360c;
 }
+
+.delivered{
+    color:#0a7c2f;
+    background:#d9f8e5;
+    padding:5px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+
+.return-requested{
+    color:#d97706;
+    background:#fff3cd;
+    padding:5px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+
+.returned{
+    color:#0b5ed7;
+    background:#dbeafe;
+    padding:5px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+
+.cancelled{
+    color:#b91c1c;
+    background:#fee2e2;
+    padding:5px 12px;
+    border-radius:20px;
+    font-weight:600;
+}
+.rejected-msg{
+    margin-top:8px;
+    padding:10px 14px;
+    background:#fee2e2;
+    color:#b91c1c;
+    border:1px solid #fecaca;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+}

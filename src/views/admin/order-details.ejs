@@ -132,6 +132,14 @@
                 Price : ₹<%= item.price %>
               </p>
 
+              <p>
+                <strong>Status :</strong>
+
+                <span class="status-badge status-<%= item.status.toLowerCase().replace(' ','-') %>">
+                  <%= item.status %>
+                </span>
+              </p>
+
             </div>
 
           </div>
@@ -185,10 +193,88 @@
    <div class="card">
       <h3>Update Order Status</h3>
 
-      <% if (order.orderStatus === "Delivered" || order.orderStatus === "Cancelled" || order.orderStatus === "Returned") { %>
+
+      <%
+const hasReturnRequest = order.items.some(item => item.status === "Return Requested");
+%>
+
+
+
+<% if(hasReturnRequest){ %>
+
+
+<h3>Return Request</h3>
+
+<% order.items.forEach(function(item){ %>
+
+  <% if(item.status === "Return Requested"){ %>
+
+    <div class="return-box">
+
+      <h4><%= item.product.name %></h4>
+
+      <p>
+        <strong>Reason:</strong>
+        <%= item.returnReason %>
+      </p>
+
+<div class="return-actions">
+
+      <form
+        action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/approve-return"
+        method="POST"
+        style="display:inline"
+      >
+        <button class="approve-btn">
+          Approve Return
+        </button>
+      </form>
+
+      <form
+        action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/reject-return"
+        method="POST"
+        style="display:inline"
+      >
+        <button class="reject-btn">
+          Reject Return
+        </button>
+      </form>
+</div>
+    </div>
+
+  <% } %>
+
+<% }) %>
+
+
+
+<% } else { %>
+
+<!--  Update Status Form -->
+  <% if (order.orderStatus === "Delivered" || order.orderStatus === "Cancelled" || order.orderStatus === "Returned") { %>
         <p style="color: #7a563f; font-weight: 600; margin-top: 15px;">
-          This order is <%= order.orderStatus %> and cannot be modified further.
-        </p>
+              <% if(order.orderStatus === "Delivered"){ %>
+
+              <p class="info-message">
+                No pending return requests.
+              </p>
+
+              <% } else if(order.orderStatus === "Returned"){ %>
+
+              <p class="info-message">
+                All products have been returned.
+              </p>
+
+              <% } else if(order.orderStatus === "Cancelled"){ %>
+
+              <p class="info-message">
+                This order has been cancelled.
+              </p>
+
+              <% } %>
+
+
+</p>
       <% } else { %>
         
         <form
@@ -223,10 +309,14 @@
         </form>
 
       <% } %>
-    </div>
+
+<% } %>
+
+      
     </div>
     </div>
     
+    </div>
 <%- include("../partials/admin-footer") %>
 
 </body>

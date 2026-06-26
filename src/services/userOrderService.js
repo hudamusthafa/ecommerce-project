@@ -449,20 +449,108 @@ exports.returnProduct = async (orderId, productId, reason) => {
   }
 
   // Request return for this item only
-  item.status = "Returned";
-  item.returnReason = reason;
+item.status = "Return Requested";
+item.returnReason = reason;
 
-  // Check if all items are returned
+
+// Show order as waiting for admin approval
+order.orderStatus = "Return Requested";
+order.returnReason = reason;
+
+  await order.save();
+
+  return order;
+
+};
+
+//==========================================================
+
+exports.approveReturn = async (orderId, productId) => {
+
+  const order = await Order.findById(orderId)
+    .populate("items.product");
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  const item = order.items.find(
+    item => item.product._id.toString() === productId
+  );
+
+  if (!item) {
+    throw new Error("Product not found");
+  }
+
+  if (item.status !== "Return Requested") {
+    throw new Error("No return request found");
+  }
+
+  // Restore stock
+  await Product.findByIdAndUpdate(
+    productId,
+    {
+      $inc: {
+        stock: item.quantity
+      }
+    }
+  );
+
+  // Mark item as returned
+  item.status = "Returned";
+
+  // Check whether all items are returned
   const allReturned = order.items.every(
     item => item.status === "Returned"
   );
 
   if (allReturned) {
-    order.orderStatus = "Return Requested";
-    order.returnReason = reason;
+    order.orderStatus = "Returned";
+    order.isReturned = true;
+  } else {
+    // Some products still active
+    order.orderStatus = "Delivered";
   }
 
   await order.save();
-  return order;
 
+  return order;
+};
+
+//=====================================
+
+exports.rejectReturn = async (orderId, productId) => {
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  const item = order.items.find(
+    item => item.product.toString() === productId
+  );
+
+  if (!item) {
+    throw new Error("Product not found");
+  }
+
+  if (item.status !== "Return Requested") {
+    throw new Error("No return request found");
+  }
+
+  item.status = "Placed";
+  item.returnReason = "";
+
+  const pendingReturns = order.items.some(
+    item => item.status === "Return Requested"
+  );
+
+  if (!pendingReturns) {
+    order.orderStatus = "Delivered";
+  }
+
+  await order.save();
+
+  return order;
 };

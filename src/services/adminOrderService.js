@@ -57,6 +57,7 @@ exports.getOrderDetails = async(orderId)=>{
     .populate("user")
     .populate("items.product");
 
+
   if(!order){
     throw new Error("Order not found");
   }
@@ -128,9 +129,111 @@ exports.updateOrderStatus = async (orderId, status) => {
   }
 
   // Update the order status
-  order.orderStatus = status;
+  
+order.orderStatus = status;
+
+
+if (
+  status === "Processing" ||
+  status === "Shipped" ||
+  status === "Delivered"
+) {
+
+  order.items.forEach(item => {
+
+    
+    if (
+      item.status !== "Cancelled" &&
+      item.status !== "Returned" &&
+      item.status !== "Return Requested"
+    ) {
+      item.status = status;
+    }
+
+  });
+
+}
   await order.save();
 
   return order;
 
+};
+
+
+
+exports.approveReturn = async(orderId,productId)=>{
+
+   const order = await Order.findById(orderId)
+      .populate("items.product");
+
+   const item = order.items.find(i =>
+      i.product._id.toString()===productId
+   );
+
+   if(!item){
+      throw new Error("Product not found");
+   }
+
+   item.status="Returned";
+
+   await Product.findByIdAndUpdate(
+      productId,
+      {
+         $inc:{
+            stock:item.quantity
+         }
+      }
+   );
+
+   const allReturned = order.items.every(i=>
+      i.status==="Returned"
+   );
+
+   if (allReturned) {
+    order.orderStatus = "Returned";
+    order.isReturned = true;
+} else {
+    order.orderStatus = "Delivered";
+}
+
+   await order.save();
+
+};
+
+
+exports.rejectReturn = async (orderId, productId) => {
+
+   const order = await Order.findById(orderId);
+
+   if (!order) {
+      throw new Error("Order not found");
+   }
+
+   const item = order.items.find(
+      i => i.product.toString() === productId
+   );
+
+   if (!item) {
+      throw new Error("Product not found");
+   }
+
+   // Mark this return as rejected
+   item.status = "Return Rejected";
+
+   // Keep or clear the reason as you prefer
+   // item.returnReason = "";
+
+   // Check if there are any other pending return requests
+   const pendingReturns = order.items.some(
+      i => i.status === "Return Requested"
+   );
+
+   // If no pending requests remain, restore order to Delivered
+   if (!pendingReturns) {
+      order.orderStatus = "Delivered";
+   }
+
+   await order.save();
+
+   return order;
 };

@@ -41,6 +41,7 @@ exports.getOrderDetails=async(req,res,next)=>{
 
     const order = await adminOrderService.getOrderDetails(req.params.id);
 
+
     res.render("admin/order-details",{order });
 
   }catch(error){
@@ -65,5 +66,46 @@ exports.updateOrderStatus = async(req,res,next)=>{
   }catch(error){
     next(error);
   }
+
+};
+
+//approve return
+exports.approveReturn = async(req,res,next)=>{
+
+   try{
+
+      await adminOrderService.approveReturn(
+         req.params.orderId,
+         req.params.productId
+      );
+
+      res.redirect("/admin/orders/"+req.params.orderId);
+
+   }catch(err){
+
+      next(err);
+
+   }
+
+};
+
+// reject return
+
+exports.rejectReturn = async(req,res,next)=>{
+
+   try{
+
+      await adminOrderService.rejectReturn(
+         req.params.orderId,
+         req.params.productId
+      );
+
+      res.redirect("/admin/orders/"+req.params.orderId);
+
+   }catch(err){
+
+      next(err);
+
+   }
 
 };

@@ -29,8 +29,13 @@ const orderSchema = new mongoose.Schema({
     type:String,
     enum:[
       "Placed",
-      "Cancelled",
-      "Returned"
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Cancelled",
+    "Return Requested",
+    "Return Rejected",
+    "Returned"
     ],
     default:"Placed"
   },

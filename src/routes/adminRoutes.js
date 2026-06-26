@@ -68,6 +68,14 @@ router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
 // UPDATE ORDER STATUS
 router.post("/orders/:id/status",isAdminLoggedIn,adminOrderController.updateOrderStatus);
 
+router.post(
+"/orders/:orderId/product/:productId/approve-return",
+adminOrderController.approveReturn
+);
 
+router.post(
+"/orders/:orderId/product/:productId/reject-return",
+adminOrderController.rejectReturn
+);
 
 module.exports=router;

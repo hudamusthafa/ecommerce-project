@@ -119,6 +119,17 @@
             <%= item.status %>
           </strong>
         </p>
+        
+<!-- error msg if rejected return-->
+         
+
+        <% if(item.status === "Return Rejected"){ %>
+
+        <p class="rejected-msg">
+            Your return request has been rejected by the admin.
+        </p>
+
+        <% } %>
 
         <% if(item.cancelReason){ %>
 
@@ -160,6 +171,7 @@
             </span>
 
             <!-- INDIVIDUAL CANCEL -->
+
             <% if(
               item.status === "Placed" &&
               ["Placed","Processing"].includes(order.orderStatus)
@@ -174,22 +186,21 @@
               </button>
             <% } %>
 
-            <!-- INDIVIDUAL RETURN -->
-            <% if(
-              item.status === "Placed" &&
-              order.orderStatus === "Delivered"
-            ){ %>
-              <button
+          <!-- INDIVIDUAL RETURN -->
+
+            <% if(item.status === "Delivered"){ %>
+
+            <button
                 type="button"
                 class="return-btn"
                 onclick="openReturnModal('<%= order._id %>', '<%= item.product._id %>')"
-              >
+            >
                 <i class="fa-solid fa-rotate-left"></i>
                 Return
-              </button>
+            </button>
             <% } %>
 
-          <% } %>
+            <% } %>
 
         </div>
 
@@ -198,6 +209,10 @@
     </div>
 
   <% }) %>
+
+
+
+  
 
 </div>
 
@@ -262,6 +277,7 @@
 <% } else if(order.orderStatus === "Delivered"){ %>
 
   <!-- BULK RETURN -->
+
   <div class="cancel-order-card">
     <h3>Return Entire Order</h3>
     <form action="/orders/<%= order._id %>/return" method="POST">
@@ -276,6 +292,7 @@
 <% } else if(["Placed","Processing"].includes(order.orderStatus)){ %>
 
   <!-- BULK CANCEL -->
+
   <div class="cancel-order-card">
     <h3>Cancel Entire Order</h3>
     <button
@@ -334,7 +351,10 @@
 
 </div>
 
+
+
 <!-- INDIVIDUAL CANCEL MODAL -->
+
 <div id="cancelModal" class="modal">
   <div class="modal-content">
     <h3>Cancel Product</h3>
@@ -352,6 +372,7 @@
 </div>
 
 <!-- BULK CANCEL MODAL -->
+
 <div id="bulkCancelModal" class="modal">
   <div class="modal-content">
     <h3>Cancel Entire Order</h3>
@@ -369,6 +390,7 @@
 </div>
 
 <!-- INDIVIDUAL RETURN MODAL -->
+
 <div id="returnModal" class="modal">
   <div class="modal-content">
     <h3>Return Product</h3>
@@ -388,7 +410,8 @@
 
 <script>
 
-// INDIVIDUAL CANCEL
+//  INDIVIDUAL CANCEL
+
 function openCancelModal(orderId, productId) {
   document.getElementById("cancelForm").action =
     "/orders/" + orderId + "/product/" + productId + "/cancel";
@@ -399,6 +422,7 @@ function closeCancelModal() {
 }
 
 // BULK CANCEL
+
 function openBulkCancelModal(orderId) {
   document.getElementById("bulkCancelForm").action =
     "/orders/" + orderId + "/cancel";
@@ -417,8 +441,8 @@ function openReturnModal(orderId, productId) {
 function closeReturnModal() {
   document.getElementById("returnModal").style.display = "none";
 }
+  // CLOSE ON OUTSIDE CLICK
 
-// CLOSE ON OUTSIDE CLICK
 window.onclick = function(event) {
   if (event.target === document.getElementById("cancelModal")) closeCancelModal();
   if (event.target === document.getElementById("bulkCancelModal")) closeBulkCancelModal();
