@@ -235,28 +235,34 @@
   Buy Now
 </a>
 
-    <a
-      href="/cart/add/<%= product._id %>"class="cart-btn">
-      Add To Cart
-    </a>
 
-            <a
-          href="/wishlist/add/<%= product._id %>" class="wishlist-btn">
-        
+<!-- cart -->
+
+    <button
+  class="cart-btn"
+  onclick="addToCart('<%= product._id %>', this)"
+>
+  Add To Cart
+</button>
 
 
-         <% if(typeof isWishlisted !== "undefined" && isWishlisted){ %>
+<!-- wishlist -->
+          <button
+            class="wishlist-btn"
+            onclick="addToWishlist('<%= product._id %>', this)"
+          >
 
-             <i class="fa-solid fa-heart"></i> Wishlisted
+            <% if(typeof isWishlisted !== "undefined" && isWishlisted){ %>
 
-          <% } else { %>
+              <i class="fa-solid fa-heart"></i> Wishlisted
 
-            Add To Wishlist
+            <% } else { %>
 
-          <% } %>
+              Add To Wishlist
 
-        </a>
+            <% } %>
 
+          </button>
 
     
   <% } else { %>
@@ -459,6 +465,76 @@ function changeVariant(image, variant){
 
    
     image.classList.add("active-thumbnail");
+}
+
+// add to cart
+
+function addToCart(productId, btn) {
+
+  fetch("/cart/add/" + productId, {
+    method: "POST"
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    if(data.success){
+
+      showToast("✓ Added to cart!", "success");
+
+      btn.innerText = "Added ✓";
+      btn.style.background = "#2e7d32";
+
+      const badge = document.querySelector(".cart-badge");
+
+      if(badge){
+        badge.innerText = parseInt(badge.innerText) + 1;
+      }else{
+        const cartIcon = document.querySelector(".cart-icon");
+
+        const newBadge = document.createElement("span");
+        newBadge.className = "cart-badge";
+        newBadge.innerText = "1";
+
+        cartIcon.appendChild(newBadge);
+      }
+
+    }else{
+
+      showToast("⚠ " + data.message, "warning");
+
+    }
+
+  });
+
+}
+
+// Add to wishlist
+
+function addToWishlist(productId, btn){
+
+  fetch("/wishlist/add/" + productId,{
+    method:"POST"
+  })
+  .then(res=>res.json())
+  .then(data=>{
+
+    if(data.success){
+
+      showToast("✓ Added to wishlist!","success");
+
+      btn.innerHTML='<i class="fa-solid fa-heart"></i> Wishlisted';
+
+      btn.style.background="#e63946";
+      btn.style.color="#fff";
+
+    }else{
+
+      showToast("⚠ "+data.message,"warning");
+
+    }
+
+  });
+
 }
 </script>
 

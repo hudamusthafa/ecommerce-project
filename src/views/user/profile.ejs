@@ -90,58 +90,68 @@
       <!-- RIGHT: PASSWORD -->
       <div class="password-section">
 
-        <% if (user.provider === "google" && user.password ) { %>
+        <% if (user.provider !== "google") { %>
 
-          <h3>Set Password</h3>
+  <div class="password-section">
 
-          <% if (typeof message !== 'undefined' && message) { %>
-            <p class="success-msg"><%= message %></p>
-          <% } %>
+    <h3>Change Password</h3>
 
-          <!-- POST -->
-          <form action="/profile/set-password" method="POST">
+    <form action="/profile/password?_method=PUT" method="POST">
 
-            <div class="password-box">
-              <input type="password" name="newPassword" id="setNewPassword" placeholder="New Password" required>
-              <i class="fas fa-eye" onclick="togglePassword('setNewPassword', this)"></i>
-            </div>
+      <div class="password-box">
+        <input
+          type="password"
+          name="currentPassword"
+          id="currentPassword"
+          placeholder="Current Password"
+          required
+        >
+        <i
+          class="fas fa-eye"
+          onclick="togglePassword('currentPassword', this)"
+        ></i>
+      </div>
 
-            <div class="password-box">
-              <input type="password" name="confirmPassword" id="setConfirmPassword" placeholder="Confirm Password" required>
-              <i class="fas fa-eye" onclick="togglePassword('setConfirmPassword', this)"></i>
-            </div>
+      <div class="password-box">
+        <input
+          type="password"
+          name="newPassword"
+          id="newPassword"
+          placeholder="New Password"
+          required
+        >
+        <i
+          class="fas fa-eye"
+          onclick="togglePassword('newPassword', this)"
+        ></i>
+      </div>
 
-            <button type="submit" class="password-btn">Set Password</button>
+      <div class="password-box">
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          placeholder="Confirm Password"
+          required
+        >
+        <i
+          class="fas fa-eye"
+          onclick="togglePassword('confirmPassword', this)"
+        ></i>
+      </div>
 
-          </form>
+      <button
+        type="submit"
+        class="password-btn"
+      >
+        Change Password
+      </button>
 
-        <% } else { %>
+    </form>
 
-          <h3>Change Password</h3>
+  </div>
 
-          <!--  UPDATED (PUT) -->
-          <form action="/profile/password?_method=PUT" method="POST">
-
-            <div class="password-box">
-              <input type="password" name="currentPassword" id="currentPassword" placeholder="Current Password" required>
-              <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)"></i>
-            </div>
-
-            <div class="password-box">
-              <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
-              <i class="fas fa-eye" onclick="togglePassword('newPassword', this)"></i>
-            </div>
-
-            <div class="password-box">
-              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
-              <i class="fas fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
-            </div>
-
-            <button type="submit" class="password-btn">Change Password</button>
-
-          </form>
-
-        <% } %>
+<% } %>
 
       </div>
 
@@ -225,5 +235,7 @@ document.getElementById("email").addEventListener("input", () => {
   document.getElementById("emailError").innerText = "";
 });
 </script>
+
+
 </body>
 </html>
