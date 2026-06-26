@@ -109,9 +109,24 @@
           value="<%= sort %>"
         >
 
-        <button type="submit">
-          Apply
-        </button>
+        <div class="price-filter-buttons">
+
+          <button type="submit">
+            Apply
+          </button>
+
+          <% if(minPrice || maxPrice){ %>
+
+            <a
+              href="/products?search=<%= search %>&sort=<%= sort %>&category=<%= category %>"
+              class="clear-price-btn"
+            >
+              Clear
+            </a>
+
+          <% } %>
+
+        </div>
 
       </form>
 

@@ -4,7 +4,7 @@ const path = require("path");
 const session = require("express-session");
 const methodOverride = require("method-override");
 const errorMiddleware = require("./src/middleware/errorMiddleware");
-
+const { noCache } = require("./src/middleware/cacheMiddleware");
 const MongoStore = require("connect-mongo").default;
 
 
@@ -54,14 +54,15 @@ store: MongoStore.create({
   }
 }));
 
-  
-  
 
 app.use(methodOverride("_method"));
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(noCache);
+
 
 // Global user middleware
  app.use(async (req, res, next) => {

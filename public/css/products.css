@@ -385,3 +385,36 @@ body{
 .wishlist-btn:hover {
   color: #c0392b;
 }
+.price-filter-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.price-filter-buttons button{
+    flex:1;
+}
+
+.clear-price-btn{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+
+    background:#f3f3f3;
+    color:#555;
+
+    border:1px solid #ccc;
+    border-radius:6px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.clear-price-btn:hover{
+    background:#e5e5e5;
+}
