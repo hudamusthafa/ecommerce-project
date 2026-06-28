@@ -334,3 +334,24 @@
   text-align:center;
   font-weight:600;
 }
+.checkout-warning{
+    background:#fff3cd;
+    border:1px solid #ffe69c;
+    color:#856404;
+    padding:16px;
+    border-radius:8px;
+    margin:20px 0;
+}
+
+.checkout-warning strong{
+    display:block;
+    margin-bottom:10px;
+}
+
+.checkout-warning ul{
+    margin:0 0 10px 20px;
+}
+
+.checkout-warning li{
+    margin-bottom:5px;
+}

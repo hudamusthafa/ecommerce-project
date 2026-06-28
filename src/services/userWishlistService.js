@@ -47,6 +47,7 @@ exports.addToWishlist=async(userId,productId)=>{
 
   return wishlist;
 };
+//=============================================
 
 // GET WISHLIST
 
@@ -64,6 +65,7 @@ exports.getWishlist=async(userId)=>{
   });
 
 };
+//===========================================
 
 // REMOVE WISHLIST ITEM
 

@@ -35,6 +35,20 @@
   <h2 class="checkout-title">Checkout</h2>
 
 
+<% if(removedProducts && removedProducts.length > 0){ %>
+<div class="checkout-warning">
+    <strong>
+        Some products are currently out of stock and have been removed from your checkout:
+    </strong>
+    <ul>
+        <% removedProducts.forEach(function(product){ %>
+            <li><%= product %></li>
+        <% }) %>
+    </ul>
+    <p>Please review your order before placing it.</p>
+</div>
+<% } %>
+
   <% if(error){ %>
 
   <div class="checkout-error">

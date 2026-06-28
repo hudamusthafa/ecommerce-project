@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Cart = require("../models/Cart");
+const Product = require("../models/Product");
 
 exports.getCheckoutData = async(userId,buyNow = null) => {
 
@@ -8,8 +9,6 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
   // buyNow section
 
   if(buyNow){
-
-  const Product = require("../models/Product");
 
   const product = await Product.findById(
     buyNow.productId
@@ -42,16 +41,14 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
     },
 
     subtotal,
-
     shipping:0,
-
     discount:0,
-
     total:subtotal
 
   };
 
 }
+
 
   const cart = await Cart.findOne({
     user: userId
@@ -71,21 +68,25 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
 
   // REMOVE INVALID PRODUCTS
   
+// Collect unavailable products
+const removedProducts = [];
 
-  const originalLength = cart.items.length;
+cart.items = cart.items.filter(item => {
 
-    cart.items = cart.items.filter(
-      item => item.product && item.product.stock > 0
+  if (!item.product || item.product.stock <= 0) {
+
+    removedProducts.push(
+      item.product ? item.product.name : "Product"
     );
+    return false;
+  }
+  return true;
+});
 
-
-
-
-    if(cart.items.length !== originalLength){
-      await cart.save();
-    }
-
-
+// Save updated cart if products were removed
+if (removedProducts.length > 0) {
+  await cart.save();
+}
 
   // NO VALID PRODUCTS
   if(cart.items.length === 0){
@@ -103,6 +104,7 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
 
     (total,item) => {
        if(item.product && item.product.stock > 0){
+
       return total + (item.product.price * item.quantity);
     }
     return total;
@@ -122,7 +124,8 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
     subtotal,
     shipping,
     discount,
-    total
+    total,
+    removedProducts
   };
 
 };

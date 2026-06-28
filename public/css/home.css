@@ -365,3 +365,11 @@ body{
   font-size:20px;
   font-weight:600;
 }
+.brand-subtitle{
+    font-size:14px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:#a07145;
+    margin-bottom:12px;
+    font-weight:600;
+}

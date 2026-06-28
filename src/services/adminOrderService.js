@@ -220,10 +220,9 @@ exports.rejectReturn = async (orderId, productId) => {
    // Mark this return as rejected
    item.status = "Return Rejected";
 
-   // Keep or clear the reason as you prefer
-   // item.returnReason = "";
+  
 
-   // Check if there are any other pending return requests
+   // Check ,any other pending return requests
    const pendingReturns = order.items.some(
       i => i.status === "Return Requested"
    );
@@ -237,3 +236,5 @@ exports.rejectReturn = async (orderId, productId) => {
 
    return order;
 };
+
+

@@ -655,6 +655,7 @@ exports.getCheckout=async(req,res,next)=>{
       shipping:data.shipping,
       discount:data.discount,
       total:data.total,
+      removedProducts:data.removedProducts,
       error:req.query.error
     });
 

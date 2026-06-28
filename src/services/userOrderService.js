@@ -21,9 +21,12 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
     const product=await Product.findById(buyNow.productId);
 
     if(!product) throw new Error("Product not found");
+
     if(product.stock<buyNow.quantity) throw new Error("Product is out of stock");
 
     const subtotal=product.price*buyNow.quantity;
+
+    // Generate Order ID
     const orderId="ORD"+Date.now();
 
     const order=new Order({
@@ -72,6 +75,8 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
 
   if(!cart) throw new Error("Cart is empty");
 
+
+  //Remove Invalid Products
   cart.items = cart.items.filter(item => {
 
   return (
@@ -103,6 +108,7 @@ if(cart.items.length === 0){
     }
   }
 
+  //Convert Cart Items into Order Items
   const orderItems=cart.items.map(item=>({
     product:item.product._id,
     quantity:item.quantity,
@@ -233,42 +239,41 @@ exports.getOrderDetails=async(orderId,userId)=>{
 
 // CANCEL ORDER
 
-exports.cancelOrder = async(orderId,reason)=>{
+exports.cancelOrder = async (orderId, reason) => {
 
   const order = await Order.findById(orderId);
 
-  if(!order){
+  if (!order) {
     throw new Error("Order not found");
   }
 
-  if(order.orderStatus === "Cancelled"){
+  if (order.orderStatus === "Cancelled") {
     throw new Error("Order already cancelled");
   }
 
-  // restore stock
-  for(const item of order.items){
+  // Restore stock and update each item
+  for (const item of order.items) {
 
     await Product.findByIdAndUpdate(
       item.product,
       {
-        $inc:{
-          stock:item.quantity
+        $inc: {
+          stock: item.quantity
         }
       }
     );
 
+    item.status = "Cancelled";
+    item.cancelReason = reason || "";
   }
 
-  // update order status
+  // Update order status
   order.orderStatus = "Cancelled";
-
-  // save cancellation reason
   order.cancelReason = reason || "";
 
   await order.save();
 
   return order;
-
 };
 //==========================================================
 
@@ -297,14 +302,18 @@ exports.cancelProduct = async (
     throw new Error("Product already cancelled");
   }
 
+
   await Product.findByIdAndUpdate(
     productId,
     {
       $inc:{
         stock:item.quantity
       }
-    }
+    },
+ 
   );
+
+
 
   item.status = "Cancelled";
   item.cancelReason = reason || "";
