@@ -50,15 +50,29 @@ exports.getAddressPage = async (req, res) => {
 //==========================================================
 
 exports.addAddress = async (req, res) => {
-
   try {
 
-    
     await userService.addAddress(req.user._id, req.body);
-    res.redirect("/address"); 
+
+     if (req.query.fromCheckout) {
+      return res.status(200).json({
+        success: true
+      });
+    }
+    res.redirect("/address");
 
   } catch (err) {
-    res.send("Error adding address");
+
+     console.error(err);
+
+    if (req.query.fromCheckout) {
+      return res.status(400).json({
+        success: false,
+        message: err.message || "Unable to add address"
+      });
+    }
+
+    return res.status(500).send("Error adding address");
   }
 };
 //==========================================================

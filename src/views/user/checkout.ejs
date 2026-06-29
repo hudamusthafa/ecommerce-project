@@ -2,343 +2,314 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
-
   <title>Checkout</title>
-
   <link rel="stylesheet" href="/css/layout.css">
   <link rel="stylesheet" href="/css/checkout.css">
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  >
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
 <%- include("../partials/header") %>
 
-<!-- sidebar -->
-  <div class="page-layout">
+<div class="page-layout">
 
   <%- include('../partials/user-sidebar') %>
 
   <div class="page-content">
 
+    <div class="checkout-page">
 
+      <h2 class="checkout-title">Checkout</h2>
 
-<div class="checkout-page">
-
-  <h2 class="checkout-title">Checkout</h2>
-
-
-<% if(removedProducts && removedProducts.length > 0){ %>
-<div class="checkout-warning">
-    <strong>
-        Some products are currently out of stock and have been removed from your checkout:
-    </strong>
-    <ul>
-        <% removedProducts.forEach(function(product){ %>
+      <% if(removedProducts && removedProducts.length > 0){ %>
+      <div class="checkout-warning">
+        <strong>Some products are currently out of stock and have been removed from your checkout:</strong>
+        <ul>
+          <% removedProducts.forEach(function(product){ %>
             <li><%= product %></li>
-        <% }) %>
-    </ul>
-    <p>Please review your order before placing it.</p>
-</div>
-<% } %>
+          <% }) %>
+        </ul>
+        <p>Please review your order before placing it.</p>
+      </div>
+      <% } %>
 
-  <% if(error){ %>
+      <% if(error){ %>
+      <div class="checkout-error">
+        <%= error %>
+      </div>
+      <% } %>
 
-  <div class="checkout-error">
-    <%= error %>
-  </div>
+      <form action="/checkout/place-order" method="POST">
 
-<% } %>
+        <div class="checkout-container">
 
-  <form action="/checkout/place-order" method="POST">
+          <div class="left-section">
 
-  <div class="checkout-container">
+            <h3>Delivery Address</h3>
 
-    <!-- LEFT SECTION -->
-    <div class="left-section">
+            <div class="address-list">
 
-      <!-- ADDRESS SECTION -->
-      <h3>Delivery Address</h3>
+              <% if(user.address && user.address.length>0){ %>
+                <% user.address.forEach(function(addr,index){ %>
+                  <div class="address-block">
+                    <label class="address-title">
+                      <input
+                        type="radio"
+                        name="selectedAddress"
+                        value="<%= addr._id %>"
+                        <%= index===0 ? "checked" : "" %>
+                      >
+                      Address <%= index+1 %>
+                    </label>
 
-      <div class="address-list">
+                    <div class="address-card">
+                      <p><strong><%= addr.fullName %></strong></p>
+                      <p><%= addr.house %></p>
+                      <p><%= addr.area %></p>
+                      <p><%= addr.city %>, <%= addr.state %></p>
+                      <p>PIN : <%= addr.pincode %></p>
+                      <p>Phone : <%= addr.phone %></p>
 
-        <% if(user.address && user.address.length>0){ %>
-
-          <% user.address.forEach(function(addr,index){ %>
-
-            <div class="address-block">
-
-              <label class="address-title">
-
-                <input
-                  type="radio"
-                  name="selectedAddress"
-                  value="<%= addr._id %>"
-                  <%= index===0 ? "checked" : "" %>
-                >
-
-                Address <%= index+1 %>
-
-              </label>
-
-              <div class="address-card">
-
-                <p>
-                  <strong><%= addr.fullName %></strong>
-                </p>
-
-                <p><%= addr.house %></p>
-
-                <p><%= addr.area %></p>
-
-                <p>
-                  <%= addr.city %>,
-                  <%= addr.state %>
-                </p>
-
-                <p>
-                  PIN : <%= addr.pincode %>
-                </p>
-
-                <p>
-                  Phone : <%= addr.phone %>
-                </p>
-
-               <div class="address-actions">
-
-                  <a
-                    href="/address/edit/<%= addr._id %>"
-                    class="btn"
-                  >
-                    Edit
-                  </a>
-
-                  <button
-                    type="button"
-                    class="btn delete-btn"
-                    onclick="openDeleteModal('<%= addr._id %>')"
-                  >
-                    Delete
-                  </button>
-
+                      <div class="address-actions">
+                        <a href="/address/edit/<%= addr._id %>" class="btn">Edit</a>
+                        <button
+                          type="button"
+                          class="btn delete-btn"
+                          onclick="openDeleteModal('<%= addr._id %>')"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <div class="empty-checkout">
+                  <p>No address found.</p>
+                  <a href="/address/new" class="btn">Add Address</a>
                 </div>
-
-              </div>
+              <% } %>
 
             </div>
 
-          <% }) %>
-
-        <% } else { %>
-
-          <div class="empty-checkout">
-
-            <p>No address found.</p>
-
-            <a href="/address/new" class="btn">
-              Add Address
+            <a href="#" class="add-new" onclick="toggleAddressForm();return false;">
+              <i class="fa-solid fa-plus"></i> Add New Address
             </a>
+
+            <div id="addressForm" class="checkout-address-form" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fullName">Full Name</label>
+                  <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input type="text" id="phone" name="phone" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pincode">Pincode</label>
+                  <input type="text" id="pincode" name="pincode" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email">
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label for="house">Address</label>
+                <textarea id="house" name="house" rows="3" required></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="state">State</label>
+                  <input type="text" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" id="city" name="city" required>
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label for="area">Landmark</label>
+                <input type="text" id="area" name="area" placeholder="Nearby landmark">
+              </div>
+
+              <div class="form-group full">
+                <label>Address Type</label>
+                <div class="radio-group">
+                  <label>
+                    <input type="radio" name="type" value="home" checked> Home
+                  </label>
+                  <label>
+                    <input type="radio" name="type" value="work"> Work
+                  </label>
+                </div>
+              </div>
+
+              <button type="button" class="save-btn" onclick="saveAddress()">
+                Save Address
+              </button>
+            </div>
+
+            <div class="payment-section">
+              <h3>Payment Method</h3>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="COD" checked> Cash On Delivery
+              </label>
+            </div>
 
           </div>
 
-        <% } %>
+          <div class="right-section">
+            <h4>Order Summary</h4>
 
-      </div>
+            <% cart.items.forEach(function(item){ %>
+              <% if(item.product){ %>
+                <div class="summary-product">
+                  <img src="/images/<%= item.product.images[0] %>" alt="<%= item.product.name %>">
+                  <div class="summary-product-info">
+                    <h5><%= item.product.name %></h5>
+                    <p>Qty : <%= item.quantity %></p>
+                    <p>
+                      ₹ <%= item.product.price %> × <%= item.quantity %> = ₹ <%= item.product.price * item.quantity %>
+                    </p>
+                  </div>
+                </div>
+              <% } %>
+            <% }) %>
 
-      <a href="/address/new" class="add-new">
-        + Add New Address
-      </a>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>₹<%= subtotal %></span>
+            </div>
 
-      <!-- PAYMENT -->
-      <div class="payment-section">
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>₹<%= shipping %></span>
+            </div>
 
-        <h3>Payment Method</h3>
+            <div class="summary-row">
+              <span>Discount</span>
+              <span>₹<%= discount %></span>
+            </div>
 
-        <label class="payment-option">
+            <div class="summary-row order-total">
+              <span>Total</span>
+              <span>₹<%= total %></span>
+            </div>
 
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="COD"
-            checked
-          >
+            <button type="submit" class="place-order-btn">
+              Place Order
+            </button>
 
-          Cash On Delivery
-
-        </label>
-
-      </div>
-
-    </div>
-
-    <!-- RIGHT SECTION -->
-    <div class="right-section">
-
-      <h4>Order Summary</h4>
-
-      <% cart.items.forEach(function(item){ %>
-
-     <% if(item.product){ %>
-
-    <div class="summary-product">
-
-      <img
-        src="/images/<%= item.product.images[0] %>"
-        alt="<%= item.product.name %>"
-      >
-
-      <div class="summary-product-info">
-
-        <h5><%= item.product.name %></h5>
-
-        <p>
-          Qty : <%= item.quantity %>
-        </p>
-
-        <p>
-          ₹ <%= item.product.price %>
-          × <%= item.quantity %>
-          = ₹ <%= item.product.price * item.quantity %>
-        </p>
-
-      </div>
-
-    </div>
-
-  <% } %>
-
-<% }) %>
-
-      <!-- PRICE DETAILS -->
-      <div class="summary-row">
-        <span>Subtotal</span>
-        <span>₹<%= subtotal %></span>
-      </div>
-
-      <div class="summary-row">
-        <span>Shipping</span>
-        <span>₹<%= shipping %></span>
-      </div>
-
-      <div class="summary-row">
-        <span>Discount</span>
-        <span>₹<%= discount %></span>
-      </div>
-
-      <div class="summary-row order-total">
-        <span>Total</span>
-        <span>₹<%= total %></span>
-      </div>
-
-      <button
-        type="submit"
-        class="place-order-btn"
-      >
-        Place Order
-      </button>
+          </div> </div> </form>
 
     </div>
 
   </div>
-
-</div>
-
-</form>
-
- </div>
 
 </div>
 
 <%- include("../partials/footer") %>
 
-
 <div id="deleteModal" class="modal">
-
   <div class="modal-content">
-
     <p>Delete this address?</p>
-
     <div class="modal-actions">
-
-      <button
-        class="cancel-btn"
-        onclick="closeModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="confirm-btn"
-        onclick="confirmDelete()"
-      >
-        Delete
-      </button>
-
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="confirm-btn" onclick="confirmDelete()">Delete</button>
     </div>
-
   </div>
-
 </div>
 
-
 <script>
-
 let selectedAddressId = null;
 
 function openDeleteModal(id){
-
   selectedAddressId = id;
-
-  document.getElementById(
-    "deleteModal"
-  ).style.display = "flex";
-
+  document.getElementById("deleteModal").style.display = "flex";
 }
 
 function closeModal(){
-
-  document.getElementById(
-    "deleteModal"
-  ).style.display = "none";
-
+  document.getElementById("deleteModal").style.display = "none";
 }
 
 function confirmDelete(){
-
-  fetch(
-    "/address/" + selectedAddressId,
-    {
-      method:"DELETE"
-    }
-  )
-
+  fetch("/address/" + selectedAddressId, { method:"DELETE" })
   .then(res=>{
-
-    if(!res.ok){
-      throw new Error();
-    }
-
+    if(!res.ok){ throw new Error(); }
     location.reload();
-
   })
-
   .catch(()=>{
-
-    alert(
-      "Failed to delete address"
-    );
-
+    alert("Failed to delete address");
   });
-
 }
 
+function toggleAddressForm() {
+  const form = document.getElementById("addressForm");
+  if (form.style.display === "none" || form.style.display === "") {
+    form.style.display = "block";
+  } else {
+    form.style.display = "none";
+  }
+}
+
+async function saveAddress() {
+
+    const body = {
+        fullName: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        pincode: document.getElementById("pincode").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        house: document.getElementById("house").value.trim(),
+        state: document.getElementById("state").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        area: document.getElementById("area").value.trim(),
+        type: document.querySelector('input[name="type"]:checked').value
+    };
+
+    if (
+        !body.fullName ||
+        !body.phone ||
+        !body.house ||
+        !body.city ||
+        !body.state ||
+        !body.pincode
+    ) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    try {
+
+        const res = await fetch("/address?fromCheckout=true", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message || "Unable to save address");
+        }
+
+    } catch (err) {
+        alert("Something went wrong.");
+    }
+}
 </script>
 
 </body>
