@@ -49,54 +49,139 @@
 
             <h3>Delivery Address</h3>
 
-            <div class="address-list">
+            <% if(user.address && user.address.length > 0){ %>
 
-              <% if(user.address && user.address.length>0){ %>
-                <% user.address.forEach(function(addr,index){ %>
-                  <div class="address-block">
-                    <label class="address-title">
-                      <input
-                        type="radio"
-                        name="selectedAddress"
-                        value="<%= addr._id %>"
-                        <%= index===0 ? "checked" : "" %>
-                      >
-                      Address <%= index+1 %>
-                    </label>
+                  <input
+                      type="hidden"
+                      name="selectedAddress"
+                      id="selectedAddress"
+                      value="<%= user.address[0]._id %>"
+                  >
 
-                    <div class="address-card">
-                      <p><strong><%= addr.fullName %></strong></p>
-                      <p><%= addr.house %></p>
-                      <p><%= addr.area %></p>
-                      <p><%= addr.city %>, <%= addr.state %></p>
-                      <p>PIN : <%= addr.pincode %></p>
-                      <p>Phone : <%= addr.phone %></p>
+                  <div class="address-dropdown">
 
-                      <div class="address-actions">
-                        <a href="/address/edit/<%= addr._id %>" class="btn">Edit</a>
-                        <button
-                          type="button"
-                          class="btn delete-btn"
-                          onclick="openDeleteModal('<%= addr._id %>')"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                <% }) %>
-              <% } else { %>
-                <div class="empty-checkout">
-                  <p>No address found.</p>
-                  <a href="/address/new" class="btn">Add Address</a>
-                </div>
-              <% } %>
+    <div
+        class="selected-address"
+        onclick="toggleAddressDropdown()"
+    >
+
+        <div id="selectedAddressCard">
+
+            <h4>
+                <h4>
+
+                  Address 1
+
+                  <span class="default-badge">
+                      Default
+                  </span>
+
+              </h4>
+
+              <p>
+                  <strong>
+                      <%= user.address[0].fullName %>
+                  </strong>
+              </p>
+
+            </h4>
+
+            <p>
+                <%= user.address[0].house %>,
+                <%= user.address[0].area %>
+            </p>
+
+            <p>
+                <%= user.address[0].city %>,
+                <%= user.address[0].state %> -
+                <%= user.address[0].pincode %>
+            </p>
+
+            <p>
+                Phone :
+                <%= user.address[0].phone %>
+            </p>
+
+        </div>
+
+        <i class="fa-solid fa-chevron-down"></i>
+
+    </div>
+
+<!-- address dropdown -->
+
+    <div
+        id="addressDropdown"
+        class="dropdown-list"
+    >
+
+        <% user.address.forEach(function(addr,index){ %>
+
+            <div
+                class="dropdown-item"
+                onclick="selectAddress(
+                    '<%= addr._id %>',
+                    this
+                )"
+            >
+
+                <strong>
+                    Address <%= index + 1 %>
+                </strong>
+
+                <% if(index === 0){ %>
+                <span class="default-badge">Default</span>
+                <% } %>
+
+                <p><%= addr.fullName %></p>
+
+                <p>
+                    <%= addr.house %>,
+                    <%= addr.area %>
+                </p>
+
+                <p>
+                    <%= addr.city %>,
+                    <%= addr.state %> -
+                    <%= addr.pincode %>
+                </p>
+
+                <p>
+                    Phone :
+                    <%= addr.phone %>
+                </p>
 
             </div>
 
-            <a href="#" class="add-new" onclick="toggleAddressForm();return false;">
-              <i class="fa-solid fa-plus"></i> Add New Address
-            </a>
+        <% }) %>
+
+    </div>
+
+</div>
+
+                  <% }else{ %>
+
+                  <div class="empty-checkout">
+
+                      <p>No address found.</p>
+
+                  </div>
+
+                  <% } %>
+
+
+
+            <button
+                type="button"
+                class="add-address-btn"
+                onclick="toggleAddressForm()"
+                >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add New Address
+
+                </button>
 
             <div id="addressForm" class="checkout-address-form" style="display:none;">
               <div class="form-row">
@@ -159,12 +244,43 @@
               </button>
             </div>
 
+<!-- payment section -->
+
             <div class="payment-section">
-              <h3>Payment Method</h3>
-              <label class="payment-option">
-                <input type="radio" name="paymentMethod" value="COD" checked> Cash On Delivery
-              </label>
+
+    <h3>Payment Method</h3>
+
+    <div class="payment-card">
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="paymentMethod"
+                value="COD"
+                checked
+            >
+
+            <div class="payment-icon">
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
             </div>
+
+            <div class="payment-info">
+
+                <h4>Cash On Delivery (COD)</h4>
+
+
+            </div>
+
+        </label>
+
+    </div>
+
+</div>
+
+<!-- order summary -->
 
           </div>
 
@@ -206,11 +322,53 @@
               <span>₹<%= total %></span>
             </div>
 
-            <button type="submit" class="place-order-btn">
-              Place Order
-            </button>
 
-          </div> </div> </form>
+
+
+
+          <button
+            type="submit"
+            class="place-order-btn"
+        >
+            <i class="fa-solid fa-lock"></i>
+            Place Order
+        </button>
+
+          </div> 
+        </div> 
+      </form>
+
+<!-- feature cards -->
+
+<div class="checkout-features">
+
+    <div class="feature-card">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h4>Secure Payment</h4>
+        <p>100% protected checkout</p>
+    </div>
+
+    <div class="feature-card">
+        <i class="fa-solid fa-rotate-left"></i>
+        <h4>Easy Returns</h4>
+        <p>Simple return process</p>
+    </div>
+
+    <div class="feature-card">
+        <i class="fa-solid fa-headset"></i>
+        <h4>24/7 Support</h4>
+        <p>We're always here to help</p>
+    </div>
+
+    <div class="feature-card">
+        <i class="fa-solid fa-truck-fast"></i>
+        <h4>Fast Delivery</h4>
+        <p>Quick & reliable shipping</p>
+    </div>
+
+</div>
+
+
 
     </div>
 
@@ -253,6 +411,19 @@ function confirmDelete(){
   });
 }
 
+
+function toggleAddressDropdown(){
+
+    const dropdown =
+        document.getElementById("addressDropdown");
+
+    dropdown.style.display =
+        dropdown.style.display === "block"
+        ? "none"
+        : "block";
+
+}
+
 function toggleAddressForm() {
   const form = document.getElementById("addressForm");
   if (form.style.display === "none" || form.style.display === "") {
@@ -260,6 +431,17 @@ function toggleAddressForm() {
   } else {
     form.style.display = "none";
   }
+}
+
+function selectAddress(id, element){
+
+    document.getElementById("selectedAddress").value = id;
+
+    document.getElementById("selectedAddressCard").innerHTML =
+        element.innerHTML;
+
+    document.getElementById("addressDropdown").style.display = "none";
+
 }
 
 async function saveAddress() {
