@@ -194,58 +194,63 @@
       <h3>Update Order Status</h3>
 
 
-      <%
-const hasReturnRequest = order.items.some(item => item.status === "Return Requested");
-%>
+<%
+const requestedItems = order.items.filter(
+    item => item.status === "Return Requested"
+);
 
+const hasReturnRequest = requestedItems.length > 0;
+
+const isBulkReturn =
+    requestedItems.length === order.items.length;
+%>
 
 
 <% if(hasReturnRequest){ %>
 
 
-<h3>Return Request</h3>
+<h3>
+    <%= isBulkReturn ? "Bulk Return Request" : "Return Request" %>
+</h3>
 
-<% order.items.forEach(function(item){ %>
 
-  <% if(item.status === "Return Requested"){ %>
+
+<% requestedItems.forEach(function(item){ %>
 
     <div class="return-box">
 
-      <h4><%= item.product.name %></h4>
+        <h4><%= item.product.name %></h4>
 
-      <p>
-        <strong>Reason:</strong>
-        <%= item.returnReason %>
-      </p>
+        <p>
+            <strong>Reason:</strong>
+            <%= item.returnReason %>
+        </p>
 
-<div class="return-actions">
+        <div class="return-actions">
 
-      <form
-        action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/approve-return"
-        method="POST"
-        style="display:inline"
-      >
-        <button class="approve-btn">
-          Approve Return
-        </button>
-      </form>
+            <form
+                action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/approve-return"
+                method="POST"
+            >
+                <button class="approve-btn">
+                    Approve Return
+                </button>
+            </form>
 
-      <form
-        action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/reject-return"
-        method="POST"
-        style="display:inline"
-      >
-        <button class="reject-btn">
-          Reject Return
-        </button>
-      </form>
-</div>
+            <form
+                action="/admin/orders/<%= order._id %>/product/<%= item.product._id %>/reject-return"
+                method="POST"
+            >
+                <button class="reject-btn">
+                    Reject Return
+                </button>
+            </form>
+
+        </div>
+
     </div>
 
-  <% } %>
-
 <% }) %>
-
 
 
 <% } else { %>

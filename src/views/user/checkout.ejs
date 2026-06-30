@@ -41,7 +41,7 @@
       </div>
       <% } %>
 
-      <form action="/checkout/place-order" method="POST">
+      <form action="/checkout/place-order" method="POST" novalidate>
 
         <div class="checkout-container">
 
@@ -67,7 +67,7 @@
 
         <div id="selectedAddressCard">
 
-            <h4>
+           
                 <h4>
 
                   Address 1
@@ -84,7 +84,7 @@
                   </strong>
               </p>
 
-            </h4>
+            
 
             <p>
                 <%= user.address[0].house %>,
@@ -183,22 +183,24 @@
 
                 </button>
 
+                <!-- address form -->
+
             <div id="addressForm" class="checkout-address-form" style="display:none;">
               <div class="form-row">
                 <div class="form-group">
                   <label for="fullName">Full Name</label>
-                  <input type="text" id="fullName" name="fullName" required>
+                  <input type="text" id="fullName" name="fullName" >
                 </div>
                 <div class="form-group">
                   <label for="phone">Phone Number</label>
-                  <input type="text" id="phone" name="phone" required>
+                  <input type="text" id="phone" name="phone" >
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label for="pincode">Pincode</label>
-                  <input type="text" id="pincode" name="pincode" required>
+                  <input type="text" id="pincode" name="pincode">
                 </div>
                 <div class="form-group">
                   <label for="email">Email</label>
@@ -208,17 +210,17 @@
 
               <div class="form-group full">
                 <label for="house">Address</label>
-                <textarea id="house" name="house" rows="3" required></textarea>
+                <textarea id="house" name="house" rows="3" ></textarea>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label for="state">State</label>
-                  <input type="text" id="state" name="state" required>
+                  <input type="text" id="state" name="state" >
                 </div>
                 <div class="form-group">
                   <label for="city">City</label>
-                  <input type="text" id="city" name="city" required>
+                  <input type="text" id="city" name="city">
                 </div>
               </div>
 

@@ -854,7 +854,7 @@ exports.reorderProduct = async(
 
 //==========================================================
 
-//RETURN ORDER
+//RETURN  BULK ORDER
 
 exports.returnOrder=async(req,res,next)=>{
   try{

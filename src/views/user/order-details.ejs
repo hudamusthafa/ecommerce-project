@@ -280,13 +280,24 @@
 
   <div class="cancel-order-card">
     <h3>Return Entire Order</h3>
-    <form action="/orders/<%= order._id %>/return" method="POST">
-      <textarea name="reason" placeholder="Reason for return" required></textarea>
-      <button type="submit" class="cancel-btn">
+
+    <form id="bulkReturnForm" action="/orders/<%= order._id %>/return" method="POST">
+
+    <textarea
+        id="bulkReturnReason"
+        name="reason"
+        placeholder="Reason for return"
+    ></textarea>
+
+    <p id="bulkReturnError" class="form-error"></p>
+
+    <button type="submit" class="cancel-btn">
         <i class="fa-solid fa-rotate-left"></i>
         Return Full Order
-      </button>
-    </form>
+    </button>
+
+</form>
+
   </div>
 
 <% } else if(["Placed","Processing"].includes(order.orderStatus)){ %>
@@ -396,10 +407,13 @@
     <h3>Return Product</h3>
     <form id="returnForm" method="POST">
       <textarea
-        name="reason"
-        placeholder="Reason for return"
-        required
-      ></textarea>
+    id="returnReason"
+    name="reason"
+    rows="4"
+    placeholder="Reason for return"
+  ></textarea>
+<p id="returnError" class="form-error"></p>
+
       <div class="modal-actions">
         <button type="button" class="close-btn" onclick="closeReturnModal()">Close</button>
         <button type="submit" class="cancel-btn">Confirm Return</button>
@@ -449,6 +463,50 @@ window.onclick = function(event) {
   if (event.target === document.getElementById("returnModal")) closeReturnModal();
 };
 
+
+
+document.getElementById("returnForm").addEventListener("submit", function (e) {
+
+    const reason = document.getElementById("returnReason").value.trim();
+    const error = document.getElementById("returnError");
+
+    error.style.display = "none";
+    error.textContent = "";
+
+    if (!reason) {
+
+        e.preventDefault();
+
+        error.textContent = "Please enter the reason for returning this product.";
+        error.style.display = "block";
+
+        return;
+    }
+
+
+});
+
+document.getElementById("bulkReturnForm")?.addEventListener("submit", function (e) {
+
+    const reason = document.getElementById("bulkReturnReason").value.trim();
+    const error = document.getElementById("bulkReturnError");
+
+    error.textContent = "";
+    error.style.display = "none";
+
+    if (!reason) {
+
+        e.preventDefault();
+
+        error.textContent = "Please enter the reason for returning this order.";
+        error.style.display = "block";
+
+        return;
+    }
+
+   
+
+});
 </script>
 
 </div>

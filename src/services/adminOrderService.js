@@ -174,32 +174,43 @@ exports.approveReturn = async(orderId,productId)=>{
       throw new Error("Product not found");
    }
 
-   item.status="Returned";
+item.status = "Returned";
 
-   await Product.findByIdAndUpdate(
-      productId,
-      {
-         $inc:{
-            stock:item.quantity
-         }
-      }
-   );
+// Restore stock
+await Product.findByIdAndUpdate(
+    productId,
+    {
+        $inc: {
+            stock: item.quantity
+        }
+    }
+);
 
-   const allReturned = order.items.every(i=>
-      i.status==="Returned"
-   );
+// Check whether ALL items are returned
+const allReturned = order.items.every(i =>
+    i.status === "Returned"
+);
 
-   if (allReturned) {
+if (allReturned) {
+
     order.orderStatus = "Returned";
     order.isReturned = true;
+
 } else {
+
+    // Some products are still active
     order.orderStatus = "Delivered";
+    order.isReturned = false;
+
 }
 
-   await order.save();
+await order.save();
+
+return order;
 
 };
 
+//======================================================
 
 exports.rejectReturn = async (orderId, productId) => {
 
@@ -217,20 +228,22 @@ exports.rejectReturn = async (orderId, productId) => {
       throw new Error("Product not found");
    }
 
-   // Mark this return as rejected
-   item.status = "Return Rejected";
+   
+   item.status = "Delivered";
+   item.returnReason = "";
 
   
 
    // Check ,any other pending return requests
-   const pendingReturns = order.items.some(
-      i => i.status === "Return Requested"
-   );
+  const pendingReturns = order.items.some(
+    i => i.status === "Return Requested"
+);
 
-   // If no pending requests remain, restore order to Delivered
-   if (!pendingReturns) {
-      order.orderStatus = "Delivered";
-   }
+if (!pendingReturns) {
+
+    order.orderStatus = "Delivered";
+
+}
 
    await order.save();
 

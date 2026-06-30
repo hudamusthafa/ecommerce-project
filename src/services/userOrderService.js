@@ -421,11 +421,25 @@ exports.returnOrder = async (orderId, reason) => {
     throw new Error("Order already returned");
   }
 
-  //  request return — admin will approve and restore stock
-  order.orderStatus = "Return Requested";
-  order.returnReason = reason;
+  //  Request return for all products — admin will approve and restore stock
+  // order.orderStatus = "Return Requested";
+  // order.returnReason = reason;
 
-  await order.save();
+  // order.items.forEach(item=>{
+  //   order.item = "Return Requested";
+  //   order.returnReason = reason;
+  // })
+
+  // await order.save();
+
+  order.items.forEach(item => {
+  if (item.status === "Delivered") {
+    item.status = "Return Requested";
+    item.returnReason = reason;
+  }
+});
+
+await order.save();
 
   return order;
 
@@ -434,6 +448,7 @@ exports.returnOrder = async (orderId, reason) => {
 
 // RETURN SINGLE PRODUCT
 exports.returnProduct = async (orderId, productId, reason) => {
+
 
   const order = await Order.findById(orderId);
 
@@ -461,10 +476,6 @@ exports.returnProduct = async (orderId, productId, reason) => {
 item.status = "Return Requested";
 item.returnReason = reason;
 
-
-// Show order as waiting for admin approval
-order.orderStatus = "Return Requested";
-order.returnReason = reason;
 
   await order.save();
 
