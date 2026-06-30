@@ -215,6 +215,46 @@ const isBulkReturn =
 
 
 
+<% if(isBulkReturn){ %>
+
+<div class="return-box">
+
+    <p>
+        All products in this order have been requested for return.
+    </p>
+
+    <p>
+        <strong>Reason:</strong>
+        <%= requestedItems[0].returnReason %>
+    </p>
+
+    <div class="return-actions">
+
+        <form
+            action="/admin/orders/<%= order._id %>/approve-return-all"
+            method="POST"
+        >
+            <button class="approve-btn">
+                Approve All
+            </button>
+        </form>
+
+        <form
+            action="/admin/orders/<%= order._id %>/reject-return-all"
+            method="POST"
+        >
+            <button class="reject-btn">
+                Reject All
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+<% } else { %>
+
+
 <% requestedItems.forEach(function(item){ %>
 
     <div class="return-box">
@@ -251,7 +291,7 @@ const isBulkReturn =
     </div>
 
 <% }) %>
-
+<% } %>
 
 <% } else { %>
 

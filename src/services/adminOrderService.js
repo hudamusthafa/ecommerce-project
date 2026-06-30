@@ -251,3 +251,75 @@ if (!pendingReturns) {
 };
 
 
+
+
+
+// APPROVE BULK RETURNS
+exports.approveAllReturns = async (orderId) => {
+
+  const order = await Order.findById(orderId)
+    .populate("items.product");
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  for (const item of order.items) {
+
+    if (item.status === "Return Requested") {
+
+      item.status = "Returned";
+
+      await Product.findByIdAndUpdate(
+        item.product._id,
+        {
+          $inc: {
+            stock: item.quantity
+          }
+        }
+      );
+
+    }
+
+  }
+
+  order.orderStatus = "Returned";
+  order.isReturned = true;
+
+  await order.save();
+
+  return order;
+
+};
+
+
+
+
+// REJECT BULK RETURNS
+exports.rejectAllReturns = async (orderId) => {
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  order.items.forEach(item => {
+
+    if (item.status === "Return Requested") {
+
+      item.status = "Delivered";
+      item.returnReason = "";
+
+    }
+
+  });
+
+  order.orderStatus = "Delivered";
+  order.isReturned = false;
+
+  await order.save();
+
+  return order;
+
+};

@@ -484,3 +484,59 @@
     margin-top:8px;
     display:none;
 }
+
+.status-badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* Delivered */
+.status-delivered{
+    background:#d4edda;
+    color:#155724;
+}
+
+/* Return Requested */
+.status-return-requested{
+    background:#fff3cd;
+    color:#856404;
+}
+
+/* Returned */
+.status-returned{
+    background:#d1ecf1;
+    color:#0c5460;
+}
+
+/* Return Rejected */
+.status-return-rejected{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+/* Cancelled */
+.status-cancelled{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+/* Processing */
+.status-processing{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+/* Shipped */
+.status-shipped{
+    background:#e0e7ff;
+    color:#4338ca;
+}
+
+/* Placed */
+.status-placed{
+    background:#e5e7eb;
+    color:#374151;
+}

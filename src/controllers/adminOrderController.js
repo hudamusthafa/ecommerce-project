@@ -69,7 +69,7 @@ exports.updateOrderStatus = async(req,res,next)=>{
 
 };
 
-//approve return
+//approve single product return
 exports.approveReturn = async(req,res,next)=>{
 
    try{
@@ -89,7 +89,7 @@ exports.approveReturn = async(req,res,next)=>{
 
 };
 
-// reject return
+// reject single product return
 
 exports.rejectReturn = async(req,res,next)=>{
 
@@ -108,4 +108,35 @@ exports.rejectReturn = async(req,res,next)=>{
 
    }
 
+};
+
+// APPROVE ALL RETURNS
+exports.approveAllReturns = async (req, res, next) => {
+  try {
+
+    await adminOrderService.approveAllReturns(
+      req.params.orderId
+    );
+
+    res.redirect("/admin/orders/" + req.params.orderId);
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+// REJECT ALL RETURNS
+exports.rejectAllReturns = async (req, res, next) => {
+  try {
+
+    await adminOrderService.rejectAllReturns(
+      req.params.orderId
+    );
+
+    res.redirect("/admin/orders/" + req.params.orderId);
+
+  } catch (err) {
+    next(err);
+  }
 };

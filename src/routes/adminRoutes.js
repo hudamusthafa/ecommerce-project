@@ -68,14 +68,18 @@ router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
 // UPDATE ORDER STATUS
 router.post("/orders/:id/status",isAdminLoggedIn,adminOrderController.updateOrderStatus);
 
-router.post(
-"/orders/:orderId/product/:productId/approve-return",
-adminOrderController.approveReturn
-);
+// single product  return approve
+router.post("/orders/:orderId/product/:productId/approve-return",adminOrderController.approveReturn);
 
-router.post(
-"/orders/:orderId/product/:productId/reject-return",
-adminOrderController.rejectReturn
-);
+// single product  return reject
+router.post("/orders/:orderId/product/:productId/reject-return",adminOrderController.rejectReturn);
+
+// BULK APPROVE RETURN
+
+router.post("/orders/:orderId/approve-return-all",isAdminLoggedIn,adminOrderController.approveAllReturns);
+
+// BULK REJECT RETURN
+
+router.post("/orders/:orderId/reject-return-all",isAdminLoggedIn,adminOrderController.rejectAllReturns);
 
 module.exports=router;
