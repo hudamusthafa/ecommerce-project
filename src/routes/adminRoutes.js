@@ -8,6 +8,8 @@ const {noCache}=require("../middleware/cacheMiddleware");
 const upload=require("../config/multer");
 
 const adminOrderController = require("../controllers/adminOrderController");
+const adminCouponController = require("../controllers/adminCouponController");
+
 
 // ADMIN LOGIN
 router.get("/login",noCache,isAdminLoggedOut,adminController.getLogin);
@@ -58,6 +60,19 @@ router.post("/add-product",isAdminLoggedIn,upload.array("images",5),productContr
 router.get("/edit-product/:id",isAdminLoggedIn,productController.getEditProduct);
 router.put("/edit-product/:id",isAdminLoggedIn,upload.array("images",5),productController.updateProduct);
 router.delete("/delete-product/:id",isAdminLoggedIn,productController.deleteProduct);
+
+
+// COUPON MANAGEMENT
+
+// COUPON LIST
+router.get("/coupons",isAdminLoggedIn,adminCouponController.getCoupons);
+
+// ADD COUPON PAGE
+router.get("/add-coupon",isAdminLoggedIn,adminCouponController.getAddCoupon);
+
+// SAVE COUPON
+router.post("/add-coupon",isAdminLoggedIn,adminCouponController.addCoupon);
+
 
 
 // ORDERS

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Add Coupon</title>
+
+    <link rel="stylesheet" href="/css/adminSidebar.css">
+    <link rel="stylesheet" href="/css/admin-addcoupon.css">
+
+</head>
+
+<body>
+
+<%- include("../partials/admin-header") %>
+
+<div class="layout">
+
+    <%- include("../partials/admin-sidebar") %>
+
+    <div class="main-content">
+
+        <div class="category-page">
+
+            <!-- TOP -->
+
+            <div class="top-section">
+
+                <h1>Add Coupon</h1>
+
+                <a href="/admin/coupons" class="back-btn">
+                    ← Back to Coupons
+                </a>
+
+            </div>
+
+            <% if(typeof error !== "undefined" && error){ %>
+
+                <div class="error-box">
+
+                    <%= error %>
+
+                </div>
+
+            <% } %>
+
+            <div class="table-card">
+
+                <form
+                    action="/admin/add-coupon"
+                    method="POST"
+                    class="coupon-form"
+                >
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>Coupon Code</label>
+
+                            <input
+                                type="text"
+                                name="code"
+                                placeholder="WELCOME10"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Description</label>
+
+                            <input
+                                type="text"
+                                name="description"
+                                placeholder="10% off on first order"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Discount Type</label>
+
+                            <select name="discountType">
+
+                                <option value="percentage">
+                                    Percentage
+                                </option>
+
+                                <option value="flat">
+                                    Flat Amount
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Discount Value</label>
+
+                            <input
+                                type="number"
+                                name="discountValue"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Maximum Discount</label>
+
+                            <input
+                                type="number"
+                                name="maxDiscount"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Minimum Purchase</label>
+
+                            <input
+                                type="number"
+                                name="minPurchase"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Usage Limit</label>
+
+                            <input
+                                type="number"
+                                name="usageLimit"
+                                value="1"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Per User Limit</label>
+
+                            <input
+                                type="number"
+                                name="perUserLimit"
+                                value="1"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Start Date</label>
+
+                            <input
+                                type="date"
+                                name="startDate"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Expiry Date</label>
+
+                            <input
+                                type="date"
+                                name="expiryDate"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="save-btn"
+                        >
+                            Save Coupon
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include("../partials/admin-footer") %>
+
+</body>
+
+</html>

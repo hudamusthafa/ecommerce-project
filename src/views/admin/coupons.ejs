@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Coupon Management</title>
+
+  <link rel="stylesheet" href="/css/adminSidebar.css">
+  <link rel="stylesheet" href="/css/admin-coupon-list.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+</head>
+
+<body>
+
+  <%- include("../partials/admin-header") %>
+
+  <div class="layout">
+
+    <%- include("../partials/admin-sidebar") %>
+
+    <div class="main-content">
+
+      <div class="category-page">
+
+        <!-- TOP SECTION -->
+        <div class="top-section">
+
+          <h1>Coupons</h1>
+
+          <a href="/admin/add-coupon" class="add-btn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Coupon
+
+          </a>
+
+        </div>
+
+        <!-- SUMMARY -->
+
+       <div class="summary-item">
+
+          <span>Total Coupons</span>
+
+          <h2><%= total %></h2>
+
+      </div>
+
+        <!-- SEARCH -->
+        <div class="top-bar">
+
+          <form
+            action="/admin/coupons"
+            method="GET"
+            class="search-form"
+          >
+
+            <input
+              type="text"
+              name="search"
+              placeholder="Search coupon..."
+              value="<%= search %>"
+              class="search-input"
+            >
+
+            <button class="search-btn">
+
+              Search
+
+            </button>
+
+            <a
+              href="/admin/coupons"
+              class="clear-btn"
+            >
+
+              Clear
+
+            </a>
+
+          </form>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Coupon</th>
+                <th>Type</th>
+                <th>Discount</th>
+                <th>Min Purchase</th>
+                <th>Expiry</th>
+                <th>Status</th>
+                <th>Action</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <% if(coupons.length){ %>
+
+                <% coupons.forEach(function(coupon){ %>
+
+                  <tr>
+
+                    <!-- COUPON -->
+                    <td>
+
+                      <strong><%= coupon.code %></strong>
+
+                      <br>
+
+                      <small><%= coupon.description %></small>
+
+                    </td>
+
+                    <!-- TYPE -->
+                    <td>
+
+                      <%= coupon.discountType %>
+
+                    </td>
+
+                    <!-- DISCOUNT -->
+                    <td>
+
+                      <%= coupon.discountType==="percentage"
+                        ? coupon.discountValue+"%"
+                        : "₹"+coupon.discountValue %>
+
+                    </td>
+
+                    <!-- MIN PURCHASE -->
+                    <td>
+
+                      ₹<%= coupon.minPurchase %>
+
+                    </td>
+
+                    <!-- EXPIRY -->
+                    <td>
+
+                      <%= new Date(coupon.expiryDate).toLocaleDateString("en-GB") %>
+
+                    </td>
+
+                    <!-- STATUS -->
+                    <td>
+
+                      <%
+                          const today = new Date();
+
+                          let badgeClass = "active";
+                          let badgeText = "Active";
+
+                          if(!coupon.isActive){
+
+                              badgeClass = "disabled";
+                              badgeText = "Disabled";
+
+                          }else if(new Date(coupon.expiryDate) < today){
+
+                              badgeClass = "expired";
+                              badgeText = "Expired";
+
+                          }
+                          %>
+
+                          <span class="status-badge <%= badgeClass %>">
+
+                              <%= badgeText %>
+
+                          </span>
+                    </td>
+
+                    <!-- ACTION -->
+                    <td>
+
+                    <div class="action-buttons">
+
+                      <button class="edit-btn">
+
+                          <i class="fa-solid fa-pen"></i>
+
+                          Edit
+
+                      </button>
+
+                      <button class="disable-btn">
+
+                          <i class="fa-solid fa-ban"></i>
+
+                          Disable
+
+                      </button>
+
+                  </div>
+
+                    </td>
+
+                  </tr>
+
+                <% }) %>
+
+              <% } else { %>
+
+                <tr>
+
+                  <td colspan="7" class="empty-msg">
+
+                    No Coupons Found
+
+                  </td>
+
+                </tr>
+
+              <% } %>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <%- include("../partials/admin-footer") %>
+
+</body>
+
+</html>

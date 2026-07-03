@@ -1,0 +1,94 @@
+/* PAGE */
+
+.main-content{
+  padding:30px;
+}
+
+.main-content h1{
+  font-size:32px;
+  margin-bottom:25px;
+  color:#2d1b12;
+}
+
+
+/* FORM CARD */
+
+.coupon-form{
+  background:#fff;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+
+/* GRID */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+
+
+/* FORM GROUP */
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group label{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:8px;
+  color:#444;
+}
+
+.form-group input,
+.form-group select{
+  height:48px;
+  padding:0 15px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+  transition:.25s;
+  outline:none;
+  background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#8b5e3c;
+  box-shadow:0 0 0 3px rgba(139,94,60,.15);
+}
+
+
+/* BUTTON */
+
+.save-btn{
+  margin-top:30px;
+  background:#8b5e3c;
+  color:white;
+  border:none;
+  border-radius:10px;
+  padding:14px 28px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.save-btn:hover{
+  background:#73492b;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+}
