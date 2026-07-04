@@ -43,6 +43,34 @@ exports.addCoupon = async (data) => {
 
   } = data;
 
+  //  field validation
+if (!code || !code.trim()) {
+    throw new Error("Coupon code is required.");
+}
+
+if (!description || !description.trim()) {
+    throw new Error("Coupon description is required.");
+}
+
+if (!discountType) {
+    throw new Error("Please select a discount type.");
+}
+
+if (!discountValue) {
+    throw new Error("Discount value is required.");
+}
+
+if (!startDate) {
+    throw new Error("Start date is required.");
+}
+
+if (!expiryDate) {
+    throw new Error("Expiry date is required.");
+}
+
+
+
+
   // Check duplicate coupon
   const existingCoupon = await Coupon.findOne({
     code: code.trim().toUpperCase()

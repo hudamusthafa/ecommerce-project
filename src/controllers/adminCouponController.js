@@ -1,6 +1,6 @@
 const adminCouponService = require("../services/adminCouponService");
 
-// GET COUPONS PAGE
+
 // GET COUPONS PAGE
 exports.getCoupons = async (req, res, next) => {
 
@@ -27,14 +27,24 @@ exports.getCoupons = async (req, res, next) => {
 // GET ADD COUPON PAGE
 exports.getAddCoupon = (req, res) => {
 
-  res.render("admin/add-coupon");
+    const error = req.session.couponError || "";
+    const formData = req.session.couponFormData || {};
 
+    // Clear after reading
+    req.session.couponError = null;
+    req.session.couponFormData = null;
+
+    res.render("admin/add-coupon", {
+        error,
+        formData
+    });
 };
 
 //=======================================
 
 // ADD COUPON
 exports.addCoupon = async (req, res, next) => {
+  
 
   try {
 
@@ -44,11 +54,10 @@ exports.addCoupon = async (req, res, next) => {
 
   } catch (error) {
 
-     res.redirect(
-        "/admin/add-coupon?error=" +
-        encodeURIComponent(error.message)
-    );
+        req.session.couponError = error.message;
+        req.session.couponFormData = req.body;
 
-  }
+        res.redirect("/admin/add-coupon");
 
+    }
 };

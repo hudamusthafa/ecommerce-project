@@ -9,6 +9,10 @@
 
     <link rel="stylesheet" href="/css/adminSidebar.css">
     <link rel="stylesheet" href="/css/admin-addcoupon.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      />
 
 </head>
 
@@ -30,21 +34,30 @@
 
                 <h1>Add Coupon</h1>
 
-                <a href="/admin/coupons" class="back-btn">
-                    ← Back to Coupons
-                </a>
+                <div class="page-actions">
 
+                  <a href="/admin/coupons" class="back-btn">
+
+                      <i class="fa-solid fa-arrow-left"></i>
+
+                      <span>Back to Coupons</span>
+
+                  </a>
+
+              </div>
             </div>
 
-            <% if(typeof error !== "undefined" && error){ %>
+          <% if (error) { %>
 
-                <div class="error-box">
+          <div class="coupon-error">
 
-                    <%= error %>
+              <i class="fa-solid fa-circle-exclamation"></i>
 
-                </div>
+              <span><%= error %></span>
 
-            <% } %>
+          </div>
+
+          <% } %>
 
             <div class="table-card">
 
@@ -63,8 +76,9 @@
                             <input
                                 type="text"
                                 name="code"
-                                placeholder="WELCOME10"
-                                required
+        
+                                value="<%= formData.code || '' %>"
+                                
                             >
 
                         </div>
@@ -76,8 +90,8 @@
                             <input
                                 type="text"
                                 name="description"
-                                placeholder="10% off on first order"
-                                required
+                                value="<%= formData.description || '' %>"
+                                
                             >
 
                         </div>
@@ -88,11 +102,15 @@
 
                             <select name="discountType">
 
-                                <option value="percentage">
+                                 <option
+                                    value="percentage"
+                                    <%= formData.discountType === "percentage" ? "selected" : "" %>>
                                     Percentage
                                 </option>
 
-                                <option value="flat">
+                                <option
+                                    value="flat"
+                                    <%= formData.discountType === "flat" ? "selected" : "" %>>
                                     Flat Amount
                                 </option>
 
@@ -107,7 +125,7 @@
                             <input
                                 type="number"
                                 name="discountValue"
-                                required
+                                value="<%= formData.discountValue || '' %>"
                             >
 
                         </div>
@@ -117,9 +135,10 @@
                             <label>Maximum Discount</label>
 
                             <input
-                                type="number"
-                                name="maxDiscount"
-                            >
+                              type="number"
+                              name="maxDiscount"
+                              value="<%= formData.maxDiscount || '' %>"
+                          >
 
                         </div>
 
@@ -128,9 +147,10 @@
                             <label>Minimum Purchase</label>
 
                             <input
-                                type="number"
-                                name="minPurchase"
-                            >
+                              type="number"
+                              name="minPurchase"
+                              value="<%= formData.minPurchase || '' %>"
+                          >
 
                         </div>
 
@@ -141,7 +161,7 @@
                             <input
                                 type="number"
                                 name="usageLimit"
-                                value="1"
+                                value="<%= formData.usageLimit || 1 %>"
                             >
 
                         </div>
@@ -153,7 +173,7 @@
                             <input
                                 type="number"
                                 name="perUserLimit"
-                                value="1"
+                                value="<%= formData.perUserLimit || 1 %>"
                             >
 
                         </div>
@@ -165,7 +185,7 @@
                             <input
                                 type="date"
                                 name="startDate"
-                                required
+                              value="<%= formData.startDate || '' %>"
                             >
 
                         </div>
@@ -177,7 +197,7 @@
                             <input
                                 type="date"
                                 name="expiryDate"
-                                required
+                                 value="<%= formData.expiryDate || '' %>"
                             >
 
                         </div>
