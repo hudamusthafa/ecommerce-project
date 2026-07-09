@@ -244,3 +244,10 @@ tbody tr:hover{
 
     background:#ffd3d3;
 }
+
+.edit-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}

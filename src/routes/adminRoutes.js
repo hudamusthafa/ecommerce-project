@@ -73,6 +73,13 @@ router.get("/add-coupon",isAdminLoggedIn,adminCouponController.getAddCoupon);
 // SAVE COUPON
 router.post("/add-coupon",isAdminLoggedIn,adminCouponController.addCoupon);
 
+// EDIT COUPON PAGE
+router.get("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.getEditCoupon);
+
+// UPDATE COUPON
+router.post("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.updateCoupon);
+
+
 
 
 // ORDERS

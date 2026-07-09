@@ -43,32 +43,7 @@ exports.addCoupon = async (data) => {
 
   } = data;
 
-  //  field validation
-if (!code || !code.trim()) {
-    throw new Error("Coupon code is required.");
-}
-
-if (!description || !description.trim()) {
-    throw new Error("Coupon description is required.");
-}
-
-if (!discountType) {
-    throw new Error("Please select a discount type.");
-}
-
-if (!discountValue) {
-    throw new Error("Discount value is required.");
-}
-
-if (!startDate) {
-    throw new Error("Start date is required.");
-}
-
-if (!expiryDate) {
-    throw new Error("Expiry date is required.");
-}
-
-
+ 
 
 
   // Check duplicate coupon
@@ -121,5 +96,91 @@ if (!expiryDate) {
   await coupon.save();
 
   return coupon;
+
+};
+//================================
+
+// GET COUPON BY ID
+exports.getCouponById = async (couponId) => {
+
+    const coupon = await Coupon.findById(couponId);
+
+    if (!coupon) {
+        throw new Error("Coupon not found.");
+    }
+
+    return coupon;
+
+};
+
+
+// UPDATE COUPON
+exports.updateCoupon = async (couponId, data) => {
+
+    const coupon = await Coupon.findById(couponId);
+
+    if (!coupon) {
+        throw new Error("Coupon not found.");
+    }
+
+    const {
+        code,
+        description,
+        discountType,
+        discountValue,
+        maxDiscount,
+        minPurchase,
+        usageLimit,
+        perUserLimit,
+        startDate,
+        expiryDate
+    } = data;
+
+
+    // Duplicate code check
+    const existingCoupon = await Coupon.findOne({
+        code: code.trim().toUpperCase(),
+        _id: { $ne: couponId }
+    });
+
+    if (existingCoupon) {
+        throw new Error("Coupon code already exists.");
+    }
+
+    // Date validation
+    if (new Date(startDate) >= new Date(expiryDate)) {
+        throw new Error("Expiry date must be later than the start date.");
+    }
+
+    // Percentage validation
+    if (
+        discountType === "percentage" &&
+        Number(discountValue) > 90
+    ) {
+        throw new Error("Percentage discount cannot exceed 90%.");
+    }
+
+    // Flat validation
+    if (
+        discountType === "flat" &&
+        Number(discountValue) >= Number(minPurchase)
+    ) {
+        throw new Error("Flat discount must be less than the minimum purchase amount.");
+    }
+
+    coupon.code = code.trim().toUpperCase();
+    coupon.description = description;
+    coupon.discountType = discountType;
+    coupon.discountValue = discountValue;
+    coupon.maxDiscount = maxDiscount;
+    coupon.minPurchase = minPurchase;
+    coupon.usageLimit = usageLimit;
+    coupon.perUserLimit = perUserLimit;
+    coupon.startDate = startDate;
+    coupon.expiryDate = expiryDate;
+
+    await coupon.save();
+
+    return coupon;
 
 };
