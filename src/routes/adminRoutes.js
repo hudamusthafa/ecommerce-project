@@ -79,7 +79,8 @@ router.get("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.getEditCoupo
 // UPDATE COUPON
 router.post("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.updateCoupon);
 
-
+// ENABLE / DISABLE COUPON
+router.post( "/coupon/:id/toggle-status",isAdminLoggedIn,adminCouponController.toggleCouponStatus);
 
 
 // ORDERS

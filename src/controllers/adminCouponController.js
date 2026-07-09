@@ -229,3 +229,24 @@ if (!expiryDate) {
     }
 
 };
+
+//======================
+
+// ENABLE / DISABLE COUPON
+exports.toggleCouponStatus = async (req, res, next) => {
+
+    try {
+
+        await adminCouponService.toggleCouponStatus(
+            req.params.id
+        );
+
+        res.redirect("/admin/coupons");
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};

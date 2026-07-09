@@ -213,41 +213,49 @@ tbody tr:hover{
     gap:10px;
 }
 
+/* Common button style */
 .edit-btn,
-.disable-btn{
-
+.disable-btn,
+.enable-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
     border:none;
     border-radius:8px;
     padding:8px 14px;
     cursor:pointer;
     font-weight:600;
+    font-size:14px;
+    text-decoration:none;
 }
 
+/* Edit */
 .edit-btn{
-
     background:#fff4db;
     color:#c98500;
 }
 
 .edit-btn:hover{
-
     background:#ffe9b0;
 }
 
+/* Disable */
 .disable-btn{
-
     background:#fde2e2;
     color:#dc3545;
 }
 
 .disable-btn:hover{
-
     background:#ffd3d3;
 }
 
-.edit-btn{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
+/* Enable */
+.enable-btn{
+    background:#d9f7e3;
+    color:#198754;
+}
+
+.enable-btn:hover{
+    background:#c4f0d2;
 }

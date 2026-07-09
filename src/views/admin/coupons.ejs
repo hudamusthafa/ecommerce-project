@@ -192,28 +192,46 @@
                     <!-- ACTION -->
                     <td>
 
-                    <div class="action-buttons">
+                          <div class="action-buttons">
 
-                     
-                      <a
-                        href="/admin/edit-coupon/<%= coupon._id %>"
-                        class="edit-btn"
-                    >
-                        <i class="fa-solid fa-pen"></i>
-                    
-                    </a>
+                              <!-- EDIT -->
+                              <a
+                                  href="/admin/edit-coupon/<%= coupon._id %>"
+                                  class="edit-btn"
+                              >
+                                  <i class="fa-solid fa-pen"></i>
+                              </a>
 
-                      <button class="disable-btn">
+                              <!-- ENABLE / DISABLE -->
+                              <form
+                                  action="/admin/coupon/<%= coupon._id %>/toggle-status"
+                                  method="POST"
+                                  style="display:inline"
+                              >
 
-                          <i class="fa-solid fa-ban"></i>
+                                  <button
+                                      type="submit"
+                                      class="<%= coupon.isActive ? 'disable-btn' : 'enable-btn' %>"                                  >
 
-                          Disable
+                                      <% if(coupon.isActive){ %>
 
-                      </button>
+                                          <i class="fa-solid fa-ban"></i>
+                                          Disable
 
-                  </div>
+                                      <% } else { %>
 
-                    </td>
+                                          <i class="fa-solid fa-check"></i>
+                                          Enable
+
+                                      <% } %>
+
+                                  </button>
+
+                              </form>
+
+                          </div>
+
+                      </td>
 
                   </tr>
 

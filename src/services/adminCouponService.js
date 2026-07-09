@@ -184,3 +184,22 @@ exports.updateCoupon = async (couponId, data) => {
     return coupon;
 
 };
+
+
+
+// ENABLE / DISABLE COUPON
+exports.toggleCouponStatus = async (couponId) => {
+
+    const coupon = await Coupon.findById(couponId);
+
+    if (!coupon) {
+        throw new Error("Coupon not found.");
+    }
+
+    coupon.isActive = !coupon.isActive;
+
+    await coupon.save();
+
+    return coupon;
+
+};
