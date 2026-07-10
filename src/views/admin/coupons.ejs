@@ -204,29 +204,34 @@
 
                               <!-- ENABLE / DISABLE -->
                               <form
-                                  action="/admin/coupon/<%= coupon._id %>/toggle-status"
-                                  method="POST"
-                                  style="display:inline"
-                              >
+                                id="toggleForm-<%= coupon._id %>"
+                                action="/admin/coupon/<%= coupon._id %>/toggle-status"
+                                method="POST"
+                                style="display:inline"
+                            >
 
                                   <button
-                                      type="submit"
-                                      class="<%= coupon.isActive ? 'disable-btn' : 'enable-btn' %>"                                  >
+                                    type="button"
+                                    class="<%= coupon.isActive ? 'disable-btn' : 'enable-btn' %>"
+                                    onclick="openModal(
+                                        'toggleForm-<%= coupon._id %>',
+                                        <%= coupon.isActive %>
+                                    )"
+                                >
 
-                                      <% if(coupon.isActive){ %>
+                                    <% if(coupon.isActive){ %>
 
-                                          <i class="fa-solid fa-ban"></i>
-                                          Disable
+                                        <i class="fa-solid fa-ban"></i>
+                                        Disable
 
-                                      <% } else { %>
+                                    <% } else { %>
 
-                                          <i class="fa-solid fa-check"></i>
-                                          Enable
+                                        <i class="fa-solid fa-check"></i>
+                                        Enable
 
-                                      <% } %>
+                                    <% } %>
 
-                                  </button>
-
+                                </button>
                               </form>
 
                           </div>
@@ -263,7 +268,104 @@
 
   </div>
 
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal">
+
+    <div class="modal-content">
+
+        <h3 id="modalTitle">Disable Coupon</h3>
+
+        <p id="modalMessage">
+            Are you sure you want to disable this coupon?
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="closeModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                id="confirmBtn"
+                class="disable-btn"
+            >
+                Disable
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let currentForm = "";
+
+function openModal(formId, isActive){
+
+    currentForm = formId;
+
+    document.getElementById("confirmModal").style.display = "flex";
+
+    if(isActive){
+
+        document.getElementById("modalTitle").innerText =
+            "Disable Coupon";
+
+        document.getElementById("modalMessage").innerText =
+            "Are you sure you want to disable this coupon?";
+
+        document.getElementById("confirmBtn").innerHTML =
+            '<i class="fa-solid fa-ban"></i> Disable';
+
+        document.getElementById("confirmBtn").className =
+            "disable-btn";
+
+    }else{
+
+        document.getElementById("modalTitle").innerText =
+            "Enable Coupon";
+
+        document.getElementById("modalMessage").innerText =
+            "Are you sure you want to enable this coupon?";
+
+        document.getElementById("confirmBtn").innerHTML =
+            '<i class="fa-solid fa-check"></i> Enable';
+
+        document.getElementById("confirmBtn").className =
+            "enable-btn";
+
+    }
+
+}
+
+function closeModal(){
+
+    document.getElementById("confirmModal").style.display = "none";
+
+}
+
+document
+.getElementById("confirmBtn")
+.addEventListener("click", function(){
+
+    document.getElementById(currentForm).submit();
+
+});
+
+</script>
+
   <%- include("../partials/admin-footer") %>
+
+
+
 
 </body>
 
