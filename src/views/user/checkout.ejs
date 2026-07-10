@@ -2,499 +2,849 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
+
   <title>Checkout</title>
+
   <link rel="stylesheet" href="/css/layout.css">
   <link rel="stylesheet" href="/css/checkout.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  >
+
 </head>
 
 <body>
 
-<%- include("../partials/header") %>
+  <%- include("../partials/header") %>
 
-<div class="page-layout">
+  <div class="page-layout">
 
-  <%- include('../partials/user-sidebar') %>
+    <%- include("../partials/user-sidebar") %>
 
-  <div class="page-content">
+    <div class="page-content">
 
-    <div class="checkout-page">
+      <div class="checkout-page">
 
-      <h2 class="checkout-title">Checkout</h2>
+        <h2 class="checkout-title">
+          Checkout
+        </h2>
 
-      <% if(removedProducts && removedProducts.length > 0){ %>
-      <div class="checkout-warning">
-        <strong>Some products are currently out of stock and have been removed from your checkout:</strong>
-        <ul>
-          <% removedProducts.forEach(function(product){ %>
-            <li><%= product %></li>
-          <% }) %>
-        </ul>
-        <p>Please review your order before placing it.</p>
-      </div>
-      <% } %>
+        <% if(removedProducts && removedProducts.length > 0){ %>
 
-      <% if(error){ %>
-      <div class="checkout-error">
-        <%= error %>
-      </div>
-      <% } %>
+          <div class="checkout-warning">
 
-      <form action="/checkout/place-order" method="POST" novalidate>
+            <strong>
+              Some products are currently out of stock and have been removed from your checkout:
+            </strong>
 
-        <div class="checkout-container">
+            <ul>
 
-          <div class="left-section">
+              <% removedProducts.forEach(function(product){ %>
 
-            <h3>Delivery Address</h3>
+                <li><%= product %></li>
 
-            <% if(user.address && user.address.length > 0){ %>
+              <% }) %>
 
-                  <input
-                      type="hidden"
-                      name="selectedAddress"
-                      id="selectedAddress"
-                      value="<%= user.address[0]._id %>"
+            </ul>
+
+            <p>
+              Please review your order before placing it.
+            </p>
+
+          </div>
+
+        <% } %>
+
+        <% if(error){ %>
+
+          <div class="checkout-error">
+            <%= error %>
+          </div>
+
+        <% } %>
+
+        <form
+          action="/checkout/place-order"
+          method="POST"
+          novalidate
+        >
+
+          <div class="checkout-container">
+
+            <div class="left-section">
+
+              <h3>
+                Delivery Address
+              </h3>
+
+              <% if(user.address && user.address.length > 0){ %>
+
+                <input
+                  type="hidden"
+                  name="selectedAddress"
+                  id="selectedAddress"
+                  value="<%= user.address[0]._id %>"
+                >
+
+                <div class="address-dropdown">
+
+                  <div
+                    class="selected-address"
+                    onclick="toggleAddressDropdown()"
                   >
 
-                  <div class="address-dropdown">
+                    <div id="selectedAddressCard">
 
-    <div
-        class="selected-address"
-        onclick="toggleAddressDropdown()"
-    >
+                      <h4>
 
-        <div id="selectedAddressCard">
+                        Address 1
 
-           
-                <h4>
+                        <span class="default-badge">
+                          Default
+                        </span>
 
-                  Address 1
+                      </h4>
 
-                  <span class="default-badge">
-                      Default
-                  </span>
+                      <p>
 
-              </h4>
+                        <strong>
+                          <%= user.address[0].fullName %>
+                        </strong>
 
-              <p>
-                  <strong>
-                      <%= user.address[0].fullName %>
-                  </strong>
-              </p>
+                      </p>
 
-            
+                      <p>
 
-            <p>
-                <%= user.address[0].house %>,
-                <%= user.address[0].area %>
-            </p>
+                        <%= user.address[0].house %>,
+                        <%= user.address[0].area %>
 
-            <p>
-                <%= user.address[0].city %>,
-                <%= user.address[0].state %> -
-                <%= user.address[0].pincode %>
-            </p>
+                      </p>
 
-            <p>
-                Phone :
-                <%= user.address[0].phone %>
-            </p>
+                      <p>
 
-        </div>
+                        <%= user.address[0].city %>,
+                        <%= user.address[0].state %> -
+                        <%= user.address[0].pincode %>
 
-        <i class="fa-solid fa-chevron-down"></i>
+                      </p>
 
-    </div>
+                      <p>
 
-<!-- address dropdown -->
+                        Phone :
+                        <%= user.address[0].phone %>
 
-    <div
-        id="addressDropdown"
-        class="dropdown-list"
-    >
+                      </p>
 
-        <% user.address.forEach(function(addr,index){ %>
+                    </div>
 
-            <div
-                class="dropdown-item"
-                onclick="selectAddress(
-                    '<%= addr._id %>',
-                    this
-                )"
-            >
-
-                <strong>
-                    Address <%= index + 1 %>
-                </strong>
-
-                <% if(index === 0){ %>
-                <span class="default-badge">Default</span>
-                <% } %>
-
-                <p><%= addr.fullName %></p>
-
-                <p>
-                    <%= addr.house %>,
-                    <%= addr.area %>
-                </p>
-
-                <p>
-                    <%= addr.city %>,
-                    <%= addr.state %> -
-                    <%= addr.pincode %>
-                </p>
-
-                <p>
-                    Phone :
-                    <%= addr.phone %>
-                </p>
-
-            </div>
-
-        <% }) %>
-
-    </div>
-
-</div>
-
-                  <% }else{ %>
-
-                  <div class="empty-checkout">
-
-                      <p>No address found.</p>
+                    <i class="fa-solid fa-chevron-down"></i>
 
                   </div>
 
-                  <% } %>
+                  <!-- ADDRESS DROPDOWN -->
 
+                  <div
+                    id="addressDropdown"
+                    class="dropdown-list"
+                  >
 
+                    <% user.address.forEach(function(addr,index){ %>
 
-            <button
+                      <div
+                        class="dropdown-item"
+                        onclick="selectAddress(
+                          '<%= addr._id %>',
+                          this
+                        )"
+                      >
+
+                        <strong>
+
+                          Address <%= index + 1 %>
+
+                        </strong>
+
+                        <% if(index===0){ %>
+
+                          <span class="default-badge">
+                            Default
+                          </span>
+
+                        <% } %>
+
+                        <p>
+
+                          <%= addr.fullName %>
+
+                        </p>
+
+                        <p>
+
+                          <%= addr.house %>,
+                          <%= addr.area %>
+
+                        </p>
+
+                        <p>
+
+                          <%= addr.city %>,
+                          <%= addr.state %> -
+                          <%= addr.pincode %>
+
+                        </p>
+
+                        <p>
+
+                          Phone :
+                          <%= addr.phone %>
+
+                        </p>
+
+                      </div>
+
+                    <% }) %>
+
+                  </div>
+
+                </div>
+
+              <% } else { %>
+
+                <div class="empty-checkout">
+
+                  <p>
+                    No address found.
+                  </p>
+
+                </div>
+
+              <% } %>
+
+              <button
                 type="button"
                 class="add-address-btn"
                 onclick="toggleAddressForm()"
-                >
+              >
 
                 <i class="fa-solid fa-plus"></i>
 
                 Add New Address
 
+              </button>
+
+              <!-- ADDRESS FORM -->
+
+              <div
+                id="addressForm"
+                class="checkout-address-form"
+                style="display:none;"
+              >
+
+                <div class="form-row">
+
+                  <div class="form-group">
+
+                    <label for="fullName">
+                      Full Name
+                    </label>
+
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                    >
+
+                  </div>
+
+                  <div class="form-group">
+
+                    <label for="phone">
+                      Phone Number
+                    </label>
+
+                    <input
+                      type="text"
+                      id="phone"
+                      name="phone"
+                    >
+
+                  </div>
+
+                </div>
+
+                <div class="form-row">
+
+                  <div class="form-group">
+
+                    <label for="pincode">
+                      Pincode
+                    </label>
+
+                    <input
+                      type="text"
+                      id="pincode"
+                      name="pincode"
+                    >
+
+                  </div>
+
+                  <div class="form-group">
+
+                    <label for="email">
+                      Email
+                    </label>
+
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                    >
+
+                  </div>
+
+                </div>
+
+                <div class="form-group full">
+
+                  <label for="house">
+                    Address
+                  </label>
+
+                  <textarea
+                    id="house"
+                    name="house"
+                    rows="3"
+                  ></textarea>
+
+                </div>
+
+                <div class="form-row">
+
+                  <div class="form-group">
+
+                    <label for="state">
+                      State
+                    </label>
+
+                    <input
+                      type="text"
+                      id="state"
+                      name="state"
+                    >
+
+                  </div>
+
+                  <div class="form-group">
+
+                    <label for="city">
+                      City
+                    </label>
+
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                    >
+
+                  </div>
+
+                </div>
+
+                <div class="form-group full">
+
+                  <label for="area">
+                    Landmark
+                  </label>
+
+                  <input
+                    type="text"
+                    id="area"
+                    name="area"
+                    placeholder="Nearby landmark"
+                  >
+
+                </div>
+
+                <div class="form-group full">
+
+                  <label>
+                    Address Type
+                  </label>
+
+                  <div class="radio-group">
+
+                    <label>
+
+                      <input
+                        type="radio"
+                        name="type"
+                        value="home"
+                        checked
+                      >
+
+                      Home
+
+                    </label>
+
+                    <label>
+
+                      <input
+                        type="radio"
+                        name="type"
+                        value="work"
+                      >
+
+                      Work
+
+                    </label>
+
+                  </div>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="save-btn"
+                  onclick="saveAddress()"
+                >
+
+                  Save Address
+
                 </button>
 
-                <!-- address form -->
-
-            <div id="addressForm" class="checkout-address-form" style="display:none;">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="fullName">Full Name</label>
-                  <input type="text" id="fullName" name="fullName" >
-                </div>
-                <div class="form-group">
-                  <label for="phone">Phone Number</label>
-                  <input type="text" id="phone" name="phone" >
-                </div>
               </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="pincode">Pincode</label>
-                  <input type="text" id="pincode" name="pincode">
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" name="email">
-                </div>
-              </div>
+              <!-- PAYMENT SECTION -->
 
-              <div class="form-group full">
-                <label for="house">Address</label>
-                <textarea id="house" name="house" rows="3" ></textarea>
-              </div>
+              <div class="payment-section">
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="state">State</label>
-                  <input type="text" id="state" name="state" >
-                </div>
-                <div class="form-group">
-                  <label for="city">City</label>
-                  <input type="text" id="city" name="city">
-                </div>
-              </div>
+                <h3>
+                  Payment Method
+                </h3>
 
-              <div class="form-group full">
-                <label for="area">Landmark</label>
-                <input type="text" id="area" name="area" placeholder="Nearby landmark">
-              </div>
+                <div class="payment-card">
 
-              <div class="form-group full">
-                <label>Address Type</label>
-                <div class="radio-group">
-                  <label>
-                    <input type="radio" name="type" value="home" checked> Home
+                  <label class="payment-option">
+
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="COD"
+                      checked
+                    >
+
+                    <div class="payment-icon">
+
+                      <i class="fa-solid fa-money-bill-wave"></i>
+
+                    </div>
+
+                    <div class="payment-info">
+
+                      <h4>
+                        Cash On Delivery (COD)
+                      </h4>
+
+                    </div>
+
                   </label>
-                  <label>
-                    <input type="radio" name="type" value="work"> Work
-                  </label>
+
                 </div>
+
               </div>
 
-              <button type="button" class="save-btn" onclick="saveAddress()">
-                Save Address
-              </button>
             </div>
 
-<!-- payment section -->
 
-            <div class="payment-section">
+            <!-- ORDER SUMMARY -->
 
-    <h3>Payment Method</h3>
+            <div class="right-section">
 
-    <div class="payment-card">
+              <h4>
+                Order Summary
+              </h4>
 
-        <label class="payment-option">
+              <% cart.items.forEach(function(item){ %>
 
-            <input
-                type="radio"
-                name="paymentMethod"
-                value="COD"
-                checked
-            >
+                <% if(item.product){ %>
 
-            <div class="payment-icon">
+                  <div class="summary-product">
 
-                <i class="fa-solid fa-money-bill-wave"></i>
+                    <img
+                      src="/images/<%= item.product.images[0] %>"
+                      alt="<%= item.product.name %>"
+                    >
 
-            </div>
+                    <div class="summary-product-info">
 
-            <div class="payment-info">
+                      <h5>
+                        <%= item.product.name %>
+                      </h5>
 
-                <h4>Cash On Delivery (COD)</h4>
+                      <p>
+                        Qty : <%= item.quantity %>
+                      </p>
+
+                      <p>
+                        ₹ <%= item.product.price %> ×
+                        <%= item.quantity %> =
+                        ₹ <%= item.product.price * item.quantity %>
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                <% } %>
+
+              <% }) %>
 
 
-            </div>
+<!-- apply coupon -->
 
-        </label>
+          <div class="coupon-box">
 
-    </div>
+              <h4>Apply Coupon</h4>
 
-</div>
+              <div class="coupon-form">
 
-<!-- order summary -->
+                  <input
+                      type="text"
+                      name="couponCode"
+                      placeholder="Enter coupon code"
+                      class="coupon-input"
+                  >
+
+                  <button
+                      type="button"
+                      class="apply-coupon-btn"
+                  >
+                      Apply
+                  </button>
+
+              </div>
 
           </div>
 
-          <div class="right-section">
-            <h4>Order Summary</h4>
 
-            <% cart.items.forEach(function(item){ %>
-              <% if(item.product){ %>
-                <div class="summary-product">
-                  <img src="/images/<%= item.product.images[0] %>" alt="<%= item.product.name %>">
-                  <div class="summary-product-info">
-                    <h5><%= item.product.name %></h5>
-                    <p>Qty : <%= item.quantity %></p>
-                    <p>
-                      ₹ <%= item.product.price %> × <%= item.quantity %> = ₹ <%= item.product.price * item.quantity %>
-                    </p>
-                  </div>
-                </div>
-              <% } %>
-            <% }) %>
 
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>₹<%= subtotal %></span>
+              <div class="summary-row">
+
+                <span>
+                  Subtotal
+                </span>
+
+                <span>
+                  ₹<%= subtotal %>
+                </span>
+
+              </div>
+
+              <div class="summary-row">
+
+                <span>
+                  Shipping
+                </span>
+
+                <span>
+                  ₹<%= shipping %>
+                </span>
+
+              </div>
+
+              <div class="summary-row">
+
+                <span>
+                  Discount
+                </span>
+
+                <span>
+                  ₹<%= discount %>
+                </span>
+
+              </div>
+
+              <div class="summary-row order-total">
+
+                <span>
+                  Total
+                </span>
+
+                <span>
+                  ₹<%= total %>
+                </span>
+
+              </div>
+
+              <button
+                type="submit"
+                class="place-order-btn"
+              >
+
+                <i class="fa-solid fa-lock"></i>
+
+                Place Order
+
+              </button>
+
             </div>
 
-            <div class="summary-row">
-              <span>Shipping</span>
-              <span>₹<%= shipping %></span>
-            </div>
+          </div>
 
-            <div class="summary-row">
-              <span>Discount</span>
-              <span>₹<%= discount %></span>
-            </div>
+        </form>
 
-            <div class="summary-row order-total">
-              <span>Total</span>
-              <span>₹<%= total %></span>
-            </div>
+        <!-- FEATURE CARDS -->
 
+        <div class="checkout-features">
 
+          <div class="feature-card">
 
+            <i class="fa-solid fa-shield-halved"></i>
 
+            <h4>
+              Secure Payment
+            </h4>
 
-          <button
-            type="submit"
-            class="place-order-btn"
+            <p>
+              100% protected checkout
+            </p>
+
+          </div>
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-rotate-left"></i>
+
+            <h4>
+              Easy Returns
+            </h4>
+
+            <p>
+              Simple return process
+            </p>
+
+          </div>
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-headset"></i>
+
+            <h4>
+              24/7 Support
+            </h4>
+
+            <p>
+              We're always here to help
+            </p>
+
+          </div>
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-truck-fast"></i>
+
+            <h4>
+              Fast Delivery
+            </h4>
+
+            <p>
+              Quick & reliable shipping
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <%- include("../partials/footer") %>
+
+  <div id="deleteModal" class="modal">
+
+    <div class="modal-content">
+
+      <p>
+        Delete this address?
+      </p>
+
+      <div class="modal-actions">
+
+        <button
+          class="cancel-btn"
+          onclick="closeModal()"
         >
-            <i class="fa-solid fa-lock"></i>
-            Place Order
+          Cancel
         </button>
 
-          </div> 
-        </div> 
-      </form>
+        <button
+          class="confirm-btn"
+          onclick="confirmDelete()"
+        >
+          Delete
+        </button>
 
-<!-- feature cards -->
-
-<div class="checkout-features">
-
-    <div class="feature-card">
-        <i class="fa-solid fa-shield-halved"></i>
-        <h4>Secure Payment</h4>
-        <p>100% protected checkout</p>
-    </div>
-
-    <div class="feature-card">
-        <i class="fa-solid fa-rotate-left"></i>
-        <h4>Easy Returns</h4>
-        <p>Simple return process</p>
-    </div>
-
-    <div class="feature-card">
-        <i class="fa-solid fa-headset"></i>
-        <h4>24/7 Support</h4>
-        <p>We're always here to help</p>
-    </div>
-
-    <div class="feature-card">
-        <i class="fa-solid fa-truck-fast"></i>
-        <h4>Fast Delivery</h4>
-        <p>Quick & reliable shipping</p>
-    </div>
-
-</div>
-
-
+      </div>
 
     </div>
 
   </div>
 
-</div>
+  <script>
 
-<%- include("../partials/footer") %>
+    let selectedAddressId=null;
 
-<div id="deleteModal" class="modal">
-  <div class="modal-content">
-    <p>Delete this address?</p>
-    <div class="modal-actions">
-      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-      <button class="confirm-btn" onclick="confirmDelete()">Delete</button>
-    </div>
-  </div>
-</div>
+    function openDeleteModal(id){
 
-<script>
-let selectedAddressId = null;
+      selectedAddressId=id;
 
-function openDeleteModal(id){
-  selectedAddressId = id;
-  document.getElementById("deleteModal").style.display = "flex";
-}
+      document.getElementById("deleteModal").style.display="flex";
 
-function closeModal(){
-  document.getElementById("deleteModal").style.display = "none";
-}
+    }
 
-function confirmDelete(){
-  fetch("/address/" + selectedAddressId, { method:"DELETE" })
-  .then(res=>{
-    if(!res.ok){ throw new Error(); }
-    location.reload();
-  })
-  .catch(()=>{
-    alert("Failed to delete address");
-  });
-}
+    function closeModal(){
 
+      document.getElementById("deleteModal").style.display="none";
 
-function toggleAddressDropdown(){
+    }
 
-    const dropdown =
-        document.getElementById("addressDropdown");
+    function confirmDelete(){
 
-    dropdown.style.display =
-        dropdown.style.display === "block"
+      fetch("/address/"+selectedAddressId,{
+        method:"DELETE"
+      })
+
+      .then(res=>{
+
+        if(!res.ok){
+          throw new Error();
+        }
+
+        location.reload();
+
+      })
+
+      .catch(()=>{
+
+        alert("Failed to delete address");
+
+      });
+
+    }
+
+    function toggleAddressDropdown(){
+
+      const dropdown=document.getElementById("addressDropdown");
+
+      dropdown.style.display=
+        dropdown.style.display==="block"
         ? "none"
         : "block";
 
-}
+    }
 
-function toggleAddressForm() {
-  const form = document.getElementById("addressForm");
-  if (form.style.display === "none" || form.style.display === "") {
-    form.style.display = "block";
-  } else {
-    form.style.display = "none";
-  }
-}
+    function toggleAddressForm(){
 
-function selectAddress(id, element){
+      const form=document.getElementById("addressForm");
 
-    document.getElementById("selectedAddress").value = id;
+      if(form.style.display==="none" || form.style.display===""){
 
-    document.getElementById("selectedAddressCard").innerHTML =
+        form.style.display="block";
+
+      }else{
+
+        form.style.display="none";
+
+      }
+
+    }
+
+    function selectAddress(id,element){
+
+      document.getElementById("selectedAddress").value=id;
+
+      document.getElementById("selectedAddressCard").innerHTML=
         element.innerHTML;
 
-    document.getElementById("addressDropdown").style.display = "none";
+      document.getElementById("addressDropdown").style.display="none";
 
-}
+    }
 
-async function saveAddress() {
+    async function saveAddress(){
 
-    const body = {
-        fullName: document.getElementById("fullName").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        pincode: document.getElementById("pincode").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        house: document.getElementById("house").value.trim(),
-        state: document.getElementById("state").value.trim(),
-        city: document.getElementById("city").value.trim(),
-        area: document.getElementById("area").value.trim(),
-        type: document.querySelector('input[name="type"]:checked').value
-    };
+      const body={
 
-    if (
+        fullName:document.getElementById("fullName").value.trim(),
+        phone:document.getElementById("phone").value.trim(),
+        pincode:document.getElementById("pincode").value.trim(),
+        email:document.getElementById("email").value.trim(),
+        house:document.getElementById("house").value.trim(),
+        state:document.getElementById("state").value.trim(),
+        city:document.getElementById("city").value.trim(),
+        area:document.getElementById("area").value.trim(),
+        type:document.querySelector('input[name="type"]:checked').value
+
+      };
+
+      if(
+
         !body.fullName ||
         !body.phone ||
         !body.house ||
         !body.city ||
         !body.state ||
         !body.pincode
-    ) {
+
+      ){
+
         alert("Please fill all required fields.");
+
         return;
-    }
 
-    try {
+      }
 
-        const res = await fetch("/address?fromCheckout=true", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
+      try{
+
+        const res=await fetch("/address?fromCheckout=true",{
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify(body)
+
         });
 
-        const data = await res.json();
+        const data=await res.json();
 
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || "Unable to save address");
+        if(data.success){
+
+          location.reload();
+
+        }else{
+
+          alert(data.message || "Unable to save address");
+
         }
 
-    } catch (err) {
+      }catch(err){
+
         alert("Something went wrong.");
+
+      }
+
     }
-}
-</script>
+
+  </script>
 
 </body>
 
