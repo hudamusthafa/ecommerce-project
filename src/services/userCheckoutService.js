@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const Coupon = require("../models/Coupon");
+const Order = require("../models/Order");
 
 exports.getCheckoutData = async(userId,buyNow = null) => {
 
@@ -127,5 +129,99 @@ if (removedProducts.length > 0) {
     total,
     removedProducts
   };
+
+};
+//============================================
+
+exports.applyCoupon = async (userId, couponCode) => {
+
+    if (!couponCode || !couponCode.trim()) {
+        throw new Error("Please enter a coupon code.");
+    }
+
+    const coupon = await Coupon.findOne({
+        code: couponCode.trim().toUpperCase()
+    });
+
+    if (!coupon) {
+        throw new Error("Invalid coupon code.");
+    }
+
+    // Disabled coupon
+    if (!coupon.isActive) {
+        throw new Error("This coupon is currently disabled.");
+    }
+
+    const today = new Date();
+
+    // Not started yet
+    if (today < coupon.startDate) {
+        throw new Error("This coupon is not active yet.");
+    }
+
+    // Expired
+    if (today > coupon.expiryDate) {
+        throw new Error("This coupon has expired.");
+    }
+
+
+ const cart = await Cart.findOne({ user: userId })
+          .populate("items.product");
+
+
+    if (!cart || cart.items.length === 0) {
+    throw new Error("Your cart is empty.");
+}
+
+     
+
+          //calculate the subtotal
+
+      let subtotal = 0;
+
+      cart.items.forEach(item => {
+
+          if (!item.product) return;
+
+          subtotal += item.product.price * item.quantity;
+
+      });
+
+      if (subtotal < coupon.minPurchase) {
+          throw new Error(
+              `Minimum purchase should be ₹${coupon.minPurchase}.`
+          );
+      }
+      //calculate the discount
+
+      let discount = 0;
+
+      if (coupon.discountType === "percentage") {
+
+          discount = Math.round(subtotal * coupon.discountValue / 100);
+
+          if (coupon.maxDiscount > 0) {
+              discount = Math.min(discount, coupon.maxDiscount);
+          }
+
+      } else {
+
+          discount = Math.min(
+          coupon.discountValue,
+          subtotal
+      );
+      }
+
+//final total
+const total = subtotal - discount;
+
+    return {
+        success: true,
+        message: "Coupon applied successfully.",
+        coupon,
+        subtotal,
+        discount,
+        total
+    };
 
 };

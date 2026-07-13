@@ -677,3 +677,17 @@
     border-top:1px solid #eee;
     border-bottom:1px solid #eee;
 }
+
+#couponMessage{
+    margin-top:12px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.success-message{
+    color:#198754;
+}
+
+.error-message{
+    color:#dc3545;
+}

@@ -514,6 +514,7 @@
 
                   <input
                       type="text"
+                      id="couponCode"
                       name="couponCode"
                       placeholder="Enter coupon code"
                       class="coupon-input"
@@ -521,12 +522,14 @@
 
                   <button
                       type="button"
+                      id="applyCouponBtn"
                       class="apply-coupon-btn"
                   >
                       Apply
                   </button>
 
               </div>
+              <div id="couponMessage"></div>
 
           </div>
 
@@ -538,7 +541,7 @@
                   Subtotal
                 </span>
 
-                <span>
+                <span id="subtotalAmount">
                   ₹<%= subtotal %>
                 </span>
 
@@ -562,7 +565,7 @@
                   Discount
                 </span>
 
-                <span>
+                <span id="discountAmount">
                   ₹<%= discount %>
                 </span>
 
@@ -574,7 +577,7 @@
                   Total
                 </span>
 
-                <span>
+                <span id="totalAmount">
                   ₹<%= total %>
                 </span>
 
@@ -844,7 +847,70 @@
 
     }
 
+
+
+
   </script>
+  <script>
+
+const btn = document.getElementById("applyCouponBtn");
+
+btn.addEventListener("click", applyCoupon);
+
+
+async function applyCoupon() {
+
+    const message = document.getElementById("couponMessage");
+
+    message.textContent = "";
+    message.className = "";
+
+    const couponCode = document.getElementById("couponCode").value.trim();
+
+    // Disable button
+    btn.disabled = true;
+    btn.textContent = "Applying...";
+
+    try {
+
+        const response = await fetch("/checkout/apply-coupon", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ couponCode })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to apply coupon.");
+        }
+
+        document.getElementById("discountAmount").textContent =
+            "₹" + data.discount;
+
+        document.getElementById("totalAmount").textContent =
+            "₹" + data.total;
+
+        message.className = "success-message";
+        message.textContent =
+            data.message || "Coupon applied successfully.";
+
+    } catch (error) {
+
+        message.className = "error-message";
+        message.textContent = error.message;
+
+    } finally {
+
+        // Enable button again
+        btn.disabled = false;
+        btn.textContent = "Apply";
+
+    }
+}
+</script>
 
 </body>
 

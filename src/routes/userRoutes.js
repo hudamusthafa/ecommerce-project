@@ -55,8 +55,15 @@ router.get("/wishlist/remove/:productId",cacheMiddleware.noCache,isLoggedIn,user
 router.get("/wishlist/move-to-cart/:productId",cacheMiddleware.noCache,isLoggedIn,userController.moveWishlistToCart);
 
 
+
+
+
 // CHECKOUT
 router.get("/checkout",cacheMiddleware.noCache,isLoggedIn,userController.getCheckout);
+
+// APPLY COUPON
+
+router.post("/checkout/apply-coupon",cacheMiddleware.noCache,isLoggedIn,userController.applyCoupon);
 
 
 // PLACE ORDER

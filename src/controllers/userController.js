@@ -689,6 +689,34 @@ if(error.message === "Your cart is empty"){
   }
 };
 
+//=======================================
+
+
+
+exports.applyCoupon = async (req, res, next) => {
+
+    try {
+
+        const result = await userCheckoutService.applyCoupon(
+            req.user._id,
+            req.body.couponCode
+        );
+
+        
+
+ res.json(result);
+
+    } catch (error) {
+
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
 //==========================================================
 //PLACE ORDER
 
