@@ -65,6 +65,8 @@ router.get("/checkout",cacheMiddleware.noCache,isLoggedIn,userController.getChec
 
 router.post("/checkout/apply-coupon",cacheMiddleware.noCache,isLoggedIn,userController.applyCoupon);
 
+// REMOVE COUPON
+router.post("/checkout/remove-coupon",cacheMiddleware.noCache,isLoggedIn,userController.removeCoupon);
 
 // PLACE ORDER
 router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);

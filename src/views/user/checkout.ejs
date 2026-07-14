@@ -506,34 +506,80 @@
 
 <!-- apply coupon -->
 
-          <div class="coupon-box">
+         <div class="coupon-box">
 
-              <h4>Apply Coupon</h4>
+            <h4>Apply Coupon</h4>
 
-              <div class="coupon-form">
+            <% if(!appliedCoupon){ %>
 
-                  <input
-                      type="text"
-                      id="couponCode"
-                      name="couponCode"
-                      placeholder="Enter coupon code"
-                      class="coupon-input"
-                  >
+                <div class="coupon-form">
+
+                    <input
+                        type="text"
+                        id="couponCode"
+                        class="coupon-input"
+                        placeholder="Enter coupon code"
+                    >
+
+                    <button
+                        type="button"
+                        id="applyCouponBtn"
+                        class="apply-coupon-btn"
+                    >
+                        Apply
+                    </button>
+
+                </div>
+
+                    <button
+                        type="button"
+                        class="view-coupon-btn"
+                        onclick="openCouponModal()"
+                    >
+                        <i class="fa-solid fa-ticket"></i>
+                        View Available Coupons
+                    </button>
+
+
+            <% } else { %>
+
+                <div class="applied-coupon">
+
+                  <div class="applied-info">
+
+                      <h5>
+                          <i class="fa-solid fa-circle-check"></i>
+                          Coupon Applied
+                      </h5>
+
+                      <strong><%= appliedCoupon.code %></strong>
+
+                      <p>You saved ₹<%= appliedCoupon.discount %></p>
+
+                  </div>
 
                   <button
                       type="button"
-                      id="applyCouponBtn"
-                      class="apply-coupon-btn"
+                      id="removeCouponBtn"
+                      class="remove-coupon-btn"
                   >
-                      Apply
+                      Remove
                   </button>
 
               </div>
-              <div id="couponMessage"></div>
-
-          </div>
 
 
+
+            <% } %>
+
+          
+
+            <div id="couponMessage"></div>
+
+        </div>
+
+
+        
 
               <div class="summary-row">
 
@@ -700,7 +746,90 @@
 
   </div>
 
+  <!-- model to get available coupons -->
+
+  <div id="couponModal" class="modal">
+
+    <div class="modal-content coupon-modal">
+
+        <div class="modal-header">
+
+            <h3>Available Coupons</h3>
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="closeCouponModal()"
+            >
+                &times;
+            </button>
+
+        </div>
+
+        <% coupons.forEach(coupon => { %>
+
+            <div class="coupon-card">
+
+                <h4><%= coupon.code %></h4>
+
+                <p><%= coupon.description %></p>
+
+                <small>
+                    Minimum Purchase ₹<%= coupon.minPurchase %>
+                </small>
+
+                <small>
+                    Expires:
+                    <%= new Date(coupon.expiryDate).toLocaleDateString("en-GB") %>
+                </small>
+
+                <div class="coupon-footer">
+
+                    <button
+                        type="button"
+                        class="use-coupon-btn"
+                        onclick="selectCoupon('<%= coupon.code %>')"
+                    >
+                        Use Coupon
+                    </button>
+
+                </div>
+
+            </div>
+
+        <% }) %>
+
+    </div>
+
+</div>
+  
+
   <script>
+
+function openCouponModal(){
+
+    document.getElementById("couponModal").style.display = "flex";
+
+}
+
+function closeCouponModal(){
+
+    document.getElementById("couponModal").style.display = "none";
+
+}
+
+function selectCoupon(code){
+
+    document.getElementById("couponCode").value = code;
+
+    closeCouponModal();
+
+}
+
+
+
+
+
 
     let selectedAddressId=null;
 
@@ -853,14 +982,18 @@
   </script>
   <script>
 
+
+
+
 const btn = document.getElementById("applyCouponBtn");
 
-btn.addEventListener("click", applyCoupon);
-
+if (btn) {
+    btn.addEventListener("click", applyCoupon);
+}
 
 async function applyCoupon() {
 
-    const message = document.getElementById("couponMessage");
+     const message = document.getElementById("couponMessage");
 
     message.textContent = "";
     message.className = "";
@@ -887,20 +1020,17 @@ async function applyCoupon() {
             throw new Error(data.message || "Failed to apply coupon.");
         }
 
-        document.getElementById("discountAmount").textContent =
-            "₹" + data.discount;
+        showToast(data.message, "success");
 
-        document.getElementById("totalAmount").textContent =
-            "₹" + data.total;
+          setTimeout(() => {
 
-        message.className = "success-message";
-        message.textContent =
-            data.message || "Coupon applied successfully.";
+                 location.href = "/checkout";
+
+          }, 800);
 
     } catch (error) {
 
-        message.className = "error-message";
-        message.textContent = error.message;
+       showToast(error.message, "error");
 
     } finally {
 
@@ -909,9 +1039,63 @@ async function applyCoupon() {
         btn.textContent = "Apply";
 
     }
+
 }
+
+
+//  REMOVE COUPON
+
+const removeBtn = document.getElementById("removeCouponBtn");
+
+if (removeBtn) {
+
+    removeBtn.addEventListener("click", async () => {
+
+        try {
+
+          await fetch("/checkout/remove-coupon", {
+          method: "POST"
+      });
+
+      showToast("Coupon removed successfully.", "success");
+
+      setTimeout(() => {
+
+          location.reload();
+
+      }, 1000);
+
+} catch (error) {
+
+    showToast(error.message, "error");
+
+}
+
+    });
+
+}
+
+
+function showToast(message, type = "success") {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className = "toast " + type + " show";
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 3000);
+
+}
+
 </script>
 
+
+<div id="toast" class="toast"></div>
 </body>
 
 </html>

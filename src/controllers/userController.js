@@ -662,6 +662,19 @@ exports.getCheckout=async(req,res,next)=>{
         req.user._id,
         req.session.buyNow || null
       );
+
+
+const coupons = await userCheckoutService.getAvailableCoupons();
+
+// Apply session coupon for display
+if (req.session.appliedCoupon) {
+
+    data.discount = req.session.appliedCoupon.discount;
+
+    data.total = req.session.appliedCoupon.total;
+        
+}
+
     res.render("user/checkout",{
       user:data.user,
       cart:data.cart,
@@ -670,10 +683,14 @@ exports.getCheckout=async(req,res,next)=>{
       discount:data.discount,
       total:data.total,
       removedProducts:data.removedProducts,
-      error:req.query.error
+      error:req.query.error,
+      appliedCoupon: req.session.appliedCoupon || null,
+      coupons
+      
     });
 
   }catch(error){
+
 if(error.message === "Your cart is empty"){
 
     return res.render(
@@ -699,9 +716,17 @@ exports.applyCoupon = async (req, res, next) => {
 
         const result = await userCheckoutService.applyCoupon(
             req.user._id,
-            req.body.couponCode
+            req.body.couponCode,
+            req.session.buyNow || null
         );
 
+
+        req.session.appliedCoupon = {
+        couponId: result.coupon._id,
+        code: result.coupon.code,
+        discount: result.discount,
+        total: result.total
+    };
         
 
  res.json(result);
@@ -714,6 +739,18 @@ exports.applyCoupon = async (req, res, next) => {
         });
 
     }
+
+};
+
+//============remove coupon================
+
+exports.removeCoupon = (req, res) => {
+
+    req.session.appliedCoupon = null;
+
+    res.json({
+        success: true
+    });
 
 };
 
@@ -733,6 +770,7 @@ const order = await userOrderService.placeOrder(
 
 //  clear after order
 delete req.session.buyNow;
+delete req.session.appliedCoupon;
 
   res.redirect("/order-success/" + order.orderId);
 

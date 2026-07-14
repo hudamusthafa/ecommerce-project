@@ -58,6 +58,7 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
   .populate("items.product");
 
 
+
   
   // CART NOT FOUND
   if(!cart){
@@ -89,6 +90,10 @@ cart.items = cart.items.filter(item => {
 if (removedProducts.length > 0) {
   await cart.save();
 }
+
+
+
+
 
   // NO VALID PRODUCTS
   if(cart.items.length === 0){
@@ -133,14 +138,14 @@ if (removedProducts.length > 0) {
 };
 //============================================
 
-exports.applyCoupon = async (userId, couponCode) => {
+exports.applyCoupon = async (userId, couponCode,buyNow = null) => {
 
     if (!couponCode || !couponCode.trim()) {
         throw new Error("Please enter a coupon code.");
     }
 
     const coupon = await Coupon.findOne({
-        code: couponCode.trim().toUpperCase()
+        code: couponCode.trim()
     });
 
     if (!coupon) {
@@ -164,28 +169,40 @@ exports.applyCoupon = async (userId, couponCode) => {
         throw new Error("This coupon has expired.");
     }
 
+   let subtotal = 0;
 
- const cart = await Cart.findOne({ user: userId })
-          .populate("items.product");
+if (buyNow) {
 
+    // BUY NOW CHECKOUT
+
+    const product = await Product.findById(buyNow.productId);
+
+    if (!product) {
+        throw new Error("Product not found.");
+    }
+
+    subtotal = product.price * buyNow.quantity;
+
+} else {
+
+    // CART CHECKOUT
+
+    const cart = await Cart.findOne({ user: userId })
+        .populate("items.product");
 
     if (!cart || cart.items.length === 0) {
-    throw new Error("Your cart is empty.");
+        throw new Error("Your cart is empty.");
+    }
+
+    cart.items.forEach(item => {
+
+        if (!item.product) return;
+
+        subtotal += item.product.price * item.quantity;
+
+    });
+
 }
-
-     
-
-          //calculate the subtotal
-
-      let subtotal = 0;
-
-      cart.items.forEach(item => {
-
-          if (!item.product) return;
-
-          subtotal += item.product.price * item.quantity;
-
-      });
 
       if (subtotal < coupon.minPurchase) {
           throw new Error(
@@ -206,10 +223,8 @@ exports.applyCoupon = async (userId, couponCode) => {
 
       } else {
 
-          discount = Math.min(
-          coupon.discountValue,
-          subtotal
-      );
+          discount = Math.min(coupon.discountValue, subtotal);
+          
       }
 
 //final total
@@ -223,5 +238,20 @@ const total = subtotal - discount;
         discount,
         total
     };
+
+};
+
+
+//get available coupons
+
+exports.getAvailableCoupons = async () => {
+
+    const today = new Date();
+
+    return await Coupon.find({
+        isActive: true,
+        startDate: { $lte: today },
+        expiryDate: { $gte: today }
+    }).sort({ expiryDate: 1 });
 
 };
