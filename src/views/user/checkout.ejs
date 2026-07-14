@@ -426,34 +426,111 @@
                   Payment Method
                 </h3>
 
-                <div class="payment-card">
+             <!-- COD -->
 
-                  <label class="payment-option">
+<div class="payment-card">
 
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="COD"
-                      checked
-                    >
+    <label class="payment-option">
 
-                    <div class="payment-icon">
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="COD"
+            checked
+        >
 
-                      <i class="fa-solid fa-money-bill-wave"></i>
+        <div class="payment-icon">
 
-                    </div>
+            <i class="fa-solid fa-money-bill-wave"></i>
 
-                    <div class="payment-info">
+        </div>
 
-                      <h4>
-                        Cash On Delivery (COD)
-                      </h4>
+        <div class="payment-info">
 
-                    </div>
+            <h4>Cash On Delivery (COD)</h4>
 
-                  </label>
+            <p>Pay when your order is delivered.</p>
 
-                </div>
+        </div>
+
+    </label>
+
+</div>
+
+
+<!-- WALLET -->
+
+<div class="payment-card">
+
+    <label class="payment-option">
+
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="Wallet"
+        >
+
+        <div class="payment-icon">
+
+            <i class="fa-solid fa-wallet"></i>
+
+        </div>
+
+        <div class="payment-info">
+
+            <h4>Wallet</h4>
+
+              <p>
+
+              Available Balance :
+              <strong>
+
+              ₹<%= wallet.balance.toLocaleString("en-IN") %>
+
+              </strong>
+
+              
+
+        </div>
+
+    </label>
+
+</div>
+
+
+<!-- RAZORPAY -->
+
+<div class="payment-card">
+
+    <label class="payment-option">
+
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="Razorpay"
+        >
+
+        <div class="payment-icon">
+
+            <i class="fa-solid fa-credit-card"></i>
+
+        </div>
+
+        <div class="payment-info">
+
+            <h4>Razorpay</h4>
+
+            <p>
+
+                UPI • Card • Net Banking • Wallet
+
+            </p>
+
+        </div>
+
+    </label>
+
+</div>
 
               </div>
 

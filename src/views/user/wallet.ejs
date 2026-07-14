@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>My Wallet</title>
+
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/wallet.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    >
+
+</head>
+
+<body>
+
+<%- include("../partials/header") %>
+
+<div class="profile-container">
+
+    <%- include("../partials/user-sidebar") %>
+
+    <main class="profile-content">
+
+        <h2 class="page-title">
+            My Wallet
+        </h2>
+
+        <div class="wallet-card">
+
+            <div class="wallet-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+
+            <h3>Available Balance</h3>
+
+           <h1>
+
+            ₹<%= wallet.balance.toLocaleString("en-IN") %>
+
+            </h1>
+
+        </div>
+
+        <div class="transaction-card">
+
+            <h3>
+                Recent Transactions
+            </h3>
+
+            <% if(wallet.transactions.length === 0){ %>
+
+                <p class="empty-text">
+
+                    No transactions available.
+
+                </p>
+
+            <% } else { %>
+
+                <% wallet.transactions.forEach(function(transaction){ %>
+
+                    <div class="transaction-item">
+
+                        <div>
+
+                            <strong>
+                                <%= transaction.description %>
+                            </strong>
+
+                            <br>
+
+                            <small>
+
+                                <%= new Date(transaction.createdAt)
+                                .toLocaleDateString("en-IN") %>
+
+                            </small>
+
+                        </div>
+
+                        <span class="<%= transaction.type === 'Credit'
+                            ? 'credit'
+                            : 'debit' %>">
+
+                            <%= transaction.type === "Credit"
+                            ? "+"
+                            : "-" %>
+
+                            ₹<%= transaction.amount %>
+
+                        </span>
+
+                    </div>
+
+                <% }) %>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include("../partials/footer") %>
+
+</body>
+
+</html>

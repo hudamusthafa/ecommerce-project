@@ -3,6 +3,7 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const userWalletService = require("./userWalletService");
 
 //==========================================================
 
@@ -267,13 +268,29 @@ exports.cancelOrder = async (orderId, reason) => {
     item.cancelReason = reason || "";
   }
 
-  // Update order status
-  order.orderStatus = "Cancelled";
-  order.cancelReason = reason || "";
+ order.orderStatus = "Cancelled";
+order.cancelReason = reason || "";
 
-  await order.save();
+// If payment was already completed,
+// refund the amount to wallet.
 
-  return order;
+if (order.paymentStatus === "Paid") {
+
+    await userWalletService.creditWallet(
+
+        order.user,
+        order.total,
+        "Refund for Cancelled Order",
+        order.orderId
+
+    );
+
+    order.paymentStatus = "Refunded";
+
+}
+
+await order.save();
+return order;
 };
 //==========================================================
 
@@ -519,6 +536,25 @@ exports.approveReturn = async (orderId, productId) => {
   // Mark item as returned
   item.status = "Returned";
 
+
+// Refund to wallet only if payment  completed
+
+if (order.paymentStatus === "Paid") {
+
+    const refundAmount = item.price * item.quantity;
+
+    await userWalletService.creditWallet(
+
+        order.user,
+        refundAmount,
+        "Refund for Returned Product",
+        order.orderId
+
+    );
+
+}
+
+
   // Check whether all items are returned
   const allReturned = order.items.every(
     item => item.status === "Returned"
@@ -532,9 +568,20 @@ exports.approveReturn = async (orderId, productId) => {
     order.orderStatus = "Delivered";
   }
 
-  await order.save();
+  if (order.paymentStatus === "Paid") {
 
-  return order;
+    const activeItems = order.items.filter(
+        item => item.status !== "Returned"
+    );
+
+    if (activeItems.length === 0) {
+        order.paymentStatus = "Refunded";
+    }
+}
+
+await order.save();
+
+return order;
 };
 
 //=====================================

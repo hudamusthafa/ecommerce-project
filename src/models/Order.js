@@ -95,6 +95,11 @@ couponCode: {
 
   paymentMethod:{
     type:String,
+    enum:[
+        "COD",
+        "Wallet",
+        "Razorpay"
+    ],
     default:"COD"
   },
 
@@ -102,7 +107,8 @@ couponCode: {
     type:String,
     enum:[
       "Pending",
-      "Paid"
+      "Paid",
+      "Refunded"
     ],
     default:"Pending"
   },

@@ -9,6 +9,8 @@ const userCheckoutService = require("../services/userCheckoutService");
 const userOrderService = require("../services/userOrderService");
 const PDFDocument = require("pdfkit");
 const Order = require("../models/Order");
+const userWalletService = require("../services/userWalletService");
+
 // ADD ADDRESS
 
 
@@ -675,6 +677,11 @@ if (req.session.appliedCoupon) {
         
 }
 
+const wallet =
+    await userWalletService.getWallet(
+        req.user._id
+    );
+
     res.render("user/checkout",{
       user:data.user,
       cart:data.cart,
@@ -685,7 +692,9 @@ if (req.session.appliedCoupon) {
       removedProducts:data.removedProducts,
       error:req.query.error,
       appliedCoupon: req.session.appliedCoupon || null,
-      coupons
+      coupons,
+      wallet
+
       
     });
 
@@ -957,6 +966,46 @@ exports.returnProduct = async (req, res, next) => {
 
 //==========================================================
 
+// WALLET PAGE
+
+
+exports.getWallet = async (req, res, next) => {
+
+    try {
+
+        const wallet = await userWalletService.getWallet(
+            req.user._id
+        );
+
+        res.render("user/wallet", {
+            user: req.user,
+            wallet
+        });
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=================================================
 // DOWNLOAD INVOICE
 
 exports.downloadInvoice=async(req,res,next)=>{
