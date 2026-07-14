@@ -508,69 +508,74 @@
 
          <div class="coupon-box">
 
-            <h4>Apply Coupon</h4>
+           
 
-            <% if(!appliedCoupon){ %>
+            <!-- COUPON BOX -->
+<div class="coupon-box">
 
-                <div class="coupon-form">
+  <h4>Apply Coupon</h4>
 
-                    <input
-                        type="text"
-                        id="couponCode"
-                        class="coupon-input"
-                        placeholder="Enter coupon code"
-                    >
+  <!-- COUPON INPUT — hide if coupon applied -->
+  <div
+    class="coupon-form"
+    style="display: <%= appliedCoupon ? 'none' : 'flex' %>;"
+  >
+    <input
+      type="text"
+      id="couponCode"
+      class="coupon-input"
+      placeholder="Enter coupon code"
+    >
+    <button
+      type="button"
+      id="applyCouponBtn"
+      class="apply-coupon-btn"
+    >
+      Apply
+    </button>
+  </div>
 
-                    <button
-                        type="button"
-                        id="applyCouponBtn"
-                        class="apply-coupon-btn"
-                    >
-                        Apply
-                    </button>
+  <!-- VIEW COUPONS BUTTON — hide if coupon applied -->
+  <button
+    type="button"
+    class="view-coupon-btn"
+    style="display: <%= appliedCoupon ? 'none' : 'block' %>;"
+    onclick="openCouponModal()"
+  >
+    <i class="fa-solid fa-ticket"></i>
+    View Available Coupons
+  </button>
 
-                </div>
+  <!-- APPLIED COUPON — show if coupon applied -->
+  <div
+    id="appliedCouponSection"
+    class="applied-coupon"
+    style="display: <%= appliedCoupon ? 'flex' : 'none' %>;"
+  >
+    <div class="applied-info">
+      <h5>
+        <i class="fa-solid fa-circle-check"></i>
+        Coupon Applied
+      </h5>
+      <strong id="appliedCouponCode">
+        <%= appliedCoupon ? appliedCoupon.code : '' %>
+      </strong>
+      <p id="appliedCouponSaving">
+        You saved ₹<%= appliedCoupon ? appliedCoupon.discount : 0 %>
+      </p>
+    </div>
+    <button
+      type="button"
+      id="removeCouponBtn"
+      class="remove-coupon-btn"
+    >
+      Remove
+    </button>
+  </div>
 
-                    <button
-                        type="button"
-                        class="view-coupon-btn"
-                        onclick="openCouponModal()"
-                    >
-                        <i class="fa-solid fa-ticket"></i>
-                        View Available Coupons
-                    </button>
+  <div id="couponMessage"></div>
 
-
-            <% } else { %>
-
-                <div class="applied-coupon">
-
-                  <div class="applied-info">
-
-                      <h5>
-                          <i class="fa-solid fa-circle-check"></i>
-                          Coupon Applied
-                      </h5>
-
-                      <strong><%= appliedCoupon.code %></strong>
-
-                      <p>You saved ₹<%= appliedCoupon.discount %></p>
-
-                  </div>
-
-                  <button
-                      type="button"
-                      id="removeCouponBtn"
-                      class="remove-coupon-btn"
-                  >
-                      Remove
-                  </button>
-
-              </div>
-
-
-
-            <% } %>
+</div>
 
           
 
@@ -982,7 +987,7 @@ function selectCoupon(code){
   </script>
   <script>
 
-
+// apply coupon script
 
 
 const btn = document.getElementById("applyCouponBtn");
@@ -991,107 +996,167 @@ if (btn) {
     btn.addEventListener("click", applyCoupon);
 }
 
+// async function applyCoupon() {
+
+//      const message = document.getElementById("couponMessage");
+
+//     message.textContent = "";
+//     message.className = "";
+
+//     const couponCode = document.getElementById("couponCode").value.trim();
+
+//     // Disable button
+//     btn.disabled = true;
+//     btn.textContent = "Applying...";
+
+//     try {
+
+//         const response = await fetch("/checkout/apply-coupon", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({ couponCode })
+//         });
+
+//         const data = await response.json();
+
+//         if (!response.ok) {
+//             throw new Error(data.message || "Failed to apply coupon.");
+//         }
+
+//         showToast(data.message, "success");
+
+//           setTimeout(() => {
+
+//                  location.href = "/checkout";
+
+//           }, 800);
+
+//     } catch (error) {
+
+//        showToast(error.message, "error");
+
+//     } finally {
+
+//         // Enable button again
+//         btn.disabled = false;
+//         btn.textContent = "Apply";
+
+//     }
+
+// }
+
 async function applyCoupon() {
 
-     const message = document.getElementById("couponMessage");
+  const couponCode = document.getElementById("couponCode").value.trim();
 
-    message.textContent = "";
-    message.className = "";
+  if(!couponCode){
+    showToast("Please enter a coupon code.", "warning");
+    return;
+  }
 
-    const couponCode = document.getElementById("couponCode").value.trim();
+  try {
 
-    // Disable button
-    btn.disabled = true;
-    btn.textContent = "Applying...";
+    const response = await fetch("/checkout/apply-coupon", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ couponCode })
+    });
 
-    try {
+    const data = await response.json();
 
-        const response = await fetch("/checkout/apply-coupon", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ couponCode })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Failed to apply coupon.");
-        }
-
-        showToast(data.message, "success");
-
-          setTimeout(() => {
-
-                 location.href = "/checkout";
-
-          }, 800);
-
-    } catch (error) {
-
-       showToast(error.message, "error");
-
-    } finally {
-
-        // Enable button again
-        btn.disabled = false;
-        btn.textContent = "Apply";
-
+    if(!data.success){
+      showToast(data.message, "warning");
+      return;
     }
 
+    // ✅ Show success toast
+    showToast("Coupon applied! You saved ₹" + data.discount, "success");
+
+    // ✅ Update discount and total amounts
+    document.getElementById("discountAmount").innerText = "₹" + data.discount;
+    document.getElementById("totalAmount").innerText = "₹" + data.total;
+
+    // ✅ Hide coupon input box
+    document.querySelector(".coupon-form").style.display = "none";
+    document.querySelector(".view-coupon-btn").style.display = "none";
+
+    // ✅ Show applied coupon section
+    document.getElementById("appliedCouponSection").style.display = "flex";
+    document.getElementById("appliedCouponCode").innerText = data.coupon.code;
+    document.getElementById("appliedCouponSaving").innerText = "You saved ₹" + data.discount;
+
+  } catch(err) {
+    showToast("Something went wrong.", "warning");
+  }
+
 }
+//  REMOVE COUPON SCRIPT
+
+// const removeBtn = document.getElementById("removeCouponBtn");
+
+// if (removeBtn) {
+
+//     removeBtn.addEventListener("click", function() {
+ 
+//   fetch("/checkout/remove-coupon", { method: "POST" })
+//     .then(function() {
+//       window.location.href = "/checkout";
+//     });
+// });
+
+// }
 
 
-//  REMOVE COUPON
+// function showToast(message, type = "success") {
+
+//     const toast = document.getElementById("toast");
+
+//     toast.textContent = message;
+
+//     toast.className = "toast " + type + " show";
+
+//     setTimeout(() => {
+
+//         toast.classList.remove("show");
+
+//     }, 3000);
+
+// }
 
 const removeBtn = document.getElementById("removeCouponBtn");
 
-if (removeBtn) {
+if(removeBtn){
 
-    removeBtn.addEventListener("click", async () => {
+  removeBtn.addEventListener("click", function(){
 
-        try {
+    fetch("/checkout/remove-coupon", { method: "POST" })
+    .then(function(){
 
-          await fetch("/checkout/remove-coupon", {
-          method: "POST"
-      });
+      // ✅ Show toast
+      showToast("Coupon removed!", "success");
 
-      showToast("Coupon removed successfully.", "success");
+      // ✅ Reset discount and total
+      const subtotal = document.getElementById("subtotalAmount").innerText;
+      document.getElementById("discountAmount").innerText = "₹0";
+      document.getElementById("totalAmount").innerText = subtotal;
 
-      setTimeout(() => {
+      // ✅ Hide applied coupon section
+      document.getElementById("appliedCouponSection").style.display = "none";
 
-          location.reload();
+      // ✅ Show coupon input box again
+      document.querySelector(".coupon-form").style.display = "flex";
+      document.querySelector(".view-coupon-btn").style.display = "block";
 
-      }, 1000);
-
-} catch (error) {
-
-    showToast(error.message, "error");
-
-}
+      // ✅ Clear input
+      document.getElementById("couponCode").value = "";
 
     });
 
-}
-
-
-function showToast(message, type = "success") {
-
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.className = "toast " + type + " show";
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 3000);
+  });
 
 }
-
 </script>
 
 

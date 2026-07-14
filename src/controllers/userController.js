@@ -748,9 +748,7 @@ exports.removeCoupon = (req, res) => {
 
     req.session.appliedCoupon = null;
 
-    res.json({
-        success: true
-    });
+    res.redirect("/checkout");
 
 };
 
