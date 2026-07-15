@@ -654,10 +654,10 @@ exports.getCheckout=async(req,res,next)=>{
       };
     }
 
-      // Coming from cart - clear buyNow
-    if(!req.query.product && !req.query.buyNow){
-      delete req.session.buyNow;
-    }
+    //   // Coming from cart - clear buyNow
+    // if(!req.query.product && !req.query.buyNow){
+    //   delete req.session.buyNow;
+    // }
 
    const data =
       await userCheckoutService.getCheckoutData(
@@ -767,12 +767,15 @@ exports.removeCoupon = (req, res) => {
 exports.placeOrder=async(req,res,next)=>{
   try{
 
-    const buyNow = req.session.buyNow || null;
+const buyNow = req.session.buyNow || null;
+
+const paymentMethod = req.body.paymentMethod;
 
 const order = await userOrderService.placeOrder(
-  req.user._id,
-  req.body.selectedAddress,
-  buyNow
+    req.user._id,
+    req.body.selectedAddress,
+    paymentMethod,
+    buyNow
 );
 
 //  clear after order

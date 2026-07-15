@@ -4,6 +4,8 @@ const Wallet = require("../models/Wallet");
 
 exports.getWallet = async (userId) => {
 
+  
+
     let wallet = await Wallet.findOne({
         user: userId
     });
@@ -30,6 +32,9 @@ exports.creditWallet = async (
     description,
     orderId = ""
 ) => {
+
+  //debug
+   console.log("creditWallet called");
 
     let wallet = await Wallet.findOne({
         user: userId

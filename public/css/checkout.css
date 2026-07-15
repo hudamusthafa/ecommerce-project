@@ -1029,3 +1029,52 @@
     box-shadow:0 6px 18px rgba(0,0,0,.08);
 
 }
+
+.checkout-alert{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:14px 18px;
+
+    margin-bottom:25px;
+
+    border-radius:10px;
+
+    background:#fff3cd;
+
+    border:1px solid #ffe69c;
+
+    color:#856404;
+
+    font-size:15px;
+
+}
+
+.checkout-alert i{
+
+    font-size:18px;
+
+}
+
+.wallet-error{
+
+    margin-top:10px;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#dc3545;
+
+    font-size:14px;
+    font-weight:500;
+
+}
+
+.wallet-error i{
+
+    font-size:14px;
+
+}

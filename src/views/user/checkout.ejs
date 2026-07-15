@@ -59,13 +59,7 @@
 
         <% } %>
 
-        <% if(error){ %>
 
-          <div class="checkout-error">
-            <%= error %>
-          </div>
-
-        <% } %>
 
         <form
           action="/checkout/place-order"
@@ -486,8 +480,22 @@
               <strong>
 
               ₹<%= wallet.balance.toLocaleString("en-IN") %>
+               </strong>
 
-              </strong>
+              </p>
+
+              <% if (error && error.includes("wallet")) { %>
+
+                <div class="wallet-error">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    <span><%= error %></span>
+
+                </div>
+
+            <% } %>
+                        
 
               
 

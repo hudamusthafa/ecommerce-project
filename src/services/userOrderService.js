@@ -7,8 +7,14 @@ const userWalletService = require("./userWalletService");
 
 //==========================================================
 
-exports.placeOrder=async(userId,addressId,buyNow=null)=>{
+exports.placeOrder = async (
+    userId,
+    addressId,
+    paymentMethod,
+    buyNow = null
+)=>{
 
+  
   const user=await User.findById(userId);
   const selectedAddress=user.address.id(addressId);
 
@@ -25,7 +31,28 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
 
     if(product.stock<buyNow.quantity) throw new Error("Product is out of stock");
 
-    const subtotal=product.price*buyNow.quantity;
+    const subtotal = product.price * buyNow.quantity;
+
+    const shipping = 0;
+    const discount = 0;
+    const total = subtotal + shipping - discount; 
+    
+
+// Wallet Payment
+if (paymentMethod === "Wallet") {
+
+    const wallet = await userWalletService.getWallet(userId);
+
+    if (wallet.balance < total) {
+        throw new Error("Insufficient wallet balance.");
+    }
+
+    await userWalletService.debitWallet(
+        userId,
+        total,
+        "Wallet Payment"
+    );
+}
 
     // Generate Order ID
     const orderId="ORD"+Date.now();
@@ -51,8 +78,13 @@ exports.placeOrder=async(userId,addressId,buyNow=null)=>{
       subtotal,
       shipping:0,
       discount:0,
-      total:subtotal,
-      paymentMethod:"COD"
+      total:total,
+      paymentMethod,
+
+  paymentStatus:
+    paymentMethod === "COD"
+        ? "Pending"
+        : "Paid",
     });
 
     await order.save();
@@ -127,6 +159,26 @@ if(cart.items.length === 0){
   const total=subtotal+shipping-discount;
   const orderId="ORD"+Date.now();
 
+
+
+// Wallet Payment
+if (paymentMethod === "Wallet") {
+
+    const wallet = await userWalletService.getWallet(userId);
+
+    if (wallet.balance < total) {
+        throw new Error("Insufficient wallet balance.");
+    }
+
+    await userWalletService.debitWallet(
+        userId,
+        total,
+        "Wallet Payment",
+        orderId
+    );
+}
+
+
   const order=new Order({
     user:userId,
     orderId,
@@ -144,7 +196,12 @@ if(cart.items.length === 0){
     shipping,
     discount,
     total,
-    paymentMethod:"COD"
+    paymentMethod,
+
+  paymentStatus:
+    paymentMethod === "COD"
+        ? "Pending"
+        : "Paid",
   });
 
   await order.save();
@@ -274,7 +331,9 @@ order.cancelReason = reason || "";
 // If payment was already completed,
 // refund the amount to wallet.
 
-if (order.paymentStatus === "Paid") {
+
+
+if (order.paymentStatus === "Paid" ) {
 
     await userWalletService.creditWallet(
 
@@ -315,6 +374,8 @@ exports.cancelProduct = async (
     throw new Error("Product not found");
   }
 
+
+  
   if(item.status === "Cancelled"){
     throw new Error("Product already cancelled");
   }
@@ -362,6 +423,24 @@ order.total =
   order.subtotal +
   shipping -
   discount;
+
+
+
+
+// Refund to wallet 
+
+if (order.paymentMethod === "Wallet") {
+
+  const refundAmount = item.price * item.quantity;
+
+  await userWalletService.creditWallet(
+    order.user,
+    refundAmount,
+    "Order Cancellation Refund",
+    order.orderId
+  );
+
+}
 
 
   await order.save();
