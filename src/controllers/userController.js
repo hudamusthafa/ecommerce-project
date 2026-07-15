@@ -10,6 +10,8 @@ const userOrderService = require("../services/userOrderService");
 const PDFDocument = require("pdfkit");
 const Order = require("../models/Order");
 const userWalletService = require("../services/userWalletService");
+const paypalService = require("../services/paypalService");
+
 
 // ADD ADDRESS
 
@@ -1029,7 +1031,51 @@ exports.getWallet = async (req, res, next) => {
 };
 
 
+// =====================================
+// CREATE PAYPAL ORDER
 
+
+exports.createPayPalOrder = async (req, res, next) => {
+
+    try {
+
+        const buyNow = req.session.buyNow || null;
+
+        const data = await userCheckoutService.getCheckoutData(
+            req.user._id,
+            buyNow
+        );
+
+        // Apply coupon if available
+        if (req.session.appliedCoupon) {
+
+            data.discount = req.session.appliedCoupon.discount;
+            data.total = req.session.appliedCoupon.total;
+
+        }
+
+        // PayPal Sandbox works in USD.
+        // We'll temporarily convert INR to USD.
+        const usdAmount = (data.total / 85).toFixed(2);
+
+        const order = await paypalService.createOrder(
+            Number(usdAmount)
+        );
+
+        res.json({
+
+            success: true,
+            orderID: order.id
+
+        });
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};
 
 
 
