@@ -836,25 +836,60 @@ exports.getOrders=async(req,res,next)=>{
 
 //==========================================================
 
-//get order details
-exports.getOrderDetails=async(req,res,next)=>{
-  try{
 
-    const order=await userOrderService.getOrderDetails(
+// get order details
+exports.getOrderDetails = async (req, res, next) => {
+
+  try {
+
+    const order = await userOrderService.getOrderDetails(
       req.params.id,
       req.user._id
     );
- const cancelled = req.query.cancelled;
 
-    res.render("user/order-details",{
+    const cancelled = req.query.cancelled;
+
+    // Get wallet
+    const wallet = await userWalletService.getWallet(
+      req.user._id
+    );
+
+    let refundMessage = null;
+
+    if (
+      order.paymentStatus === "Refunded" &&
+      (order.paymentMethod === "Wallet" ||
+       order.paymentMethod === "Razorpay")
+    ) {
+
+      const refundTxn = wallet.transactions.find(
+        tx =>
+          tx.type === "Credit" &&
+          tx.orderId === order.orderId
+      );
+
+      if (refundTxn) {
+
+        refundMessage = {
+          amount: refundTxn.amount,
+          balance: wallet.balance
+        };
+
+      }
+
+    }
+
+    res.render("user/order-details", {
       order,
-      user:req.user,
-      cancelled
+      user: req.user,
+      cancelled,
+      refundMessage
     });
 
-  }catch(error){
+  } catch (error) {
     next(error);
   }
+
 };
 
 

@@ -540,3 +540,50 @@
     background:#e5e7eb;
     color:#374151;
 }
+
+.refund-success{
+    display:flex;
+    align-items:center;
+    gap:18px;
+
+    background:#ecfdf3;
+    border:1px solid #b8ebc6;
+    border-left:5px solid #22c55e;
+
+    border-radius:12px;
+
+    padding:18px 22px;
+    margin-bottom:25px;
+}
+
+.refund-icon{
+    width:55px;
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#dff7e7;
+    border-radius:50%;
+
+    color:#16a34a;
+    font-size:24px;
+}
+
+.refund-content h4{
+    margin:0;
+    color:#15803d;
+    font-size:18px;
+    font-weight:600;
+}
+
+.refund-content p{
+    margin:6px 0 4px;
+    color:#444;
+}
+
+.refund-content span{
+    color:#666;
+    font-size:14px;
+}

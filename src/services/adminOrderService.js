@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product"); 
+const userWalletService = require("./userWalletService");
 
 exports.getOrders = async (search, status, page, limit, dateFrom, dateTo) => {
 
@@ -159,7 +160,7 @@ if (
 
 };
 
-
+//=====================================
 
 exports.approveReturn = async(orderId,productId)=>{
 
@@ -186,6 +187,23 @@ await Product.findByIdAndUpdate(
     }
 );
 
+// Refund wallet if payment already completed
+
+if (order.paymentStatus === "Paid") {
+
+    const refundAmount = item.price * item.quantity;
+
+    await userWalletService.creditWallet(
+        order.user,
+        refundAmount,
+        "Return Refund",
+        order.orderId
+    );
+
+}
+
+
+
 // Check whether ALL items are returned
 const allReturned = order.items.every(i =>
     i.status === "Returned"
@@ -195,6 +213,7 @@ if (allReturned) {
 
     order.orderStatus = "Returned";
     order.isReturned = true;
+    order.paymentStatus = "Refunded";
 
 } else {
 
@@ -251,7 +270,7 @@ if (!pendingReturns) {
 };
 
 
-
+//======================================
 
 
 // APPROVE BULK RETURNS
@@ -282,6 +301,25 @@ exports.approveAllReturns = async (orderId) => {
     }
 
   }
+
+
+
+// Refund entire order amount
+
+if (order.paymentStatus === "Paid") {
+
+    await userWalletService.creditWallet(
+        order.user,
+        order.total,
+        "Return Refund",
+        order.orderId
+    );
+
+    order.paymentStatus = "Refunded";
+
+}
+
+
 
   order.orderStatus = "Returned";
   order.isReturned = true;

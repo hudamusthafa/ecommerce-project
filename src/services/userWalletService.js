@@ -33,8 +33,7 @@ exports.creditWallet = async (
     orderId = ""
 ) => {
 
-  //debug
-   console.log("creditWallet called");
+  
 
     let wallet = await Wallet.findOne({
         user: userId

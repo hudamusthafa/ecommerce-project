@@ -31,6 +31,37 @@
     Order Details
   </h2>
 
+<!-- refund msg -->
+
+
+
+<% if(refundMessage){ %>
+
+<div class="refund-success">
+
+    <div class="refund-icon">
+        <i class="fas fa-wallet"></i>
+    </div>
+
+    <div class="refund-content">
+
+        <h4>Refund Completed</h4>
+
+        <p>
+            ₹<%= refundMessage.amount %> has been credited to your wallet.
+        </p>
+
+        <span>
+            Current Wallet Balance:
+            <strong>₹<%= refundMessage.balance %></strong>
+        </span>
+
+    </div>
+
+</div>
+
+<% } %>
+
   <!-- error msg -->
 
   <% if(cancelled){ %>
