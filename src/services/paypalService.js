@@ -36,23 +36,38 @@ exports.createOrder = async (amount) => {
 
     request.prefer("return=representation");
 
-    request.requestBody({
+  request.requestBody({
 
-        intent: "CAPTURE",
+    intent: "CAPTURE",
 
-        purchase_units: [
+    application_context: {
 
-            {
-                amount: {
-                    currency_code: "USD",
-                    value: amount.toFixed(2)
-                }
+        return_url:
+            process.env.BASE_URL +
+            "/checkout/paypal/success",
+
+        cancel_url:
+            process.env.BASE_URL +
+            "/checkout/paypal/cancel",
+
+        brand_name: "Aura",
+
+        user_action: "PAY_NOW"
+
+    },
+
+    purchase_units: [
+
+        {
+            amount: {
+                currency_code: "USD",
+                value: amount.toFixed(2)
             }
+        }
 
-        ]
+    ]
 
-    });
-
+});
     const response =
         await client.execute(request);
 

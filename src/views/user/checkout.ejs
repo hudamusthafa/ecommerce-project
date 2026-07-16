@@ -62,6 +62,7 @@
 
 
         <form
+          id="checkoutForm"
           action="/checkout/place-order"
           method="POST"
           novalidate
@@ -506,7 +507,7 @@
 </div>
 
 
-<!-- RAZORPAY -->
+<!-- PAYPAL -->
 
 <div class="payment-card">
 
@@ -515,22 +516,22 @@
         <input
             type="radio"
             name="paymentMethod"
-            value="Razorpay"
+            value="PayPal"
         >
 
         <div class="payment-icon">
 
-            <i class="fa-solid fa-credit-card"></i>
+            <i class="fa-brands fa-paypal"></i>
 
         </div>
 
         <div class="payment-info">
 
-            <h4>Razorpay</h4>
+            <h4>PayPal</h4>
 
             <p>
 
-                UPI • Card • Net Banking • Wallet
+                Pay securely using your PayPal account.
 
             </p>
 
@@ -720,6 +721,7 @@
               </div>
 
               <button
+                id="placeOrderBtn"
                 type="submit"
                 class="place-order-btn"
               >
@@ -729,6 +731,12 @@
                 Place Order
 
               </button>
+
+
+              <div
+                id="paypal-button-container"
+                style="display:none; margin-top:15px;"
+            ></div>
 
             </div>
 
@@ -893,6 +901,8 @@
 
 </div>
   
+
+<script src="https://www.paypal.com/sdk/js?client-id=<%= paypalClientId %>&currency=USD"></script>
 
   <script>
 
@@ -1081,57 +1091,6 @@ if (btn) {
     btn.addEventListener("click", applyCoupon);
 }
 
-// async function applyCoupon() {
-
-//      const message = document.getElementById("couponMessage");
-
-//     message.textContent = "";
-//     message.className = "";
-
-//     const couponCode = document.getElementById("couponCode").value.trim();
-
-//     // Disable button
-//     btn.disabled = true;
-//     btn.textContent = "Applying...";
-
-//     try {
-
-//         const response = await fetch("/checkout/apply-coupon", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify({ couponCode })
-//         });
-
-//         const data = await response.json();
-
-//         if (!response.ok) {
-//             throw new Error(data.message || "Failed to apply coupon.");
-//         }
-
-//         showToast(data.message, "success");
-
-//           setTimeout(() => {
-
-//                  location.href = "/checkout";
-
-//           }, 800);
-
-//     } catch (error) {
-
-//        showToast(error.message, "error");
-
-//     } finally {
-
-//         // Enable button again
-//         btn.disabled = false;
-//         btn.textContent = "Apply";
-
-//     }
-
-// }
-
 async function applyCoupon() {
 
   const couponCode = document.getElementById("couponCode").value.trim();
@@ -1156,18 +1115,18 @@ async function applyCoupon() {
       return;
     }
 
-    // ✅ Show success toast
+    //  Show success toast
     showToast("Coupon applied! You saved ₹" + data.discount, "success");
 
-    // ✅ Update discount and total amounts
+    //  Update discount and total amounts
     document.getElementById("discountAmount").innerText = "₹" + data.discount;
     document.getElementById("totalAmount").innerText = "₹" + data.total;
 
-    // ✅ Hide coupon input box
+    //  Hide coupon input box
     document.querySelector(".coupon-form").style.display = "none";
     document.querySelector(".view-coupon-btn").style.display = "none";
 
-    // ✅ Show applied coupon section
+    //  Show applied coupon section
     document.getElementById("appliedCouponSection").style.display = "flex";
     document.getElementById("appliedCouponCode").innerText = data.coupon.code;
     document.getElementById("appliedCouponSaving").innerText = "You saved ₹" + data.discount;
@@ -1177,38 +1136,7 @@ async function applyCoupon() {
   }
 
 }
-//  REMOVE COUPON SCRIPT
 
-// const removeBtn = document.getElementById("removeCouponBtn");
-
-// if (removeBtn) {
-
-//     removeBtn.addEventListener("click", function() {
- 
-//   fetch("/checkout/remove-coupon", { method: "POST" })
-//     .then(function() {
-//       window.location.href = "/checkout";
-//     });
-// });
-
-// }
-
-
-// function showToast(message, type = "success") {
-
-//     const toast = document.getElementById("toast");
-
-//     toast.textContent = message;
-
-//     toast.className = "toast " + type + " show";
-
-//     setTimeout(() => {
-
-//         toast.classList.remove("show");
-
-//     }, 3000);
-
-// }
 
 const removeBtn = document.getElementById("removeCouponBtn");
 
@@ -1219,22 +1147,22 @@ if(removeBtn){
     fetch("/checkout/remove-coupon", { method: "POST" })
     .then(function(){
 
-      // ✅ Show toast
+      //  Show toast
       showToast("Coupon removed!", "success");
 
-      // ✅ Reset discount and total
+      //  Reset discount and total
       const subtotal = document.getElementById("subtotalAmount").innerText;
       document.getElementById("discountAmount").innerText = "₹0";
       document.getElementById("totalAmount").innerText = subtotal;
 
-      // ✅ Hide applied coupon section
+      // Hide applied coupon section
       document.getElementById("appliedCouponSection").style.display = "none";
 
-      // ✅ Show coupon input box again
+      //  Show coupon input box again
       document.querySelector(".coupon-form").style.display = "flex";
       document.querySelector(".view-coupon-btn").style.display = "block";
 
-      // ✅ Clear input
+      //  Clear input
       document.getElementById("couponCode").value = "";
 
     });
@@ -1244,6 +1172,203 @@ if(removeBtn){
 }
 </script>
 
+
+<script>
+
+const checkoutForm = document.getElementById("checkoutForm");
+
+checkoutForm.addEventListener("submit", async function (e) {
+
+    const paymentMethod = document.querySelector(
+        'input[name="paymentMethod"]:checked'
+    ).value;
+
+    // Allow COD and Wallet to continue normally
+    if (
+        paymentMethod === "COD" ||
+        paymentMethod === "Wallet"
+    ) {
+        return;
+    }
+
+    // Stop normal form submission
+    e.preventDefault();
+
+    try {
+
+        const selectedAddress =
+            document.getElementById("selectedAddress").value;
+
+        // Create PayPal Order
+        const response = await fetch(
+            "/checkout/paypal/create-order",
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+
+            showToast(
+                "Unable to start PayPal payment.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        // Redirect user to PayPal Checkout
+        window.location.href =
+            "https://www.sandbox.paypal.com/checkoutnow?token=" +
+            data.orderID;
+
+    } catch (err) {
+
+        console.error(err);
+
+        showToast(
+            "Something went wrong.",
+            "error"
+        );
+
+    }
+
+});
+
+const paymentRadios =
+    document.querySelectorAll(
+        'input[name="paymentMethod"]'
+    );
+
+const paypalContainer =
+    document.getElementById(
+        "paypal-button-container"
+    );
+
+const placeOrderBtn =
+    document.getElementById(
+        "placeOrderBtn"
+    );
+
+paymentRadios.forEach(radio => {
+
+    radio.addEventListener("change", function () {
+
+        if (this.value === "PayPal") {
+
+            paypalContainer.style.display = "block";
+            placeOrderBtn.style.display = "none";
+
+        } else {
+
+            paypalContainer.style.display = "none";
+            placeOrderBtn.style.display = "block";
+
+        }
+
+    });
+
+});
+
+
+
+</script>
+
+<script>
+
+paypal.Buttons({
+
+    style: {
+        layout: "vertical",
+        color: "gold",
+        shape: "rect",
+        label: "paypal"
+    },
+
+    createOrder: async function () {
+
+        const response = await fetch(
+            "/checkout/paypal/create-order",
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        return data.orderID;
+
+    },
+
+    onApprove: async function (data) {
+
+  const selectedAddress =    document.getElementById("selectedAddress").value;   
+        
+
+
+        const response = await fetch(
+            "/checkout/paypal/capture-order",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    orderID: data.orderID,
+                    selectedAddress
+
+                })
+
+            }
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            window.location.href = "/orders/" + result.orderId;
+                
+
+        } else {
+
+            showToast(
+                "Payment failed.",
+                "error"
+            );
+
+        }
+
+    },
+
+    onCancel: function () {
+
+        showToast(
+            "Payment cancelled.",
+            "error"
+        );
+
+    },
+
+    onError: function (err) {
+
+        console.error(err);
+
+        showToast(
+            "PayPal Error.",
+            "error"
+        );
+
+    }
+
+}).render("#paypal-button-container");
+
+</script>
 
 <div id="toast" class="toast"></div>
 </body>

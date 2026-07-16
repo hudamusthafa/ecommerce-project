@@ -72,6 +72,14 @@ router.post("/checkout/remove-coupon",cacheMiddleware.noCache,isLoggedIn,userCon
 
 router.get("/wallet",cacheMiddleware.noCache,isLoggedIn,userController.getWallet);
 
+// PAYPAL
+
+router.post("/checkout/paypal/create-order",cacheMiddleware.noCache,isLoggedIn,userController.createPayPalOrder);
+
+router.post("/checkout/paypal/capture-order",cacheMiddleware.noCache,isLoggedIn,userController.capturePayPalOrder);
+
+
+
 // PLACE ORDER
 router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);
 

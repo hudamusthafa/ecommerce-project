@@ -656,11 +656,7 @@ exports.getCheckout=async(req,res,next)=>{
       };
     }
 
-    //   // Coming from cart - clear buyNow
-    // if(!req.query.product && !req.query.buyNow){
-    //   delete req.session.buyNow;
-    // }
-
+   
    const data =
       await userCheckoutService.getCheckoutData(
         req.user._id,
@@ -695,7 +691,8 @@ const wallet =
       error:req.query.error,
       appliedCoupon: req.session.appliedCoupon || null,
       coupons,
-      wallet
+      wallet,
+       paypalClientId: process.env.PAYPAL_CLIENT_ID
 
       
     });
@@ -792,6 +789,94 @@ delete req.session.appliedCoupon;
     encodeURIComponent(error.message)
   );
   }
+};
+
+
+// =====================================
+// CREATE PAYPAL ORDER
+
+
+exports.createPayPalOrder = async (req, res, next) => {
+
+    try {
+
+        const buyNow = req.session.buyNow || null;
+
+        const data = await userCheckoutService.getCheckoutData(
+            req.user._id,
+            buyNow
+        );
+
+        // Apply coupon if available
+        if (req.session.appliedCoupon) {
+
+            data.discount = req.session.appliedCoupon.discount;
+            data.total = req.session.appliedCoupon.total;
+
+        }
+
+        // PayPal Sandbox works in USD.
+        //  convert INR to USD.
+        const usdAmount = (data.total / 85).toFixed(2);
+
+        const paypalOrder = await paypalService.createOrder(
+            Number(usdAmount)
+        );
+
+        res.json({
+
+            success: true,
+            //redirectUrl: "/orders/" + order.orderId
+             orderID: paypalOrder.id
+        });
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};
+
+//==========================================================
+// CAPTURE PAYPAL PAYMENT
+
+exports.capturePayPalOrder = async (req, res, next) => {
+
+    try {
+
+        const buyNow = req.session.buyNow || null;
+
+        // Capture payment from PayPal
+        await paypalService.captureOrder(
+            req.body.orderID
+        );
+
+        // Create order in our database
+        const order = await userOrderService.placeOrder(
+            req.user._id,
+            req.body.selectedAddress,
+            "PayPal",
+            buyNow
+        );
+
+        // Clear session
+        delete req.session.buyNow;
+        delete req.session.appliedCoupon;
+
+        res.json({
+
+            success: true,
+           orderId: order._id
+
+        });
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
 };
 
 //==========================================================
@@ -1031,51 +1116,7 @@ exports.getWallet = async (req, res, next) => {
 };
 
 
-// =====================================
-// CREATE PAYPAL ORDER
 
-
-exports.createPayPalOrder = async (req, res, next) => {
-
-    try {
-
-        const buyNow = req.session.buyNow || null;
-
-        const data = await userCheckoutService.getCheckoutData(
-            req.user._id,
-            buyNow
-        );
-
-        // Apply coupon if available
-        if (req.session.appliedCoupon) {
-
-            data.discount = req.session.appliedCoupon.discount;
-            data.total = req.session.appliedCoupon.total;
-
-        }
-
-        // PayPal Sandbox works in USD.
-        // We'll temporarily convert INR to USD.
-        const usdAmount = (data.total / 85).toFixed(2);
-
-        const order = await paypalService.createOrder(
-            Number(usdAmount)
-        );
-
-        res.json({
-
-            success: true,
-            orderID: order.id
-
-        });
-
-    } catch (error) {
-
-        next(error);
-
-    }
-
-};
 
 
 
