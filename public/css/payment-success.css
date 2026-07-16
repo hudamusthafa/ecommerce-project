@@ -1,0 +1,326 @@
+/* Premium Aura Payment Success Page */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(180deg,#fafafa,#f4f5f7);
+    color:#333;
+    min-height:100vh;
+}
+
+.topbar{
+    width:100%;
+    height:72px;
+    background:#fff;
+    border-bottom:1px solid #ececec;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8%;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo a{
+    text-decoration:none;
+    font-size:30px;
+    font-weight:700;
+    color:#9a6434;
+}
+
+.top-links a{
+    text-decoration:none;
+    color:#444;
+    font-weight:600;
+}
+
+.top-links i{
+    margin-right:8px;
+}
+
+.success-page{
+    padding:45px 20px 60px;
+}
+
+.success-wrapper{
+    max-width:1100px;
+    margin:auto;
+}
+
+.success-banner{
+       background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+    border-radius:16px;
+    padding:24px 32px;
+    display:flex;
+    align-items:center;
+    gap:22px;
+    margin-bottom:24px;
+}
+
+.success-icon{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#fff;
+    color:#22c55e;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:34px;
+    flex-shrink:0;
+}
+
+.success-text h1{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.success-text p{
+    font-size:18px;
+    line-height:1.7;
+}
+
+.success-text small{
+    display:block;
+    margin-top:10px;
+    opacity:.9;
+}
+
+.amount-card{
+    background:#fff;
+    border-radius:18px;
+    padding:18px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+.amount-card span{
+    color:#777;
+}
+
+.amount-card h2{
+    margin-top:8px;
+    font-size:40px;
+    color:#9a6434;
+}
+
+.paid-badge{
+    background:#ecfdf3;
+    color:#16a34a;
+    padding:12px 22px;
+    border-radius:999px;
+    font-weight:bold;
+}
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+    margin-bottom:35px;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+    margin-bottom:25px;
+}
+
+.card h3{
+    color:#9a6434;
+    margin-bottom:22px;
+    font-size:24px;
+}
+
+.card h3 i{
+    margin-right:10px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid #eee;
+}
+
+.row:last-child{
+    border:none;
+}
+
+.row span{
+    color:#666;
+}
+
+.row strong{
+    color:#222;
+}
+
+.paid{
+    color:#22c55e;
+}
+
+.delivery h4{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.delivery p{
+    margin-bottom:10px;
+    font-size:17px;
+}
+
+.delivery small{
+    color:#666;
+    line-height:1.6;
+}
+
+.address strong{
+    display:block;
+    margin-bottom:10px;
+}
+
+.address p{
+    margin-bottom:8px;
+    color:#555;
+}
+
+.action-buttons{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin:15px 0 40px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    text-decoration:none;
+    min-width:240px;
+    text-align:center;
+    padding:16px 34px;
+    border-radius:10px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.btn i{
+    margin-right:8px;
+}
+
+.btn-primary{
+    background:#9a6434;
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:#7e512b;
+    transform:translateY(-2px);
+}
+
+.btn-outline{
+    border:2px solid #9a6434;
+    color:#9a6434;
+    background:#fff;
+}
+
+.btn-outline:hover{
+    background:#9a6434;
+    color:#fff;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.feature{
+    background:#fff;
+    border-radius:16px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+    transition:.3s;
+}
+
+.feature:hover{
+    transform:translateY(-5px);
+}
+
+.feature i{
+    font-size:34px;
+    color:#9a6434;
+    margin-bottom:16px;
+}
+
+.feature h4{
+    margin-bottom:10px;
+}
+
+.feature p{
+    color:#666;
+    line-height:1.6;
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    color:#888;
+}
+
+@media(max-width:900px){
+
+    .summary-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .topbar{
+        padding:0 20px;
+    }
+
+    .success-banner{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .success-text h1{
+        font-size:32px;
+    }
+
+    .amount-card{
+        flex-direction:column;
+        gap:18px;
+        text-align:center;
+    }
+
+    .row{
+        flex-direction:column;
+        gap:8px;
+    }
+
+    .features{
+        grid-template-columns:1fr;
+    }
+
+    .btn{
+        width:100%;
+        min-width:unset;
+    }
+
+}
+
+

@@ -78,6 +78,9 @@ router.post("/checkout/paypal/create-order",cacheMiddleware.noCache,isLoggedIn,u
 
 router.post("/checkout/paypal/capture-order",cacheMiddleware.noCache,isLoggedIn,userController.capturePayPalOrder);
 
+// PAYMENT SUCCESS
+
+router.get("/payment-success/:id",cacheMiddleware.noCache,isLoggedIn,userController.getPaymentSuccess);
 
 
 // PLACE ORDER

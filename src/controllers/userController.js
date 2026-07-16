@@ -879,6 +879,40 @@ exports.capturePayPalOrder = async (req, res, next) => {
 
 };
 
+//==================================
+
+// PAYMENT SUCCESS PAGE
+
+exports.getPaymentSuccess = async (req, res, next) => {
+
+    try {
+
+        const order = await Order.findById(
+            req.params.id
+        );
+
+        if (!order) {
+
+            return res.redirect("/orders");
+
+        }
+
+        res.render(
+            "user/payment-success",
+            {
+                order
+            }
+        );
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};
+
+
 //==========================================================
 //order success
 
