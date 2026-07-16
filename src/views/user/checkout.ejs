@@ -1348,21 +1348,14 @@ paypal.Buttons({
 
     onCancel: function () {
 
-        showToast(
-            "Payment cancelled.",
-            "error"
-        );
-
+       window.location.href="/payment-failure";
     },
 
     onError: function (err) {
 
         console.error(err);
 
-        showToast(
-            "PayPal Error.",
-            "error"
-        );
+       window.location.href="/payment-failure";
 
     }
 

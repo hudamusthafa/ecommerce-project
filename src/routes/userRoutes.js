@@ -82,6 +82,9 @@ router.post("/checkout/paypal/capture-order",cacheMiddleware.noCache,isLoggedIn,
 
 router.get("/payment-success/:id",cacheMiddleware.noCache,isLoggedIn,userController.getPaymentSuccess);
 
+// PAYMENT FAILURE
+
+router.get("/payment-failure",cacheMiddleware.noCache,isLoggedIn,userController.getPaymentFailure);
 
 // PLACE ORDER
 router.post("/checkout/place-order",cacheMiddleware.noCache,isLoggedIn,userController.placeOrder);

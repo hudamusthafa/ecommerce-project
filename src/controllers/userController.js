@@ -929,6 +929,19 @@ exports.getOrderSuccess=async(req,res,next)=>{
   }
 };
 
+//==============================
+
+exports.getPaymentFailure = (req,res)=>{
+
+res.render("user/payment-failure",{
+
+user:req.user
+
+});
+
+};
+
+
 //==========================================================
 
 //view orders list
