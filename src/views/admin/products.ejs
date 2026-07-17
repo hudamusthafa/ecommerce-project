@@ -177,6 +177,7 @@
               <th>Product</th>
               <th>Category</th>
               <th>Price</th>
+              <th>Offer</th>
               <th>Stock</th>
               <th>Date</th>
               <th>Status</th>
@@ -239,7 +240,29 @@
                   <!-- PRICE -->
                   <td>
 
-                    ₹ <%= product.price %>
+                      ₹<%= product.price %>
+
+                  </td>
+
+                  <td>
+
+                      <% if(product.productOffer > 0){ %>
+
+                          <span class="offer-badge">
+
+                              <%= product.productOffer %>% OFF
+
+                          </span>
+
+                      <% } else { %>
+
+                          <span class="no-offer">
+
+                              --
+
+                          </span>
+
+                      <% } %>
 
                   </td>
 
@@ -335,7 +358,7 @@
 
               <tr>
 
-                <td colspan="7" class="empty-msg">
+                <td colspan="8" class="empty-msg">
 
                   No products found
 

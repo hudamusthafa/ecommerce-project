@@ -96,7 +96,8 @@ exports.addProduct=async(req,res)=>{
       price,
       stock,
       category,
-      variant
+      variant,
+      productOffer
     }=req.body;
 
  if(parseInt(stock) < 0){
@@ -167,6 +168,7 @@ try{
       stock: parseInt(stock),
       category,
       variant,
+       productOffer: Number(productOffer) || 0,
       images
     });
 
@@ -217,8 +219,15 @@ exports.updateProduct=async(req,res)=>{
 
   try{
 
-    const {name, description, price, stock, category,variant} = req.body;
-
+const {
+  name,
+  description,
+  price,
+  stock,
+  category,
+  variant,
+  productOffer
+} = req.body;
 
     if(parseInt(stock) < 0){
       req.session.error = "Stock cannot be negative";
@@ -298,6 +307,10 @@ try{
       );
     }
 
+
+
+
+
     // UPDATE PRODUCT
     await productService.updateProduct(
       req.params.id,
@@ -308,6 +321,7 @@ try{
         stock: parseInt(stock),
         category,
         variant,
+        productOffer: Number(productOffer) || 0,
         images
       }
     );

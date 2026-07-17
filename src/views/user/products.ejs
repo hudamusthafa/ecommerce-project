@@ -304,13 +304,58 @@
             alt="<%= product.name %>"
           >
 
+<!-- Offer Badge -->
+
+
+<% if(product.offerPercentage > 0){ %>
+
+<div class="product-offer-badge">
+
+    <%= product.offerPercentage %>% OFF
+
+</div>
+
+<% } %>
+
           <h3>
             <%= product.name %>
           </h3>
 
-          <p>
-            ₹ <%= product.price %>
-          </p>
+<!-- product offer -->
+
+         <div class="price-box">
+
+    <% if(product.offerPercentage > 0){ %>
+
+        <span class="offer-price">
+
+            ₹<%= product.finalPrice %>
+
+        </span>
+
+        <span class="original-price">
+
+            ₹<%= product.originalPrice %>
+
+        </span>
+
+        <span class="offer-percent">
+
+            <%= product.offerPercentage %>% OFF
+
+        </span>
+
+    <% } else { %>
+
+        <span class="normal-price">
+
+            ₹<%= product.price %>
+
+        </span>
+
+    <% } %>
+
+</div>
 
         </a>
 

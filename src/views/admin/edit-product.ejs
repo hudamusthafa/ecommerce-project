@@ -172,6 +172,36 @@
 
         </div>
 
+
+
+
+
+        <!-- PRODUCT OFFER -->
+
+<div class="form-group">
+
+    <label>
+
+        Product Offer (%)
+
+    </label>
+
+    <input
+        type="number"
+        name="productOffer"
+        min="0"
+        max="90"
+        value="<%= product.productOffer || 0 %>"
+    >
+
+    <small>
+
+        Enter 0 if there is no offer.
+
+    </small>
+
+</div>
+
         <!-- STOCK -->
         <div class="form-group">
 
@@ -335,45 +365,31 @@
 
 function validateProductForm(){
 
-  const name=document.querySelector(
-    'input[name="name"]'
-  ).value.trim();
+  const name=document.querySelector('input[name="name"]').value.trim();
 
-  const description=document.querySelector(
-    'textarea[name="description"]'
-  ).value.trim();
+  const description=document.querySelector('textarea[name="description"]').value.trim();
 
-  const category=document.querySelector(
-    'select[name="category"]'
-  ).value;
+  const category=document.querySelector('select[name="category"]').value;
 
-  const variant=document.querySelector(
-  'select[name="variant"]'
-).value;
+  const variant=document.querySelector('select[name="variant"]').value;
 
-  const price=document.querySelector(
-    'input[name="price"]'
-  ).value;
+ const price=document.querySelector('input[name="price"]').value;
 
-  const stock=document.querySelector(
-    'input[name="stock"]'
-  ).value;
+const productOffer=document.querySelector('input[name="productOffer"]').value;
 
-  const images=document.getElementById(
-    "finalImages"
-  ).files;
+const stock=document.querySelector('input[name="stock"]').value;
 
-  const error=document.getElementById(
-    "formError"
-  );
+  const images=document.getElementById("finalImages").files;
+
+  const error=document.getElementById("formError");
 
   error.innerText="";
 
   // NAME
+
   if(name===""){
 
-    error.innerText=
-      "Product name is required";
+    error.innerText="Product name is required";
 
     return false;
 
@@ -381,105 +397,106 @@ function validateProductForm(){
 
   if(name.length<3){
 
-    error.innerText=
-      "Product name must contain at least 3 characters";
+    error.innerText="Product name must contain at least 3 characters";
 
     return false;
 
   }
 
   // DESCRIPTION
+
   if(description===""){
 
-    error.innerText=
-      "Description is required";
+    error.innerText="Description is required";
 
     return false;
 
   }
 
   // CATEGORY
+
   if(category===""){
 
-    error.innerText=
-      "Please select a category";
+    error.innerText="Please select a category";
 
     return false;
 
   }
-// VARIANT
-if(variant===""){
 
-  error.innerText=
-    "Please select a variant";
+  // VARIANT
 
-  return false;
+  if(variant===""){
 
-}
+    error.innerText="Please select a variant";
+
+    return false;
+
+  }
 
   // PRICE
-  if(price===""){
 
-    error.innerText=
-      "Price is required";
+  if(price==="" || isNaN(price)){
+
+    error.innerText="Price is required";
+
+    return false;
+
+  }
+
+  if(parseInt(price)<0){
+
+    error.innerText="Price cannot be negative";
 
     return false;
 
   }
 
 
-  if(price === "" || isNaN(price)){
-  error.innerText="Price is required";
+  // PRODUCT OFFER
+if(productOffer === "" || isNaN(productOffer)){
+  error.innerText = "Product offer is required";
   return false;
 }
 
-if(parseInt(price) < 0){
-  error.innerText="Price cannot be negative";
+if(parseInt(productOffer) < 0 || parseInt(productOffer) > 90){
+  error.innerText = "Offer must be between 0 and 90%";
   return false;
 }
-  
 
   // STOCK
-  if(stock===""){
 
-    error.innerText=
-      "Stock is required";
+  if(stock==="" || isNaN(stock)){
+
+    error.innerText="Stock is required";
 
     return false;
 
   }
 
-  if(stock === "" || isNaN(stock)){
-  error.innerText="Stock is required";
-  return false;
-}
+  if(parseInt(stock)<0){
 
-if(parseInt(stock) < 0){
-  error.innerText="Stock cannot be negative";
-  return false;
-}
+    error.innerText="Stock cannot be negative";
+
+    return false;
+
+  }
+
   // IMAGE VALIDATION
 
-const existingImages=
-  document.querySelectorAll(
-    ".existing-image"
-  ).length;
+  const existingImages=document.querySelectorAll(".existing-image").length;
 
-const uploadedImages=
-  uploadedFiles.length;
+  const uploadedImages=uploadedFiles.length;
 
-const totalImages=
-  existingImages+
-  uploadedImages;
+  const totalImages=existingImages+uploadedImages;
 
-if(totalImages<3){
+  if(totalImages<3){
 
-  error.innerText=
-    "Minimum 3 images required";
+    error.innerText="Minimum 3 images required";
 
-  return false;
+    return false;
 
-}
+  }
+
   return true;
 
 }
@@ -745,8 +762,8 @@ window.addEventListener("load",function(){
 
               cropper.destroy();
 
-              cropModal.style.display=
-                "none";
+              cropModal.style.display= "none";
+               
 
               imageInput.value="";
 
@@ -765,8 +782,8 @@ window.addEventListener("load",function(){
 
   window.closeCropModal=function(){
 
-    cropModal.style.display=
-      "none";
+    cropModal.style.display=  "none";
+    
 
     if(cropper){
 

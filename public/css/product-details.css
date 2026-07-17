@@ -1,466 +1,432 @@
-/* PAGE */
-
-.details-page{
-  display:flex;
-  background:#ece7e7;
-  min-height:100vh;
+/* ==========================================
+   PAGE SETUP & CANVAS SURFACE
+   ========================================== */
+.details-page {
+  display: flex;
+  background-color: #f3eee7; /* Soft sand background matching the canvas edge */
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-
-
-/* RIGHT CONTENT */
-
-.details-content{
-  flex:1;
-  padding:40px;
+.details-content {
+  flex: 1;
+  padding: 35px 40px;
 }
 
-
-
-/* BREADCRUMB */
-
-.breadcrumb{
-  margin-bottom:25px;
-  font-size:14px;
+/* ==========================================
+   BREADCRUMBS
+   ========================================== */
+.breadcrumb {
+  margin-bottom: 25px;
+  font-size: 15px; /* Increased size for readability */
+  font-weight: 500;
+  color: #666666; /* Darker, clearer grey */
 }
 
-.breadcrumb a{
-  text-decoration:none;
-  color:#8b5e3c;
-}
-
-
-
-/* MAIN SECTION */
-
-.product-details-container{
-  display:flex;
-  gap:50px;
-  background:#fff;
-  padding:30px;
-  border-radius:12px;
-}
-
-
-
-/* LEFT */
-
-.product-images{
-  width:45%;
-}
-
-
-
-/* MAIN IMAGE */
-
-
-
-.main-image{
-  width:100%;
-  height:450px;
-  overflow:hidden;
-  border-radius:12px;
-  cursor:zoom-in;
-}
-
-.main-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:transform 0.15s ease;
-}
-/* .main-image:hover img{
-  transform:scale(1.2);
-} */
- 
-/* ZOOM MODAL */
-
-.zoom-modal{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.85);
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.zoomed-image{
-  width:70%;
-  max-height:90%;
-  object-fit:contain;
-  border-radius:12px;
-}
-
-.close-zoom{
-  position:absolute;
-  top:30px;
-  right:40px;
-  color:#fff;
-  font-size:40px;
-  cursor:pointer;
-}
-
-/* THUMBNAILS */
-
-.thumbnail-images{
-  display:flex;
-  gap:15px;
-  margin-top:15px;
-}
-
-.thumbnail-images img{
-  width:90px;
-  height:90px;
-  object-fit:cover;
-  border-radius:10px;
-  cursor:pointer;
-  border:2px solid transparent;
-}
-
-.thumbnail-images img:hover{
-  border-color:#8b5e3c;
-}
-
-
-
-/* RIGHT INFO */
-
-.product-info{
-  width:55%;
-}
-
-.product-info h1{
-  font-size:34px;
-  margin-bottom:15px;
-  color:#2d1b12;
-}
-
-
-
-/* RATING */
-
-.rating{
-  color:#f4b400;
-  margin-bottom:20px;
-}
-
-.rating span{
-  color:#555;
-  margin-left:10px;
-}
-
-
-
-/* PRICE */
-
-.price-section{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.price-section h2{
-  font-size:32px;
-  color:#2d1b12;
-}
-
-.old-price{
-  text-decoration:line-through;
-  color:#888;
-}
-
-.discount{
-  color:green;
-  font-weight:bold;
-}
-
-
-
-/* STOCK */
-
-.in-stock{
-  color:green;
-  font-weight:600;
-}
-
-.out-stock{
-  color:red;
-  font-weight:600;
-}
-
-
-
-/* DESCRIPTION */
-
-.description{
-  margin:25px 0;
-  line-height:1.8;
-  color:#555;
-}
-
-
-
-/* BUTTONS */
-
-.details-buttons{
-  display:flex;
-  gap:20px;
-}
-
-.buy-btn,
-.cart-btn{
-  padding:14px 30px;
-  border:none;
-  border-radius:30px;
-  cursor:pointer;
-  font-size:16px;
-}
-
-.buy-btn{
-  background:#f4c542;
-  color:#fff;
-}
-
-.cart-btn{
-  background:#8b5e3c;
-  color:#fff;
-}
-
-
-
-/* RELATED */
-
-.related-section{
-  margin-top:50px;
-}
-
-.related-section h2{
-  margin-bottom:20px;
-  color:#2d1b12;
-}
-
-
-
-/* RELATED GRID */
-
-.related-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
-}
-
-
-
-/* RELATED CARD */
-
-.related-card{
-  background:#fff;
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
-  transition:0.3s;
-}
-
-.related-card:hover{
-  transform:translateY(-5px);
-}
-
-.related-card img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-  border-radius:10px;
-}
-
-.related-card h4{
-  margin-top:12px;
-  color:#2d1b12;
-}
-
-.related-card p{
-  margin-top:8px;
-  color:#8b5e3c;
-}
-
-
-
-/* REMOVE LINK STYLE */
-
-.related-link{
-  text-decoration:none;
-}
-/* out of stock */
-.disabled-btn{
-  padding:14px 30px;
-  border:none;
-  border-radius:30px;
-  background:#999;
-  color:#fff;
-  cursor:not-allowed;
-}
-/* variants */
-.thumbnail-box{
-  text-align:center;
-}
-
-.variant-name{
-  font-size:12px;
-  margin-top:6px;
-  color:#555;
-}
-
-/* HIGHLIGHTS */
-
-.product-highlights{
-  margin:25px 0;
-}
-
-.product-highlights h3{
-  margin-bottom:12px;
-  color:#2d1b12;
-}
-
-.product-highlights ul{
-  padding-left:18px;
-}
-
-.product-highlights li{
-  margin-bottom:10px;
-  color:#555;
-  line-height:1.6;
-}
-
-/* REVIEWS */
-
-.reviews-section{
-  margin-top:50px;
-}
-
-.reviews-section h2{
-  margin-bottom:20px;
-  color:#2d1b12;
-}
-
-.review-card{
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-}
-
-.review-stars{
-  color:#f4b400;
-  margin-bottom:10px;
-}
-
-.review-card h4{
-  margin-bottom:10px;
-  color:#2d1b12;
-}
-
-.review-card p{
-  color:#555;
-  line-height:1.6;
-}
-.wishlist-btn{
-  padding:14px 30px;
-  border:none;
-  border-radius:30px;
-  background:#fff;
-  color:#8b5e3c;
-  border:2px solid #8b5e3c;
-  text-decoration:none;
-  font-weight:600;
-  transition:.3s;
-}
-
-.wishlist-btn:hover{
-  background:#8b5e3c;
-  color:#fff;
-}
-.wishlist-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.buy-now-btn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 150px;
-  height: 50px;
-
-  background: #e6b325;
-  color: #fff;
-
-  border: 2px solid #e6b325;
-  border-radius: 30px;
-
-  font-size: 18px;
-  font-weight: 600;
+.breadcrumb a {
+  color: #666666;
   text-decoration: none;
-
-  transition: 0.3s ease;
+  font-weight: 600; /* Bolder link */
 }
 
-.buy-now-btn:hover{
-  background: #c99700;
-  border-color: #c99700;
-  transform: translateY(-2px);
+.breadcrumb .divider {
+  margin: 0 6px;
+  color: #8c8c8c;
 }
-.details-buttons{
+
+.breadcrumb .current-item {
+  color: #111111;
+  font-weight: 700;
+}
+
+/* ==========================================
+   MAIN PRODUCT CARD CONTAINER
+   ========================================== */
+.product-showcase-box {
+  display: flex;
+  background-color: #ffffff;
+  padding: 35px; 
+  border-radius: 15px; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  margin-bottom: 30px;
+  gap: 40px; 
+}
+
+/* Gallery Column (Left) */
+.gallery-column {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-image-frame {
+  width: 100%;
+  height: 380px; 
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.main-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.thumbnails-row {
+  display: flex;
+  margin-top: 15px;
+  gap: 12px;
+}
+
+.thumb-card {
+  width: 75px; /* Slightly wider to prevent text wrapping */
+  text-align: center;
+  cursor: pointer;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.thumb-img.active {
+  border: 2px solid #c9b09a;
+}
+
+/* Variant Names below Thumbnails */
+.thumb-label {
+  display: block;
+  font-size: 13px; /* Much larger and bolder thumbnail labels */
+  font-weight: 600; 
+  color: #444444; /* Darker contrast */
+  margin-top: 8px;
+  line-height: 1.2;
+}
+
+/* Details Column (Right) */
+.info-column {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Product Title (Unchanged) */
+.product-title {
+  font-size: 32px; 
+  font-weight: 800; 
+  color: #111111;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+}
+
+/* Star Rating Section */
+.rating-row {
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-top: 25px;
-}
-.variant-section{
-    margin:18px 0;
+  gap: 8px;
 }
 
-.variant-title{
-    font-size:15px;
-    color:#666;
-    margin-bottom:8px;
-    font-weight:500;
+.stars-gold {
+  color: #eebb11;
+  font-size: 16px; 
 }
 
-.variant-badge{
-    display:inline-block;
-    padding:8px 18px;
-    border:1px solid #8b5e3c;
-    border-radius:25px;
-    background:#f8f2eb;
-    color:#8b5e3c;
-    font-weight:600;
-    font-size:14px;
-}
-.thumbnail-img{
-
-    width:90px;
-    height:90px;
-    object-fit:cover;
-    border:2px solid transparent;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.3s;
-
+/* Customer Reviews Text */
+.rating-text {
+  font-size: 15px; /* Larger text */
+  font-weight: 600; /* Bolded for clear view */
+  color: #555555; /* Higher contrast grey */
 }
 
-.thumbnail-img:hover{
-    transform:scale(1.05);
+/* Pricing Section (Unchanged) */
+.price-row {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
-.active-thumbnail{
-    border:3px solid #8b5e3c;
-    box-shadow:0 0 12px rgba(139,94,60,.35);
+.current-price {
+  font-size: 34px; 
+  font-weight: 800; 
+  color: #111111;
+}
 
+.before-price {
+  font-size: 18px; 
+  color: #9c9c9c;
+  text-decoration: line-through;
+}
+
+.promo-tag {
+  color: #2b9348;
+  font-size: 15px; 
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* Variant Pill Option ("Finish") */
+.spec-group {
+  margin-bottom: 15px;
+}
+
+.spec-title {
+  display: block;
+  font-size: 15px; /* Larger 'Finish' label */
+  color: #555555;
+  margin-bottom: 8px;
+  font-weight: 600; /* Bolded */
+}
+
+.spec-pill {
+  display: inline-block;
+  padding: 8px 20px; 
+  background-color: #fdfaf6;
+  border: 2px solid #dcd1c4; /* Slightly thicker border for distinction */
+  color: #6a4e37;
+  font-size: 15px; /* Extremely readable variant pill text */
+  font-weight: 700; /* Strong bold */
+  border-radius: 20px;
+}
+
+/* Stock Status */
+.stock-status-row {
+  margin-bottom: 15px;
+}
+
+.badge-in-stock {
+  color: #00875a;
+  font-size: 16px; /* Larger and distinct status */
+  font-weight: 700;
+}
+
+.badge-out-stock {
+  color: #de350b;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Description paragraph (Details of Product) */
+.summary-paragraph {
+  font-size: 16px; /* Made much larger */
+  font-weight: 500; /* Medium-bold weight */
+  color: #222222; /* High contrast black/grey for perfect readability */
+  line-height: 1.6;
+  margin: 5px 0 20px 0;
+}
+
+/* Highlights List Section styling */
+.features-box {
+  margin-bottom: 30px;
+}
+
+.features-title {
+  font-size: 17px; /* Bold heading for highlights list */
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 12px 0;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-list li {
+  font-size: 16px; /* Larger list item text */
+  font-weight: 500; /* Bolded slightly */
+  color: #333333; /* Solid readable color */
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 18px;
+}
+
+/* Bullet list styling */
+.features-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #8c8c8c;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ==========================================
+   PILL CAPSULE BUTTONS (COMPACT LENGTH)
+   ========================================== */
+.actions-wrapper {
+  margin-top: auto; 
+}
+
+.button-row-layout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: flex-start; 
+}
+
+.btn-buy-now {
+  flex: 1;
+  max-width: 150px; 
+  height: 42px; 
+  background-color: #e5af24; 
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 700; 
+  font-size: 15px; 
+  border-radius: 25px; 
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-add-cart {
+  flex: 1;
+  max-width: 150px; 
+  height: 42px; 
+  background-color: #835f43; 
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-weight: 700; 
+  font-size: 15px; 
+  border-radius: 25px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-wishlist {
+  flex: 1;
+  max-width: 150px; 
+  height: 42px; 
+  background-color: #ffffff;
+  border: 1px solid #835f43; 
+  color: #835f43;
+  font-size: 14px; 
+  font-weight: 700; 
+  border-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+/* ==========================================
+   BOTTOM LIST EXTENSIONS (RELATED & REVIEWS)
+   ========================================== */
+.related-section-box, .reviews-section-box {
+  margin-top: 45px;
+}
+
+.section-main-heading {
+  font-size: 18px; /* Increased from 16px */
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 20px;
+}
+
+/* Related Items Grid */
+.related-items-row {
+  display: flex;
+  gap: 15px;
+}
+
+.card-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-mini-card {
+  width: 190px;
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.card-thumbnail-holder {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.card-thumbnail-holder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-product-title {
+  font-size: 14px; /* Increased from 12px */
+  margin: 8px 0 4px 0;
+  font-weight: 600;
+  color: #2b2b2b;
+}
+
+.card-price-container {
+  font-size: 14px; /* Increased from 12px */
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ==========================================
+   USER FEEDBACKS (REVIEWS) SECTION
+   ========================================== */
+.reviews-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+
+.review-item {
+  border-bottom: 1px solid #f0e9e1;
+  padding-bottom: 15px;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.review-author {
+  font-size: 15px; /* Increased from 13px */
+  font-weight: 700;
+  color: #2b2b2b;
+}
+
+.review-rating-stars {
+  color: #eebb11;
+  font-size: 13px; /* Increased from 11px */
+}
+
+.review-comment {
+  font-size: 15px; /* Increased from 13px */
+  color: #555555;
+  line-height: 1.5;
+  margin: 0;
 }

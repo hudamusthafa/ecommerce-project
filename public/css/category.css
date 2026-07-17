@@ -680,3 +680,22 @@ td{
 .date-input:focus {
   border-color: #8b5e3c;
 }
+
+.offer-badge{
+
+    background:#dff6e5;
+    color:#198754;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    display:inline-block;
+
+}
+
+.no-offer{
+
+    color:#999;
+    font-weight:500;
+
+}

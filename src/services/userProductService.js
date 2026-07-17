@@ -2,6 +2,8 @@ const Product=require("../models/Product");
 
 const Category=require("../models/Category");
 const Wishlist = require("../models/Wishlist");
+const offerHelper = require("../helpers/offerHelper");
+
 
 
 
@@ -95,10 +97,28 @@ exports.getProducts=async(query)=>{
   .skip(skip)
   .limit(limit);
 
+
+
+
   const activeProducts = products.filter(product =>
   product.category &&
   product.category.isListed
-);
+).map(product => {         //adding offer for products
+
+    const offer = offerHelper.getProductOfferPrice(product);
+
+    product = product.toObject();
+
+    product.originalPrice = offer.originalPrice;
+    product.finalPrice = offer.finalPrice;
+    product.discountAmount = offer.discountAmount;
+    product.offerPercentage = offer.offerPercentage;
+
+    return product;
+
+  });
+
+
 
   // TOTAL PRODUCTS
   const totalProducts=await Product.countDocuments(filter);
@@ -140,12 +160,28 @@ exports.getProductDetails=async(productId,userId)=>{
   .populate("category");
 
 
-
-  // PRODUCT NOT FOUND
+ // PRODUCT NOT FOUND
   if(!product || !product.isListed || !product.category || !product.category.isListed){
     return null;
   }
 
+
+
+//product offer
+const offer = offerHelper.getProductOfferPrice(product);
+
+const productData = product.toObject();
+
+
+
+productData.originalPrice = offer.originalPrice;
+productData.finalPrice = offer.finalPrice;
+productData.discountAmount = offer.discountAmount;
+productData.offerPercentage = offer.offerPercentage;
+
+
+
+ 
   // RELATED PRODUCTS
   const relatedProducts=await Product.find({
 
@@ -170,9 +206,25 @@ if(userId){
   }
 }
 
+const relatedProductsWithOffer = relatedProducts.map(product => {
+
+    const offer = offerHelper.getProductOfferPrice(product);
+
+    product = product.toObject();
+
+    product.originalPrice = offer.originalPrice;
+    product.finalPrice = offer.finalPrice;
+    product.offerPercentage = offer.offerPercentage;
+
+    return product;
+
+});
+
+
+
   return{
-    product,
-    relatedProducts,
+     product: productData,
+    relatedProducts: relatedProductsWithOffer,
     isWishlisted
   };
 };
