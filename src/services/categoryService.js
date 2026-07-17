@@ -43,7 +43,7 @@ exports.getActiveCategories = async () => {
 
 // ADD CATEGORY
 exports.addCategory = async (data) => {
-  return await Category.create(data);
+  return await Category.create(data);//save categoryOffer automatically.
 };
 
 

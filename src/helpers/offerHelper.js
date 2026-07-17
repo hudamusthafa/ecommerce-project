@@ -1,6 +1,11 @@
 exports.getProductOfferPrice = (product) => {
 
-    const offer = product.productOffer || 0;
+    const productOffer = product.productOffer || 0;
+
+    const categoryOffer = product.category?.categoryOffer || 0;
+
+    // Apply the higher offer
+    const offer = Math.max(productOffer, categoryOffer);
 
     const discount = (product.price * offer) / 100;
 
@@ -12,7 +17,7 @@ exports.getProductOfferPrice = (product) => {
 
         offerPercentage: offer,
 
-        discountAmount: discount,
+        discountAmount: Math.round(discount),
 
         finalPrice: Math.round(finalPrice)
 

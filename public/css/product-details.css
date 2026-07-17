@@ -430,3 +430,31 @@
   line-height: 1.5;
   margin: 0;
 }
+
+.card-price-container{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.card-new-price{
+    font-size:18px;
+    font-weight:700;
+    color:#111;
+}
+
+.card-old-price{
+    font-size:14px;
+    color:#888;
+    text-decoration:line-through;
+}
+
+.card-offer-badge{
+    background:#e8f8ef;
+    color:#198754;
+    padding:2px 8px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}

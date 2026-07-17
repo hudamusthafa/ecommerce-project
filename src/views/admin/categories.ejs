@@ -110,7 +110,7 @@
             <tr>
 
               <th>Category Name</th>
-             
+             <th>Category Offer</th>
               <th class="highlight-column">Added ↓</th>
               <th>Status</th>
               <th>Action</th>
@@ -142,6 +142,19 @@
 
                 </div>
 
+              </td>
+
+
+              <!-- offer -->
+
+              <td>
+                  <% if(category.categoryOffer > 0){ %>
+                      <span class="offer-badge">
+                          <%= category.categoryOffer %>% OFF
+                      </span>
+                  <% } else { %>
+                      <span class="no-offer">No Offer</span>
+                  <% } %>
               </td>
 
               <!-- DATE -->
@@ -181,9 +194,10 @@
                  <button
                   type="button"
                   class="icon-btn"
-                  onclick="openViewModal(
+                 onclick="openViewModal(
                     '<%= category.name %>',
                     `<%= category.description || "No description" %>`,
+                    '<%= category.categoryOffer %>',
                     '<%= new Date(category.createdAt).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -208,10 +222,12 @@
                       onclick="openDeleteModal('<%= category._id %>', <%= category.isListed  %>)"
                     >
                 <% if(category.isListed){ %>
-  <i class="fa-solid fa-trash" style="color:#dc3545"></i>
-<% } else { %>
-  <i class="fa-solid fa-rotate-left" style="color:#28a745"></i>
-<% } %></button>
+                      <i class="fa-solid fa-trash" style="color:#dc3545"></i>
+                    <% } else { %>
+                      <i class="fa-solid fa-rotate-left" style="color:#28a745"></i>
+                    <% } %>
+                    
+                  </button>
                   </form>
 
                 </div>
@@ -318,8 +334,14 @@
     <h3 id="viewTitle"></h3>
 
     <p>
+    <strong>Category Offer:</strong>
+    <span id="viewOffer"></span>
+</p>
+
+    <p>
       <strong>Description:</strong>
     </p>
+
 
     <p id="viewDescription"></p>
 
@@ -387,6 +409,7 @@
   function openViewModal(
     name,
     description,
+    offer,
     date,
     status
   ) {
@@ -411,6 +434,8 @@
       "viewModal"
     ).style.display = "flex";
 
+    document.getElementById("viewOffer").innerText =
+    offer > 0 ? offer + "% OFF" : "No Offer";
   }
 
   function closeViewModal() {

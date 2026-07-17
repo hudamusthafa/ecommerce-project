@@ -189,6 +189,7 @@ productData.offerPercentage = offer.offerPercentage;
     category:product.category._id,
     isListed:true
   })
+  .populate("category")
   .limit(4);
 
 

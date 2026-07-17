@@ -16,17 +16,17 @@
 
   <div class="details-content">
     
-    <!-- BREADCRUMB -->
+   
     <div class="breadcrumb">
       <a href="/products">Products</a>
       <span class="divider">/</span>
       <span class="current-item"><%= product.name %></span>
     </div>
 
-    <!-- MAIN PRODUCT SHOWCASE CONTAINER -->
+    <!-- MAIN PRODUCT  -->
     <div class="product-showcase-box">
       
-      <!-- LEFT BLOCK: GALLERY -->
+      <!--  GALLERY -->
       <div class="gallery-column">
         <div class="main-image-frame">
           <img id="mainProductImage" src="/images/<%= product.images[0] %>" onclick="openZoom(this.src)">
@@ -43,11 +43,11 @@
         </div>
       </div>
 
-      <!-- RIGHT BLOCK: INFO DETAILS -->
+      <!--  INFO DETAILS -->
       <div class="info-column">
         <h1 class="product-title"><%= product.name %></h1>
 
-        <!-- RATING & USER REVIEWS COUNT (RESTORED) -->
+        <!-- RATING & USER REVIEWS -->
         <div class="rating-row">
           <span class="stars-gold">
             <i class="fa-solid fa-star"></i>
@@ -138,23 +138,41 @@
               </div>
               <h4 class="card-product-title"><%= item.name %></h4>
               <div class="card-price-container">
-                <% if(item.offerPercentage > 0) { %>
-                  <span class="card-new-price">₹<%= item.finalPrice %></span>
-                <% } else { %>
-                  <span class="card-new-price">₹<%= item.price %></span>
-                <% } %>
-              </div>
+
+                    <% if(item.offerPercentage > 0){ %>
+
+                        <span class="card-new-price">
+                            ₹<%= item.finalPrice %>
+                        </span>
+
+                        <span class="card-old-price">
+                            ₹<%= item.originalPrice %>
+                        </span>
+
+                        <span class="card-offer-badge">
+                            <%= item.offerPercentage %>% OFF
+                        </span>
+
+                    <% } else { %>
+
+                        <span class="card-new-price">
+                            ₹<%= item.price %>
+                        </span>
+
+                    <% } %>
+
+                </div>
             </div>
           </a>
         <% }) %>
       </div>
     </div>
 
-    <!-- USER FEEDBACK / REVIEWS SECTION (RESTORED & STYLED) -->
+    <!-- USER FEEDBACK  -->
     <div class="reviews-section-box">
       <h3 class="section-main-heading">Customer Feedbacks</h3>
       <div class="reviews-container">
-        <!-- Sample Feedback Item 1 -->
+        <!-- Sample Feedback  1 -->
         <div class="review-item">
           <div class="review-header">
             <span class="review-author">Huda Musthafa</span>
@@ -198,7 +216,7 @@
 <%- include("../partials/footer") %>
 
 <script>
-// Keep your existing scripts active
+
 const image = document.getElementById("mainProductImage");
 image.addEventListener("mousemove", function(e) {
   const rect = image.getBoundingClientRect();

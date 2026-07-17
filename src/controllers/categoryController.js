@@ -44,7 +44,7 @@ exports.getAddCategory=(req,res)=>{
 exports.addCategory=async(req,res,next)=>{
   try{
 
-    const {name,description}=req.body;
+    const {name,description, categoryOffer}=req.body;
 
     // EMPTY VALIDATION
     if(!name || name.trim()===""){
@@ -62,8 +62,13 @@ exports.addCategory=async(req,res,next)=>{
       });
     }
 
-    // SAVE CATEGORY
-    await categoryService.addCategory({name,description});
+//SAVE CATEGORY
+
+    await categoryService.addCategory({
+    name,
+    description,
+    categoryOffer: Number(categoryOffer) || 0
+});
 
     res.redirect("/admin/categories");
 
@@ -104,7 +109,7 @@ exports.getEditCategory=async(req,res,next)=>{
 exports.updateCategory=async(req,res,next)=>{
   try{
 
-    const {name,description}=req.body;
+    const {name,description, categoryOffer}=req.body;
 
     // EMPTY VALIDATION
     if(!name || name.trim()===""){
@@ -133,7 +138,8 @@ exports.updateCategory=async(req,res,next)=>{
     // UPDATE CATEGORY
     await categoryService.updateCategory(req.params.id,{
       name,
-      description
+      description,
+      categoryOffer:Number(categoryOffer)||0
     });
 
     res.redirect("/admin/categories");
