@@ -118,6 +118,7 @@ async function verifyOtp() {
   const email = localStorage.getItem("email");
   const name = localStorage.getItem("name");
   const password = localStorage.getItem("password");
+  const referralCode = localStorage.getItem("referralCode");
   const type = localStorage.getItem("type");
 
   //  check based on type
@@ -151,7 +152,7 @@ async function verifyOtp() {
     if (type === "forgot") {
       bodyData = { email, otp };
     } else {
-      bodyData = { email, otp, name, password };
+      bodyData = { email, otp, name, password,referralCode };
     }
 
     const res = await fetch("/verify-otp", {
@@ -196,6 +197,7 @@ async function resendOtp() {
   const email = localStorage.getItem("email");
   const name = localStorage.getItem("name");
   const password = localStorage.getItem("password");
+  const referralCode = localStorage.getItem("referralCode");
 
   if (!email || !name || !password) {
     document.getElementById("otpError").innerText = "Session expired. Redirecting...";
@@ -211,7 +213,7 @@ async function resendOtp() {
     await fetch("/send-otp", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ email, name, password })
+      body: JSON.stringify({ email, name, password , referralCode})
     });
 
     document.getElementById("otpError").innerText = "OTP sent successfully. Please check your email.";

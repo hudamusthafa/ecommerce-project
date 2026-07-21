@@ -93,7 +93,7 @@ exports.login=async(req,res,next)=>{
 exports.sendOtp=async(req,res,next)=>{
   try{
 
-    const {name,email,password}=req.body;
+    const {name,email,password, referralCode}=req.body;
 
     // EMPTY VALIDATION
     if(!name || !email || !password){
@@ -103,7 +103,7 @@ exports.sendOtp=async(req,res,next)=>{
     }
 
     // GENERATE OTP
-    const otp=await sendOtpService(name,email,password);
+    const otp=await sendOtpService(name,email,password, referralCode);
 
     console.log("Generated OTP:",otp);
 
@@ -128,7 +128,7 @@ exports.sendOtp=async(req,res,next)=>{
 exports.verifyOtp=async(req,res,next)=>{
   try{
 
-    const {email,otp,name,password}=req.body;
+    const {email,otp,name,password, referralCode}=req.body;
 
     // REQUIRED VALIDATION
     if(!email || !otp){
@@ -142,7 +142,7 @@ exports.verifyOtp=async(req,res,next)=>{
     // SIGNUP OTP FLOW
     if(name && password){
 
-      user=await verifyOtpService(email,otp,name,password);
+      user=await verifyOtpService(email,otp,name,password,referralCode);
 
       return res.status(200).json({
         message:"User verified successfully",

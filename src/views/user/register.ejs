@@ -120,6 +120,24 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
       <p class="error" id="confirmPasswordError"></p>
 
+<!-- REFERRAL CODE -->
+<div class="input-group">
+
+  <i class="fa-solid fa-gift"></i>
+
+  <input
+    type="text"
+    name="referralCode"
+    id="referralCode"
+    placeholder="Referral Code (Optional)"
+  >
+
+</div>
+
+<p class="error" id="referralCodeError"></p>
+
+
+
       <button
         type="submit"
         class="signup-btn"
@@ -171,9 +189,9 @@ function validateForm(){
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const confirmPassword =
-  document.getElementById("confirmPassword").value;
-
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  //const referralCode = document.getElementById("referralCode").value.trim();
+  
   document.getElementById("nameError").innerText = "";
   document.getElementById("emailError").innerText = "";
   document.getElementById("passwordError").innerText = "";
@@ -247,6 +265,9 @@ document
   const password =
   document.getElementById("password").value;
 
+  const referralCode =
+document.getElementById("referralCode").value.trim();
+
   const res = await fetch("/send-otp",{
     method:"POST",
     headers:{
@@ -255,7 +276,8 @@ document
     body:JSON.stringify({
       name,
       email,
-      password
+      password,
+       referralCode
     })
   });
 
@@ -266,6 +288,7 @@ document
     localStorage.setItem("name",name);
     localStorage.setItem("email",email);
     localStorage.setItem("password",password);
+    localStorage.setItem( "referralCode", referralCode);
     localStorage.setItem("type","register");
 
     window.location.href="/otp";

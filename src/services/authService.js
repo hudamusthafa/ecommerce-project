@@ -3,6 +3,12 @@ const User = require("../models/User");
 const Otp = require("../models/Otp");
 
 // //--------------------------------REGISTER
+//fn to generate referral code
+
+const generateReferralCode = () => {
+    return "AURA" + Math.random().toString(36).substring(2, 8).toUpperCase();
+};
+
 
 exports.registerService = async (name, email, password) => {
   const emailLower = email.toLowerCase();
@@ -15,11 +21,15 @@ exports.registerService = async (name, email, password) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  //generate referal code
+const referralCode = generateReferralCode();
+
   const user = await User.create({
     name,
     email: emailLower,
     password: hashedPassword,
-     provider: "local"
+    provider: "local"
+   
   });
 
   return user;
@@ -57,7 +67,7 @@ exports.loginService = async (email, password) => {
 
 // SEND OTP
 
-exports.sendOtpService = async (name, email, password) => {
+exports.sendOtpService = async (name, email, password, referralCode) => {
   const emailLower = email.toLowerCase();
 
   const existingUser = await User.findOne({ email: emailLower });
@@ -66,9 +76,26 @@ exports.sendOtpService = async (name, email, password) => {
     throw new Error("User already exists");
   }
 
+
+// Validate referral code before sending OTP
+if (referralCode && referralCode.trim()) {
+
+    const referrer = await User.findOne({
+        referralCode: referralCode.trim().toUpperCase()
+    });
+
+    if (!referrer) {
+        throw new Error("Invalid referral code.");
+    }
+
+}
+
+
+
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   await Otp.deleteMany({ email: emailLower });
+
 
   await Otp.create({
     email: emailLower,
@@ -82,7 +109,7 @@ exports.sendOtpService = async (name, email, password) => {
 ////---------------------------- VERIFY OTP
 
 
-exports.verifyOtpService = async (email, otp, name, password) => {
+exports.verifyOtpService = async (email, otp, name, password,referralCode) => {
   const emailLower = email.toLowerCase();
 
   const record = await Otp.findOne({ email: emailLower });
@@ -101,13 +128,32 @@ exports.verifyOtpService = async (email, otp, name, password) => {
     throw new Error("User already exists");
   }
 
+let referrer = null;
+
+if (referralCode && referralCode.trim()) {
+    referrer = await User.findOne({
+        referralCode: referralCode.trim().toUpperCase()
+    });
+}
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({
+  const newReferralCode = generateReferralCode();
+
+
+  //creating user
+const user = await User.create({
+
     name,
     email: emailLower,
-    password: hashedPassword
-  });
+    password: hashedPassword,
+     provider: "local",
+
+    referralCode: newReferralCode,
+
+    referredBy: referrer ? referrer._id : null
+
+});
 
   await Otp.deleteMany({ email: emailLower });
 

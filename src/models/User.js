@@ -8,9 +8,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     password: String,
-    // phone: {
-    // type: String
-    // },
+   
     gender: {
       type: String
     },
@@ -48,6 +46,17 @@ const userSchema = new mongoose.Schema(
 },
 
 
+referralCode: {
+    type: String,
+    unique: true,
+    sparse: true
+},
+
+referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+},
   },
  
   { timestamps: true },
