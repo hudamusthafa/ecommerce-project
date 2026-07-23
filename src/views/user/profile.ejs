@@ -87,73 +87,125 @@
 
       </div>
 
-      <!-- RIGHT: PASSWORD -->
-      <div class="password-section">
 
-        <% if (user.provider !== "google") { %>
 
-  <div class="password-section">
+      <!-- Referral Program -->
+
+<div class="referral-card">
+
+  <h3>Referral Program</h3>
+
+  <p class="referral-text">
+    Invite your friends and earn exciting rewards.
+  </p>
+
+  <label>Your Referral Code</label>
+
+  <div class="referral-box">
+
+    <input
+      type="text"
+      id="referralCode"
+      value="<%= user.referralCode %>"
+      readonly
+    >
+
+    <button
+      type="button"
+      onclick="copyReferralCode()"
+      class="copy-btn"
+    >
+      Copy
+    </button>
+
+  </div>
+
+  <label>Referral Link</label>
+
+  <div class="referral-box">
+
+    <input
+      type="text"
+      id="referralLink"
+      value="<%= referralLink %>"     
+      readonly
+    >
+
+    <button
+      type="button"
+      onclick="copyReferralLink()"
+      class="copy-btn"
+    >
+      Copy
+    </button>
+
+  </div>
+
+</div>
+
+<!-- PASSWORD -->
+<% if (user.provider !== "google") { %>
+
+<div class="password-section">
 
     <h3>Change Password</h3>
 
     <form action="/profile/password?_method=PUT" method="POST">
 
-      <div class="password-box">
-        <input
-          type="password"
-          name="currentPassword"
-          id="currentPassword"
-          placeholder="Current Password"
-          required
-        >
-        <i
-          class="fas fa-eye"
-          onclick="togglePassword('currentPassword', this)"
-        ></i>
-      </div>
+        <div class="password-box">
+            <input
+                type="password"
+                name="currentPassword"
+                id="currentPassword"
+                placeholder="Current Password"
+                required
+            >
+            <i
+                class="fas fa-eye"
+                onclick="togglePassword('currentPassword', this)"
+            ></i>
+        </div>
 
-      <div class="password-box">
-        <input
-          type="password"
-          name="newPassword"
-          id="newPassword"
-          placeholder="New Password"
-          required
-        >
-        <i
-          class="fas fa-eye"
-          onclick="togglePassword('newPassword', this)"
-        ></i>
-      </div>
+        <div class="password-box">
+            <input
+                type="password"
+                name="newPassword"
+                id="newPassword"
+                placeholder="New Password"
+                required
+            >
+            <i
+                class="fas fa-eye"
+                onclick="togglePassword('newPassword', this)"
+            ></i>
+        </div>
 
-      <div class="password-box">
-        <input
-          type="password"
-          name="confirmPassword"
-          id="confirmPassword"
-          placeholder="Confirm Password"
-          required
-        >
-        <i
-          class="fas fa-eye"
-          onclick="togglePassword('confirmPassword', this)"
-        ></i>
-      </div>
+        <div class="password-box">
+            <input
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                required
+            >
+            <i
+                class="fas fa-eye"
+                onclick="togglePassword('confirmPassword', this)"
+            ></i>
+        </div>
 
-      <button
-        type="submit"
-        class="password-btn"
-      >
-        Change Password
-      </button>
+        <button
+            type="submit"
+            class="password-btn"
+        >
+            Change Password
+        </button>
 
     </form>
 
-  </div>
+</div>
 
 <% } %>
-
-      </div>
 
     </div>
 
@@ -234,7 +286,35 @@ document.querySelector("input[name='name']").addEventListener("input", () => {
 document.getElementById("email").addEventListener("input", () => {
   document.getElementById("emailError").innerText = "";
 });
+
+
+// referal code
+
+function copyReferralCode() {
+
+  const input =
+  document.getElementById("referralCode");
+
+  navigator.clipboard.writeText(input.value);
+
+  alert("Referral code copied!");
+
+}
+
+function copyReferralLink() {
+
+  const input =
+  document.getElementById("referralLink");
+
+  navigator.clipboard.writeText(input.value);
+
+  alert("Referral link copied!");
+
+}
+
 </script>
+
+
 
 
 </body>

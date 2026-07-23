@@ -140,8 +140,18 @@ exports.getEditAddress = async (req, res) => {
 
 // PROFILE PAGE
 exports.getProfile = (req, res) => {
-res.render("user/profile", { user: req.user, error: null, success: null });};
 
+  const referralLink =
+    `${req.protocol}://${req.get("host")}/register?ref=${req.user.referralCode}`;
+
+  res.render("user/profile", {
+    user: req.user,
+    referralLink,
+    error: null,
+    success: null
+  });
+
+};
 
 //==========================================================
 

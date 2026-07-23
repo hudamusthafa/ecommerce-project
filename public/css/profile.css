@@ -1,14 +1,12 @@
 /* ===== PROFILE STYLING ONLY ===== */
 
 /* PROFILE CARD */
-.profile-card {
-  background: #fff;
-  width: 320px;              
-  margin-top: 20px;         
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  text-align: center;
+.profile-card{
+    background:#fff;
+    width:100%;
+    padding:28px;
+    border-radius:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 /* PROFILE IMAGE */
@@ -20,7 +18,9 @@
   display: block;
   margin: 0 auto 15px;
 }
-
+.profile-grid{
+    margin-top:15px;
+}
 /* LABELS */
 .profile-card label {
   font-size: 14px;
@@ -36,6 +36,18 @@
   margin-top: 5px;
   border: 1px solid #ddd;
   border-radius: 6px;
+}
+
+.profile-container{
+
+    padding:35px 45px;
+
+}
+
+.profile-content{
+
+    padding:10px 0 40px;
+
 }
 
 /* GENDER */
@@ -102,10 +114,20 @@
 }
 
 /* PASSWORD SECTION (same style as card) */
-.password-section {
-  width: 320px;
-  margin-top: 40px;
-  text-align: center;
+.password-section{
+
+    width:380px;
+
+    margin:35px auto 0;
+
+    padding:28px;
+
+    background:#fff;
+
+    border-radius:14px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
 }
 
 /* PASSWORD INPUT WITH ICON */
@@ -146,4 +168,101 @@ input[readonly]{
   background:#f5f5f5;
   color:#666;
   cursor:not-allowed;
+}
+
+.referral-card{
+    background:#fff;
+    padding:28px;
+    border-radius:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    border:none;
+    width:100%;
+    height:fit-content;
+}
+.referral-card h3{
+    font-size:24px;
+    color:#2d2d2d;
+    margin-bottom:8px;
+}
+
+.referral-text{
+
+    color:#666;
+
+    font-size:14px;
+
+    line-height:22px;
+
+    margin-bottom:22px;
+
+}
+.referral-card label{
+
+    display:block;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+    color:#333;
+
+}
+
+.referral-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:22px;
+
+}
+
+.referral-box input{
+
+    flex:1;
+
+    height:42px;
+
+    padding:0 14px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    background:#fafafa;
+
+}
+
+.copy-btn{
+    width:70px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#8B5E3C;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.copy-btn:hover{
+
+    background:#6b4428;
+
+}
+
+.copy-btn:hover{
+    opacity:.9;
 }
