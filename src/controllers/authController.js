@@ -15,7 +15,10 @@ const sendEmail=require("../helpers/sendEmail");
 // ===================== REGISTER ========================
 
 exports.getRegister=(req,res)=>{
-  res.render("user/register");
+
+  const referralCode = req.query.ref || "" ;
+  
+  res.render("user/register",{referralCode});
 };
 
 exports.register=async(req,res,next)=>{
