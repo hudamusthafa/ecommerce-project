@@ -9,7 +9,7 @@ const upload=require("../config/multer");
 
 const adminOrderController = require("../controllers/adminOrderController");
 const adminCouponController = require("../controllers/adminCouponController");
-
+const adminSalesReportController = require("../controllers/adminSalesReportController");
 
 // ADMIN LOGIN
 router.get("/login",noCache,isAdminLoggedOut,adminController.getLogin);
@@ -75,34 +75,31 @@ router.post("/add-coupon",isAdminLoggedIn,adminCouponController.addCoupon);
 
 // EDIT COUPON PAGE
 router.get("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.getEditCoupon);
-
 // UPDATE COUPON
 router.post("/edit-coupon/:id",isAdminLoggedIn,adminCouponController.updateCoupon);
-
 // ENABLE / DISABLE COUPON
 router.post( "/coupon/:id/toggle-status",isAdminLoggedIn,adminCouponController.toggleCouponStatus);
+
+
+
+//SALES REPORT
+router.get("/sales-report",isAdminLoggedIn,adminSalesReportController.getSalesReport);
+
 
 
 // ORDERS
 router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
 //ORDER DETAILS
 router.get("/orders/:id",isAdminLoggedIn,adminOrderController.getOrderDetails);
-
 // UPDATE ORDER STATUS
 router.post("/orders/:id/status",isAdminLoggedIn,adminOrderController.updateOrderStatus);
-
 // single product  return approve
 router.post("/orders/:orderId/product/:productId/approve-return",adminOrderController.approveReturn);
-
 // single product  return reject
 router.post("/orders/:orderId/product/:productId/reject-return",adminOrderController.rejectReturn);
-
 // BULK APPROVE RETURN
-
 router.post("/orders/:orderId/approve-return-all",isAdminLoggedIn,adminOrderController.approveAllReturns);
-
 // BULK REJECT RETURN
-
 router.post("/orders/:orderId/reject-return-all",isAdminLoggedIn,adminOrderController.rejectAllReturns);
 
 module.exports=router;

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Sales Report</title>
+
+    <link rel="stylesheet" href="/css/adminSidebar.css">
+    <link rel="stylesheet" href="/css/category.css">
+    <link rel="stylesheet" href="/css/sales-report.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+</head>
+
+<body>
+
+<%- include("../partials/admin-header") %>
+
+<div class="layout">
+
+    <%- include("../partials/admin-sidebar") %>
+
+    <div class="main-content">
+
+        <div class="category-page">
+
+            <div class="top-section">
+               
+            </div>
+
+<!-- date filter -->
+
+
+<div class="top-section">
+
+    <h1>Sales Report</h1>
+
+    <div class="filter-card">
+
+    <form
+        action="/admin/sales-report"
+        method="GET"
+        class="filter-form"
+    >
+
+        <div class="report-toolbar">
+
+    <div class="filter-group">
+
+            <label>Filter By</label>
+
+            <select
+                id="filter"
+                name="filter"
+                onchange="toggleCustomDate()"
+            >
+
+                <option value="daily"
+                <%= filter==="daily"?"selected":"" %>>
+                    Daily
+                </option>
+
+                <option value="weekly"
+                <%= filter==="weekly"?"selected":"" %>>
+                    Weekly
+                </option>
+
+                <option value="yearly"
+                <%= filter==="yearly"?"selected":"" %>>
+                    Yearly
+                </option>
+
+                <option value="custom"
+                <%= filter==="custom"?"selected":"" %>>
+                    Custom
+                </option>
+
+            </select>
+
+        </div>
+
+          <div
+    id="customDate"
+    class="date-group"
+    style="<%= filter==='custom' ? 'display:flex' : 'display:none' %>"
+>
+
+    <div class="date-field">
+
+        <label>From</label>
+
+        <input
+            type="date"
+            name="fromDate"
+            value="<%= fromDate %>"
+        >
+
+    </div>
+
+    <div class="date-field">
+
+        <label>To</label>
+
+        <input
+            type="date"
+            name="toDate"
+            value="<%= toDate %>"
+        >
+
+    </div>
+
+    <div class="btn-group">
+
+    <button class="apply-btn">
+        Apply
+    </button>
+
+    <a href="/admin/sales-report"
+       class="reset-btn">
+        Reset
+    </a>
+
+</div>
+
+</div>
+
+        </div>
+
+    </form>
+    </div>
+
+</div>
+
+<!-- summary cards -->
+
+<div class="summary-card">
+
+    <div class="summary-box">
+        <span>Total Orders</span>
+        <h3><%= summary.totalOrders %></h3>
+    </div>
+
+    <div class="summary-box">
+        <span>Total Sales</span>
+        <h3>₹<%= summary.totalSales %></h3>
+    </div>
+
+    <div class="summary-box">
+        <span>Total Discount</span>
+        <h3>₹<%= summary.totalDiscount %></h3>
+    </div>
+
+    <div class="summary-box">
+        <span>Coupon Discount</span>
+        <h3>₹<%= summary.couponDiscount %></h3>
+    </div>
+
+    <div class="summary-box">
+        <span>Net Sales</span>
+        <h3>₹<%= summary.netSales %></h3>
+    </div>
+
+</div>
+
+            <!-- table -->
+            <div class="table-card">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <% if(orders.length){ %>
+
+                            <% orders.forEach(order=>{ %>
+
+                                <tr>
+
+                                    <td><%= order.orderId %></td>
+
+                                    <td><%= order.user?.name %></td>
+
+                                    <td>₹<%= order.total %></td>
+
+                                    <td><%= order.paymentMethod %></td>
+
+                                    <td>
+                                        <%= new Date(order.createdAt).toLocaleDateString("en-GB") %>
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        <% } else { %>
+
+                            <tr>
+                                <td colspan="5" class="empty-msg">
+                                    No sales found
+                                </td>
+                            </tr>
+
+                        <% } %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+ 
+
+
+<%- include("../partials/admin-footer") %>
+
+<script>
+
+function toggleCustomDate(){
+
+    const filter =
+        document.getElementById("filter").value;
+
+    const custom =
+        document.getElementById("customDate");
+
+    if(filter==="custom"){
+
+        custom.style.display="flex";
+
+    }else{
+
+        custom.style.display="none";
+
+        document.querySelector(".filter-form").submit();
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
