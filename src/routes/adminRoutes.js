@@ -85,7 +85,8 @@ router.post( "/coupon/:id/toggle-status",isAdminLoggedIn,adminCouponController.t
 //SALES REPORT
 router.get("/sales-report",isAdminLoggedIn,adminSalesReportController.getSalesReport);
 
-
+//PDF DOWNLOAD
+router.get("/sales-report/pdf", isAdminLoggedIn,adminSalesReportController.downloadSalesReportPDF );
 
 // ORDERS
 router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
