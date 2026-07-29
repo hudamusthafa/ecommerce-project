@@ -1,6 +1,6 @@
 const adminSalesReportService = require("../services/adminSalesReportService");
 const PDFDocument = require("pdfkit");
-
+const ExcelJS = require("exceljs");
 
 exports.getSalesReport = async (req, res, next) => {
 
@@ -263,5 +263,411 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
     next(error);
 
   }
+
+};
+
+
+//==============================
+
+exports.downloadSalesReportExcel = async (req, res, next) => {
+
+    try {
+
+        const filter = req.query.filter || "daily";
+        const fromDate = req.query.fromDate || "";
+        const toDate = req.query.toDate || "";
+
+        const { orders, summary } =
+            await adminSalesReportService.getSalesReport({
+                filter,
+                fromDate,
+                toDate
+            });
+
+        const workbook = new ExcelJS.Workbook();
+
+        workbook.creator = "Aura";
+        workbook.created = new Date();
+
+        const worksheet =
+            workbook.addWorksheet("Sales Report");
+
+        // =========================
+        // COLUMN WIDTHS
+      
+
+        worksheet.columns = [
+
+            { width: 28 },
+            { width: 28 },
+            { width: 18 },
+            { width: 18 },
+            { width: 18 }
+
+        ];
+
+        // =========================
+        // TITLE
+        
+
+        worksheet.mergeCells("A1:E1");
+
+        worksheet.getCell("A1").value = "AURA";
+
+        worksheet.getCell("A1").font = {
+
+            name: "Calibri",
+            size: 24,
+            bold: true,
+            color: {
+                argb: "9A6434"
+            }
+
+        };
+
+        worksheet.getCell("A1").alignment = {
+
+            horizontal: "center"
+
+        };
+
+        worksheet.getRow(1).height = 32;
+
+        worksheet.mergeCells("A2:E2");
+
+        worksheet.getCell("A2").value = "Jewellery Store";
+
+        worksheet.getCell("A2").alignment = {
+
+            horizontal: "center"
+
+        };
+
+        worksheet.mergeCells("A4:E4");
+
+        worksheet.getCell("A4").value = "SALES REPORT";
+
+        worksheet.getCell("A4").font = {
+
+            name: "Calibri",
+            size: 18,
+            bold: true
+
+        };
+
+        worksheet.getCell("A4").alignment = {
+
+            horizontal: "center"
+
+        };
+
+        worksheet.getRow(4).height = 26;
+
+        // =========================
+        // REPORT INFORMATION
+        
+
+        worksheet.addRow([]);
+
+       const reportHeader = worksheet.addRow([
+    "Report Information"
+]);
+
+worksheet.mergeCells(
+    `A${reportHeader.number}:E${reportHeader.number}`
+);
+
+reportHeader.eachCell(cell => {
+
+    cell.font = {
+        bold: true,
+        color: {
+            argb: "FFFFFF"
+        }
+    };
+
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {
+            argb: "9A6434"
+        }
+    };
+
+    cell.alignment = {
+        horizontal: "center"
+    };
+
+});
+
+        worksheet.addRow([
+            "Report Type",
+            filter.toUpperCase()
+        ]);
+
+        if (filter === "custom") {
+
+            worksheet.addRow([
+                "From",
+                fromDate
+            ]);
+
+            worksheet.addRow([
+                "To",
+                toDate
+            ]);
+
+        }
+
+        worksheet.addRow([
+            "Generated On",
+            new Date().toLocaleDateString("en-GB")
+        ]);
+
+        worksheet.addRow([]);
+
+        // =========================
+        // SUMMARY
+        
+const summaryHeader = worksheet.addRow([
+    "Summary"
+]);
+
+worksheet.mergeCells(
+    `A${summaryHeader.number}:E${summaryHeader.number}`
+);
+
+summaryHeader.eachCell(cell => {
+
+    cell.font = {
+        bold: true,
+        color: {
+            argb: "FFFFFF"
+        }
+    };
+
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {
+            argb: "9A6434"
+        }
+    };
+
+    cell.alignment = {
+        horizontal: "center"
+    };
+
+});
+
+const totalOrdersRow = worksheet.addRow([
+    "Total Orders",
+    summary.totalOrders
+]);
+
+const totalSalesRow = worksheet.addRow([
+    "Total Sales",
+    summary.totalSales
+]);
+
+const totalDiscountRow = worksheet.addRow([
+    "Total Discount",
+    summary.totalDiscount
+]);
+
+const couponDiscountRow = worksheet.addRow([
+    "Coupon Discount",
+    summary.couponDiscount
+]);
+
+const netSalesRow = worksheet.addRow([
+    "Net Sales",
+    summary.netSales
+]);
+        worksheet.addRow([]);
+
+        // =========================
+        // ORDERS TABLE
+        
+
+       const ordersHeader = worksheet.addRow([
+    "Order ID",
+    "Customer",
+    "Payment",
+    "Total",
+    "Date"
+]);
+
+ordersHeader.eachCell(cell => {
+
+    cell.font = {
+
+        bold: true,
+        color: {
+            argb: "FFFFFF"
+        }
+
+    };
+
+    cell.fill = {
+
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {
+            argb: "9A6434"
+        }
+
+    };
+
+    cell.alignment = {
+
+        horizontal: "center"
+
+    };
+
+});
+
+        orders.forEach(order => {
+
+            worksheet.addRow([
+
+                order.orderId,
+
+                order.user?.name || "-",
+
+                order.paymentMethod,
+
+                order.total,
+
+                new Date(order.createdAt)
+                    .toLocaleDateString("en-GB")
+
+            ]);
+
+        });
+
+        // =========================
+        // ALIGNMENT
+        
+
+        worksheet.getColumn(4).alignment = {
+
+            horizontal: "right"
+
+        };
+
+        worksheet.getColumn(5).alignment = {
+
+            horizontal: "center"
+
+        };
+
+        // =========================
+        // CURRENCY FORMAT
+        
+
+ worksheet.getColumn(4).numFmt = '₹#,##0.00';
+
+totalSalesRow.getCell(2).numFmt = '₹#,##0.00';
+
+totalDiscountRow.getCell(2).numFmt = '₹#,##0.00';
+
+couponDiscountRow.getCell(2).numFmt = '₹#,##0.00';
+
+netSalesRow.getCell(2).numFmt = '₹#,##0.00';
+
+        // =========================
+        // BORDERS
+        
+
+        worksheet.eachRow(row => {
+
+            row.eachCell(cell => {
+
+                cell.border = {
+
+                    top: {
+                        style: "thin"
+                    },
+
+                    left: {
+                        style: "thin"
+                    },
+
+                    bottom: {
+                        style: "thin"
+                    },
+
+                    right: {
+                        style: "thin"
+                    }
+
+                };
+
+            });
+
+        });
+
+        // =========================
+        // FOOTER
+      
+worksheet.addRow([]);
+
+const footerRow = worksheet.addRow([
+    "This report was generated electronically."
+]);
+
+worksheet.mergeCells(
+    `A${footerRow.number}:E${footerRow.number}`
+);
+
+footerRow.getCell(1).alignment = {
+    horizontal: "center"
+};
+
+footerRow.getCell(1).font = {
+    italic: true,
+    color: {
+        argb: "808080"
+    }
+};
+
+//header stay visible
+
+worksheet.views = [
+    {
+        state: "frozen",
+        ySplit: ordersHeader.number
+    }
+];
+
+
+
+
+        // =========================
+        // DOWNLOAD
+        
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=Sales-Report.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+
+        res.end();
+
+    } catch (error) {
+
+        console.log(error);
+
+        next(error);
+
+    }
 
 };

@@ -87,6 +87,12 @@ router.get("/sales-report",isAdminLoggedIn,adminSalesReportController.getSalesRe
 
 //PDF DOWNLOAD
 router.get("/sales-report/pdf", isAdminLoggedIn,adminSalesReportController.downloadSalesReportPDF );
+//EXCEL
+router.get("/sales-report/excel",isAdminLoggedIn,adminSalesReportController.downloadSalesReportExcel);
+
+
+
+
 
 // ORDERS
 router.get("/orders",isAdminLoggedIn,adminOrderController.getOrders);
