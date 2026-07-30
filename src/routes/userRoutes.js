@@ -74,9 +74,14 @@ router.get("/wallet",cacheMiddleware.noCache,isLoggedIn,userController.getWallet
 
 // PAYPAL
 
-router.post("/checkout/paypal/create-order",cacheMiddleware.noCache,isLoggedIn,userController.createPayPalOrder);
+// router.post("/checkout/paypal/create-order",cacheMiddleware.noCache,isLoggedIn,userController.createPayPalOrder);
+// router.post("/checkout/paypal/capture-order",cacheMiddleware.noCache,isLoggedIn,userController.capturePayPalOrder);
 
-router.post("/checkout/paypal/capture-order",cacheMiddleware.noCache,isLoggedIn,userController.capturePayPalOrder);
+//STRIPE
+router.post("/checkout/stripe/create-session", isLoggedIn, userController.createStripeSession);
+router.get("/checkout/stripe/success", isLoggedIn, userController.stripeSuccess);
+router.get("/checkout/stripe/cancel", isLoggedIn, userController.stripeCancel);
+
 
 // PAYMENT SUCCESS
 

@@ -508,7 +508,7 @@
 
 
 <!-- PAYPAL -->
-
+<!-- 
 <div class="payment-card">
 
     <label class="payment-option">
@@ -539,7 +539,42 @@
 
     </label>
 
+</div> -->
+
+<!-- STRIPE -->
+
+<div class="payment-card">
+
+    <label class="payment-option">
+
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="Stripe"
+        >
+
+        <div class="payment-icon">
+
+            <i class="fa-brands fa-stripe"></i>
+
+        </div>
+
+        <div class="payment-info">
+
+            <h4>Stripe</h4>
+
+            <p>
+                Pay securely using Stripe.
+            </p>
+
+        </div>
+
+    </label>
+
 </div>
+
+
+
 
               </div>
 
@@ -733,10 +768,10 @@
               </button>
 
 
-              <div
+              <!-- <div
                 id="paypal-button-container"
                 style="display:none; margin-top:15px;"
-            ></div>
+            ></div> -->
 
             </div>
 
@@ -902,7 +937,8 @@
 </div>
   
 
-<script src="https://www.paypal.com/sdk/js?client-id=<%= paypalClientId %>&currency=USD"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
 
   <script>
 
@@ -1174,194 +1210,246 @@ if(removeBtn){
 
 
 <script>
+  
+  //stripe
+
+const stripe = Stripe("<%= stripePublishableKey %>");
 
 const checkoutForm = document.getElementById("checkoutForm");
 
 checkoutForm.addEventListener("submit", async function (e) {
 
+   console.log("Submit clicked");
+
     const paymentMethod = document.querySelector(
         'input[name="paymentMethod"]:checked'
     ).value;
 
-    // Allow COD and Wallet to continue normally
-    if (
-        paymentMethod === "COD" ||
-        paymentMethod === "Wallet"
-    ) {
+       console.log("Submit clicked");
+
+    if (paymentMethod === "COD" || paymentMethod === "Wallet") {
         return;
     }
 
-    // Stop normal form submission
+if (paymentMethod === "Stripe") {
+
     e.preventDefault();
 
-    try {
 
-        const selectedAddress =
-            document.getElementById("selectedAddress").value;
+      console.log("Stripe selected");
 
-        // Create PayPal Order
-        const response = await fetch(
-            "/checkout/paypal/create-order",
-            {
-                method: "POST"
-            }
-        );
 
-        const data = await response.json();
-
-        if (!data.success) {
-
-            showToast(
-                "Unable to start PayPal payment.",
-                "error"
-            );
-
-            return;
-
+    const response = await fetch(
+        "/checkout/stripe/create-session",
+        {
+            method: "POST"
         }
+    );
 
-        // Redirect user to PayPal Checkout
-        window.location.href =
-            "https://www.sandbox.paypal.com/checkoutnow?token=" +
-            data.orderID;
+console.log(response);
 
-    } catch (err) {
 
-        console.error(err);
+    const data = await response.json();
 
-        showToast(
-            "Something went wrong.",
-            "error"
-        );
+     console.log(data);
+
+    if (data.success) {
+
+        window.location.href = data.url;
 
     }
 
-});
-
-const paymentRadios =
-    document.querySelectorAll(
-        'input[name="paymentMethod"]'
-    );
-
-const paypalContainer =
-    document.getElementById(
-        "paypal-button-container"
-    );
-
-const placeOrderBtn =
-    document.getElementById(
-        "placeOrderBtn"
-    );
-
-paymentRadios.forEach(radio => {
-
-    radio.addEventListener("change", function () {
-
-        if (this.value === "PayPal") {
-
-            paypalContainer.style.display = "block";
-            placeOrderBtn.style.display = "none";
-
-        } else {
-
-            paypalContainer.style.display = "none";
-            placeOrderBtn.style.display = "block";
-
-        }
-
-    });
+}
 
 });
-
-
-
 </script>
+<!-- <script> 
 
-<script>
+// const checkoutForm = document.getElementById("checkoutForm");
 
-paypal.Buttons({
+// checkoutForm.addEventListener("submit", async function (e) {
 
-    style: {
-        layout: "vertical",
-        color: "gold",
-        shape: "rect",
-        label: "paypal"
-    },
+//     const paymentMethod = document.querySelector(
+//         'input[name="paymentMethod"]:checked'
+//     ).value;
 
-    createOrder: async function () {
+//     // Allow COD and Wallet to continue normally
+//     if (
+//         paymentMethod === "COD" ||
+//         paymentMethod === "Wallet"
+//     ) {
+//         return;
+//     }
 
-        const response = await fetch(
-            "/checkout/paypal/create-order",
-            {
-                method: "POST"
-            }
-        );
+//     // Stop normal form submission
+//     e.preventDefault();
 
-        const data = await response.json();
+//     try {
 
-        return data.orderID;
+//         const selectedAddress =
+//             document.getElementById("selectedAddress").value;
 
-    },
+//         // Create PayPal Order
+//         const response = await fetch(
+//             "/checkout/paypal/create-order",
+//             {
+//                 method: "POST"
+//             }
+//         );
 
-    onApprove: async function (data) {
+//         const data = await response.json();
 
-  const selectedAddress =    document.getElementById("selectedAddress").value;   
+//         if (!data.success) {
+
+//             showToast(
+//                 "Unable to start PayPal payment.",
+//                 "error"
+//             );
+
+//             return;
+
+//         }
+
+//         // Redirect user to PayPal Checkout
+//         window.location.href =
+//             "https://www.sandbox.paypal.com/checkoutnow?token=" +
+//             data.orderID;
+
+//     } catch (err) {
+
+//         console.error(err);
+
+//         showToast(
+//             "Something went wrong.",
+//             "error"
+//         );
+
+//     }
+
+// });
+
+// const paymentRadios =
+//     document.querySelectorAll(
+//         'input[name="paymentMethod"]'
+//     );
+
+// const paypalContainer =
+//     document.getElementById(
+//         "paypal-button-container"
+//     );
+
+// const placeOrderBtn =
+//     document.getElementById(
+//         "placeOrderBtn"
+//     );
+
+// paymentRadios.forEach(radio => {
+
+//     radio.addEventListener("change", function () {
+
+//         if (this.value === "PayPal") {
+
+//             paypalContainer.style.display = "block";
+//             placeOrderBtn.style.display = "none";
+
+//         } else {
+
+//             paypalContainer.style.display = "none";
+//             placeOrderBtn.style.display = "block";
+
+//         }
+
+//     });
+
+// });
+
+
+
+
+
+// paypal.Buttons({
+
+//     style: {
+//         layout: "vertical",
+//         color: "gold",
+//         shape: "rect",
+//         label: "paypal"
+//     },
+
+//     createOrder: async function () {
+
+//         const response = await fetch(
+//             "/checkout/paypal/create-order",
+//             {
+//                 method: "POST"
+//             }
+//         );
+
+//         const data = await response.json();
+
+//         return data.orderID;
+
+//     },
+
+//     onApprove: async function (data) {
+
+//   const selectedAddress =    document.getElementById("selectedAddress").value;   
         
 
 
-        const response = await fetch(
-            "/checkout/paypal/capture-order",
-            {
-                method: "POST",
+//         const response = await fetch(
+//             "/checkout/paypal/capture-order",
+//             {
+//                 method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 },
 
-                body: JSON.stringify({
+//                 body: JSON.stringify({
 
-                    orderID: data.orderID,
-                    selectedAddress
+//                     orderID: data.orderID,
+//                     selectedAddress
 
-                })
+//                 })
 
-            }
-        );
+//             }
+//         );
 
-        const result = await response.json();
+//         const result = await response.json();
 
-        if (result.success) {
+//         if (result.success) {
 
-           window.location.href = "/payment-success/" + result.orderId;
+//            window.location.href = "/payment-success/" + result.orderId;
                 
 
-        } else {
+//         } else {
 
-            showToast(
-                "Payment failed.",
-                "error"
-            );
+//             showToast(
+//                 "Payment failed.",
+//                 "error"
+//             );
 
-        }
+//         }
 
-    },
+//     },
 
-    onCancel: function () {
+//     onCancel: function () {
 
-       window.location.href="/payment-failure";
-    },
+//        window.location.href="/payment-failure";
+//     },
 
-    onError: function (err) {
+//     onError: function (err) {
 
-        console.error(err);
+//         console.error(err);
 
-       window.location.href="/payment-failure";
+//        window.location.href="/payment-failure";
 
-    }
+//     }
 
-}).render("#paypal-button-container");
+// }).render("#paypal-button-container");
 
-</script>
+</script> -->
 
 <div id="toast" class="toast"></div>
 </body>

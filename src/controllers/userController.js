@@ -10,8 +10,8 @@ const userOrderService = require("../services/userOrderService");
 const PDFDocument = require("pdfkit");
 const Order = require("../models/Order");
 const userWalletService = require("../services/userWalletService");
-const paypalService = require("../services/paypalService");
-
+//const paypalService = require("../services/paypalService");
+const stripe = require("../config/stripe");
 
 // ADD ADDRESS
 
@@ -702,7 +702,8 @@ const wallet =
       appliedCoupon: req.session.appliedCoupon || null,
       coupons,
       wallet,
-       paypalClientId: process.env.PAYPAL_CLIENT_ID
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+       //paypalClientId: process.env.PAYPAL_CLIENT_ID
 
       
     });
@@ -806,80 +807,168 @@ delete req.session.appliedCoupon;
 // CREATE PAYPAL ORDER
 
 
-exports.createPayPalOrder = async (req, res, next) => {
+// exports.createPayPalOrder = async (req, res, next) => {
 
-    try {
+//     try {
 
-        const buyNow = req.session.buyNow || null;
+//         const buyNow = req.session.buyNow || null;
 
-        const data = await userCheckoutService.getCheckoutData(
-            req.user._id,
-            buyNow
-        );
+//         const data = await userCheckoutService.getCheckoutData(
+//             req.user._id,
+//             buyNow
+//         );
 
-        // Apply coupon if available
-        if (req.session.appliedCoupon) {
+//         // Apply coupon if available
+//         if (req.session.appliedCoupon) {
 
-            data.discount = req.session.appliedCoupon.discount;
-            data.total = req.session.appliedCoupon.total;
+//             data.discount = req.session.appliedCoupon.discount;
+//             data.total = req.session.appliedCoupon.total;
 
-        }
+//         }
 
-        // PayPal Sandbox works in USD.
-        //  convert INR to USD.
-        const usdAmount = (data.total / 85).toFixed(2);
+//         // PayPal Sandbox works in USD.
+//         //  convert INR to USD.
+//         const usdAmount = (data.total / 85).toFixed(2);
 
-        const paypalOrder = await paypalService.createOrder(
-            Number(usdAmount)
-        );
+//         const paypalOrder = await paypalService.createOrder(
+//             Number(usdAmount)
+//         );
 
-        res.json({
+//         res.json({
 
-            success: true,
-            //redirectUrl: "/orders/" + order.orderId
-             orderID: paypalOrder.id
-        });
+//             success: true,
+//             //redirectUrl: "/orders/" + order.orderId
+//              orderID: paypalOrder.id
+//         });
 
-    } catch (error) {
+//     } catch (error) {
 
-        next(error);
+//         next(error);
 
-    }
+//     }
 
-};
+// };
 
 //==========================================================
 // CAPTURE PAYPAL PAYMENT
 
-exports.capturePayPalOrder = async (req, res, next) => {
+// exports.capturePayPalOrder = async (req, res, next) => {
+
+//     try {
+
+//         const buyNow = req.session.buyNow || null;
+
+//         // Capture payment from PayPal
+//         await paypalService.captureOrder(
+//             req.body.orderID
+//         );
+
+//         // Create order in our database
+//         const order = await userOrderService.placeOrder(
+//             req.user._id,
+//             req.body.selectedAddress,
+//             "PayPal",
+//             buyNow
+//         );
+
+//         // Clear session
+//         delete req.session.buyNow;
+//         delete req.session.appliedCoupon;
+
+//         res.json({
+
+//             success: true,
+//            orderId: order._id
+
+//         });
+
+//     } catch (error) {
+
+//         next(error);
+
+//     }
+
+// };
+
+//==================================
+
+exports.createStripeSession = async (req, res, next) => {
 
     try {
 
         const buyNow = req.session.buyNow || null;
 
-        // Capture payment from PayPal
-        await paypalService.captureOrder(
-            req.body.orderID
-        );
+        const data =
+            await userCheckoutService.getCheckoutData(
+                req.user._id,
+                buyNow
+            );
 
-        // Create order in our database
-        const order = await userOrderService.placeOrder(
-            req.user._id,
-            req.body.selectedAddress,
-            "PayPal",
-            buyNow
-        );
+        let total = data.total;
 
-        // Clear session
-        delete req.session.buyNow;
-        delete req.session.appliedCoupon;
+        // Apply coupon if available
+        if (req.session.appliedCoupon) {
+            total = req.session.appliedCoupon.total;
+        }
+
+        const session = await stripe.checkout.sessions.create({
+
+            mode: "payment",
+
+            payment_method_types: ["card"],
+
+            line_items: [
+
+                {
+
+                    price_data: {
+
+                        currency: "inr",
+
+                        product_data: {
+
+                            name: "Aura Order"
+
+                        },
+
+                        unit_amount: Math.round(total * 100)
+
+                    },
+
+                    quantity: 1
+
+                }
+
+            ],
+
+            success_url:
+                "http://localhost:3000/checkout/stripe/success?session_id={CHECKOUT_SESSION_ID}",
+
+            cancel_url:
+                "http://localhost:3000/checkout/stripe/cancel"
+
+        });
 
         res.json({
 
             success: true,
-           orderId: order._id
+            url: session.url
 
         });
+
+    } catch (error) {
+
+        console.log(error);
+        next(error);
+
+    }
+
+};
+exports.stripeSuccess = async (req, res, next) => {
+
+    try {
+
+        res.send("Stripe Payment Success");
 
     } catch (error) {
 
@@ -889,8 +978,21 @@ exports.capturePayPalOrder = async (req, res, next) => {
 
 };
 
-//==================================
+exports.stripeCancel = async (req, res, next) => {
 
+    try {
+
+        res.redirect("/checkout");
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
+};
+
+//=================================
 // PAYMENT SUCCESS PAGE
 
 exports.getPaymentSuccess = async (req, res, next) => {
@@ -1171,17 +1273,6 @@ exports.getWallet = async (req, res, next) => {
     }
 
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
