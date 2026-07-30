@@ -1219,13 +1219,11 @@ const checkoutForm = document.getElementById("checkoutForm");
 
 checkoutForm.addEventListener("submit", async function (e) {
 
-   console.log("Submit clicked");
 
     const paymentMethod = document.querySelector(
         'input[name="paymentMethod"]:checked'
     ).value;
 
-       console.log("Submit clicked");
 
     if (paymentMethod === "COD" || paymentMethod === "Wallet") {
         return;
@@ -1235,23 +1233,25 @@ if (paymentMethod === "Stripe") {
 
     e.preventDefault();
 
+const selectedAddress =
+    document.getElementById("selectedAddress").value;
 
-      console.log("Stripe selected");
+//send selected address to bakcend
+const response = await fetch(
+    "/checkout/stripe/create-session",
+    {
+        method: "POST",
 
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-    const response = await fetch(
-        "/checkout/stripe/create-session",
-        {
-            method: "POST"
-        }
-    );
-
-console.log(response);
-
-
+        body: JSON.stringify({
+            selectedAddress
+        })
+    }
+);
     const data = await response.json();
-
-     console.log(data);
 
     if (data.success) {
 

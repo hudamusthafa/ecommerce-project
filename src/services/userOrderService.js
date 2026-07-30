@@ -11,7 +11,8 @@ exports.placeOrder = async (
     userId,
     addressId,
     paymentMethod,
-    buyNow = null
+    buyNow = null,
+    isPaid = false
 )=>{
 
   
@@ -82,9 +83,8 @@ if (paymentMethod === "Wallet") {
       paymentMethod,
 
   paymentStatus:
-    paymentMethod === "COD"
-        ? "Pending"
-        : "Paid",
+    isPaid ? "Paid" : "Pending",
+
     });
 
     await order.save();
@@ -198,10 +198,8 @@ if (paymentMethod === "Wallet") {
     total,
     paymentMethod,
 
-  paymentStatus:
-    paymentMethod === "COD"
-        ? "Pending"
-        : "Paid",
+paymentStatus:
+    isPaid ? "Paid" : "Pending",
   });
 
   await order.save();

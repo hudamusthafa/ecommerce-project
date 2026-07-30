@@ -98,7 +98,7 @@ couponCode: {
     enum:[
         "COD",
         "Wallet",
-        "Razorpay"
+        "Stripe"
     ],
     default:"COD"
   },

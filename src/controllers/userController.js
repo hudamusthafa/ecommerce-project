@@ -785,7 +785,8 @@ const order = await userOrderService.placeOrder(
     req.user._id,
     req.body.selectedAddress,
     paymentMethod,
-    buyNow
+    buyNow,
+    paymentMethod === "Wallet"
 );
 
 //  clear after order
@@ -911,6 +912,11 @@ exports.createStripeSession = async (req, res, next) => {
             total = req.session.appliedCoupon.total;
         }
 
+// Save selected address
+req.session.stripeCheckout = {
+    addressId: req.body.selectedAddress
+};
+
         const session = await stripe.checkout.sessions.create({
 
             mode: "payment",
@@ -964,20 +970,37 @@ exports.createStripeSession = async (req, res, next) => {
     }
 
 };
+
+//=================================
 exports.stripeSuccess = async (req, res, next) => {
-
     try {
+        const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 
-        res.send("Stripe Payment Success");
+        if (session.payment_status !== "paid") {
+            return res.redirect("/checkout");
+        }
 
+        const addressId = req.session.stripeCheckout.addressId;
+        const buyNow = req.session.buyNow || null;
+
+        const order = await userOrderService.placeOrder(
+            req.user._id,
+            addressId,
+            "Stripe",
+            buyNow,
+            true
+        );
+
+        delete req.session.buyNow;
+        delete req.session.appliedCoupon;
+        delete req.session.stripeCheckout;
+
+        res.redirect("/order-success/" + order.orderId);
     } catch (error) {
-
         next(error);
-
     }
-
 };
-
+//=====================================
 exports.stripeCancel = async (req, res, next) => {
 
     try {
