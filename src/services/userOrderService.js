@@ -12,7 +12,8 @@ exports.placeOrder = async (
     addressId,
     paymentMethod,
     buyNow = null,
-    isPaid = false
+    isPaid = false,
+    appliedCoupon = null
 )=>{
 
   
@@ -34,9 +35,16 @@ exports.placeOrder = async (
 
     const subtotal = product.price * buyNow.quantity;
 
-    const shipping = 0;
-    const discount = 0;
-    const total = subtotal + shipping - discount; 
+const shipping = 0;
+
+const discount =
+    appliedCoupon ?
+    appliedCoupon.discount : 0;
+
+const total =
+    appliedCoupon ?
+    appliedCoupon.total :
+    subtotal + shipping; 
     
 
 // Wallet Payment
@@ -76,14 +84,22 @@ if (paymentMethod === "Wallet") {
         state:selectedAddress.state,
         pincode:selectedAddress.pincode
       },
-      subtotal,
-      shipping:0,
-      discount:0,
-      total:total,
-      paymentMethod,
+        subtotal,
+        shipping,
+        discount,
 
-  paymentStatus:
-    isPaid ? "Paid" : "Pending",
+        coupon: appliedCoupon
+            ? appliedCoupon.couponId
+            : null,
+
+        couponCode: appliedCoupon
+            ? appliedCoupon.code
+            : "",
+
+        total,
+        paymentMethod,
+          paymentStatus:
+            isPaid ? "Paid" : "Pending",
 
     });
 
@@ -154,9 +170,17 @@ if(cart.items.length === 0){
     0
   );
 
-  const shipping=0;
-  const discount=0;
-  const total=subtotal+shipping-discount;
+const shipping = 0;
+
+const discount =
+    appliedCoupon ?
+    appliedCoupon.discount : 0;
+
+const total =
+    appliedCoupon ?
+    appliedCoupon.total :
+    subtotal + shipping;
+
   const orderId="ORD"+Date.now();
 
 
@@ -195,11 +219,19 @@ if (paymentMethod === "Wallet") {
     subtotal,
     shipping,
     discount,
+
+    coupon: appliedCoupon
+        ? appliedCoupon.couponId
+        : null,
+
+    couponCode: appliedCoupon
+        ? appliedCoupon.code
+        : "",
+
     total,
     paymentMethod,
-
-paymentStatus:
-    isPaid ? "Paid" : "Pending",
+    paymentStatus:
+        isPaid ? "Paid" : "Pending",
   });
 
   await order.save();

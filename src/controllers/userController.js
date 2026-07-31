@@ -786,7 +786,8 @@ const order = await userOrderService.placeOrder(
     req.body.selectedAddress,
     paymentMethod,
     buyNow,
-    paymentMethod === "Wallet"
+    paymentMethod === "Wallet",
+    req.session.appliedCoupon || null
 );
 
 //  clear after order
@@ -988,7 +989,8 @@ exports.stripeSuccess = async (req, res, next) => {
             addressId,
             "Stripe",
             buyNow,
-            true
+            true,
+            req.session.appliedCoupon || null
         );
 
         delete req.session.buyNow;
