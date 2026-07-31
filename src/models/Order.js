@@ -102,6 +102,10 @@ couponCode: {
     ],
     default:"COD"
   },
+  stripeSessionId: {
+    type: String,
+    default: null
+},
 
   paymentStatus:{
     type:String,

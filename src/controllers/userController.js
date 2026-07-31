@@ -790,6 +790,8 @@ const order = await userOrderService.placeOrder(
     req.session.appliedCoupon || null
 );
 
+
+
 //  clear after order
 delete req.session.buyNow;
 delete req.session.appliedCoupon;
@@ -977,9 +979,33 @@ exports.stripeSuccess = async (req, res, next) => {
     try {
         const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 
+
+        // 2. Check payment status
+
         if (session.payment_status !== "paid") {
             return res.redirect("/checkout");
         }
+
+        //check order already exists 
+        const existingOrder = await Order.findOne({
+            stripeSessionId: session.id
+        });
+
+      
+            
+        if (existingOrder) {
+
+            return res.redirect(
+                "/order-success/" + existingOrder.orderId
+            );
+        }
+
+
+// 4. Check session for first-time payment only
+if (!req.session.stripeCheckout) {
+    return res.redirect("/checkout");
+}
+
 
         const addressId = req.session.stripeCheckout.addressId;
         const buyNow = req.session.buyNow || null;
@@ -992,6 +1018,13 @@ exports.stripeSuccess = async (req, res, next) => {
             true,
             req.session.appliedCoupon || null
         );
+
+        //Save the Stripe session ID
+        order.stripeSessionId = session.id;
+        await order.save();
+
+        
+
 
         delete req.session.buyNow;
         delete req.session.appliedCoupon;
@@ -1006,6 +1039,8 @@ exports.stripeSuccess = async (req, res, next) => {
 exports.stripeCancel = async (req, res, next) => {
 
     try {
+
+      delete req.session.stripeCheckout;
 
         res.redirect("/checkout");
 
