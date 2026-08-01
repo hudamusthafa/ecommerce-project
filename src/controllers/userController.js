@@ -1040,9 +1040,10 @@ exports.stripeCancel = async (req, res, next) => {
 
     try {
 
+       // Clear temporary Stripe checkout data
       delete req.session.stripeCheckout;
 
-        res.redirect("/checkout");
+        res.redirect("/payment-failure");
 
     } catch (error) {
 
@@ -1055,13 +1056,46 @@ exports.stripeCancel = async (req, res, next) => {
 //=================================
 // PAYMENT SUCCESS PAGE
 
-exports.getPaymentSuccess = async (req, res, next) => {
+// exports.getPaymentSuccess = async (req, res, next) => {
+
+//     try {
+
+//         const order = await Order.findById(
+//             req.params.id
+//         );
+
+//         if (!order) {
+
+//             return res.redirect("/orders");
+
+//         }
+
+//         res.render(
+//             "user/payment-success",
+//             {
+//                 order
+//             }
+//         );
+
+//     } catch (error) {
+
+//         next(error);
+
+//     }
+
+// };
+
+
+//==========================================================
+//order success
+
+exports.getOrderSuccess = async (req, res, next) => {
 
     try {
 
-        const order = await Order.findById(
-            req.params.id
-        );
+        const order = await Order.findOne({
+            orderId: req.params.orderId
+        });
 
         if (!order) {
 
@@ -1069,12 +1103,12 @@ exports.getPaymentSuccess = async (req, res, next) => {
 
         }
 
-        res.render(
-            "user/payment-success",
-            {
-                order
-            }
-        );
+        res.render("user/order-success", {
+
+            order,
+            user: req.user
+
+        });
 
     } catch (error) {
 
@@ -1082,23 +1116,6 @@ exports.getPaymentSuccess = async (req, res, next) => {
 
     }
 
-};
-
-
-//==========================================================
-//order success
-
-exports.getOrderSuccess=async(req,res,next)=>{
-  try{
-
-    res.render("user/order-success",{
-      orderId:req.params.orderId,
-      user:req.user
-    });
-
-  }catch(error){
-    next(error);
-  }
 };
 
 //==============================
@@ -1165,7 +1182,7 @@ exports.getOrderDetails = async (req, res, next) => {
     if (
       order.paymentStatus === "Refunded" &&
       (order.paymentMethod === "Wallet" ||
-       order.paymentMethod === "Razorpay")
+       order.paymentMethod === "Stripe")
     ) {
 
       const refundTxn = wallet.transactions.find(

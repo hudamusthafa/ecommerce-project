@@ -85,7 +85,7 @@ router.get("/checkout/stripe/cancel", isLoggedIn, userController.stripeCancel);
 
 // PAYMENT SUCCESS
 
-router.get("/payment-success/:id",cacheMiddleware.noCache,isLoggedIn,userController.getPaymentSuccess);
+//router.get("/payment-success/:id",cacheMiddleware.noCache,isLoggedIn,userController.getPaymentSuccess);
 
 // PAYMENT FAILURE
 
