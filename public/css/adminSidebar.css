@@ -57,9 +57,14 @@ body{
   margin: 0;
   background: #f7f7f7;
   font-family: Arial, Helvetica, sans-serif;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .layout{
+  flex: 1;
   display: flex;
 }
 
@@ -68,10 +73,8 @@ body{
   margin-left: 250px;
   padding: 30px;
   background: #f5f5f5;
-  min-height: 100vh;
   box-sizing: border-box;
 }
-
 /* ==========================
    ADMIN HEADER
 ========================== */
@@ -136,16 +139,12 @@ body{
 ========================== */
 .admin-footer{
     margin-top: 40px;
+    margin-left: 250px;
 
     background: #8b5e3c;
-
     color: #fff;
-
     text-align: center;
-
     padding: 18px;
 
-    font-size: 15px;
-
-    font-weight: 500;
+    box-sizing: border-box;
 }

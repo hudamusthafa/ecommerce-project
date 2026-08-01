@@ -459,7 +459,7 @@ order.total =
 
 // Refund to wallet 
 
-if (order.paymentMethod === "Wallet") {
+if (order.paymentMethod === "paid") {
 
   const refundAmount = item.price * item.quantity;
 
@@ -715,7 +715,7 @@ exports.rejectReturn = async (orderId, productId) => {
     throw new Error("No return request found");
   }
 
-  item.status = "Placed";
+  item.status = "Delivered";
   item.returnReason = "";
 
   const pendingReturns = order.items.some(
