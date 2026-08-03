@@ -35,28 +35,45 @@
 
 
 
-<% if(refundMessage){ %>
+<% if(order.paymentStatus === "Refunded"){ %>
 
 <div class="refund-success">
 
     <div class="refund-icon">
-        <i class="fas fa-wallet"></i>
+        <i class="fas fa-check-circle"></i>
     </div>
 
     <div class="refund-content">
 
-        <h4>Refund Completed</h4>
+        <h3>Refund Processed Successfully</h3>
 
         <p>
-            ₹<%= refundMessage.amount %> has been credited to your wallet.
+            Your return request has been approved.
         </p>
 
-        <span>
-            Current Wallet Balance:
-            <strong>₹<%= refundMessage.balance %></strong>
-        </span>
+        <p class="refund-amount">
+            ₹<%= order.total %> has been credited to your Aura Wallet.
+        </p>
+
+        <div class="refund-info">
+
+            <span>
+                <strong>Payment Method:</strong>
+                <%= order.paymentMethod %>
+            </span>
+
+            <span>
+                <strong>Refund Method:</strong>
+                Aura Wallet
+            </span>
+
+        </div>
 
     </div>
+
+    <a href="/wallet" class="wallet-link">
+        View Wallet
+    </a>
 
 </div>
 
@@ -273,6 +290,25 @@
       <p>₹<%= order.total %></p>
     </div>
 
+    <div>
+    <h4>Payment Status</h4>
+
+    <% if(order.paymentStatus === "Refunded"){ %>
+
+        <p class="payment-refunded">
+            Refunded
+        </p>
+
+    <% } else { %>
+
+        <p>
+            <%= order.paymentStatus %>
+        </p>
+
+    <% } %>
+
+</div>
+
   </div>
 
 
@@ -288,15 +324,8 @@
     <% } %>
   </div>
 
-<% } else if(order.orderStatus === "Returned"){ %>
 
-  <div class="cancel-order-card">
-    <h3>Order Returned</h3>
-    <p>Status : <strong>Returned</strong></p>
-    <% if(order.returnReason){ %>
-      <p>Reason : <%= order.returnReason %></p>
-    <% } %>
-  </div>
+  
 
 <% } else if(order.orderStatus === "Return Requested"){ %>
 
