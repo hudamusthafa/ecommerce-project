@@ -33,9 +33,18 @@
 
 <!-- refund msg -->
 
+<%
+const refundedItems = order.items.filter(
+    item => item.status === "Returned"
+);
 
+const refundAmount = refundedItems.reduce(
+    (total, item) => total + (item.price * item.quantity),
+    0
+);
+%>
 
-<% if(order.paymentStatus === "Refunded"){ %>
+<% if(refundedItems.length > 0){ %>
 
 <div class="refund-success">
 
@@ -52,8 +61,7 @@
         </p>
 
         <p class="refund-amount">
-            ₹<%= order.total %> has been credited to your Aura Wallet.
-        </p>
+             ₹<%= refundAmount %> has been credited to your Aura Wallet.        </p>
 
         <div class="refund-info">
 
@@ -63,7 +71,7 @@
             </span>
 
             <span>
-                <strong>Refund Method:</strong>
+                <strong>Refunded To:</strong>
                 Aura Wallet
             </span>
 
@@ -506,7 +514,10 @@ function closeBulkCancelModal() {
   document.getElementById("bulkCancelModal").style.display = "none";
 }
 
+
+
 // INDIVIDUAL RETURN
+
 function openReturnModal(orderId, productId) {
   document.getElementById("returnForm").action =
     "/orders/" + orderId + "/product/" + productId + "/return";
@@ -515,7 +526,10 @@ function openReturnModal(orderId, productId) {
 function closeReturnModal() {
   document.getElementById("returnModal").style.display = "none";
 }
+
+
   // CLOSE ON OUTSIDE CLICK
+
 
 window.onclick = function(event) {
   if (event.target === document.getElementById("cancelModal")) closeCancelModal();

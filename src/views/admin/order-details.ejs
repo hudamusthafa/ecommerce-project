@@ -201,16 +201,17 @@ const requestedItems = order.items.filter(
 
 const hasReturnRequest = requestedItems.length > 0;
 
+
 const isBulkReturn =
+    order.items.length > 1 &&
     requestedItems.length === order.items.length;
 %>
-
 
 <% if(hasReturnRequest){ %>
 
 
 <h3>
-    <%= isBulkReturn ? "Bulk Return Request" : "Return Request" %>
+    <%= isBulkReturn ? "Bulk Return Request" : "Product Return Request" %>
 </h3>
 
 
