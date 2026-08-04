@@ -373,3 +373,66 @@ body{
     margin-bottom:12px;
     font-weight:600;
 }
+/* ================= OFFER STYLES ================= */
+
+.product-card{
+    position:relative;
+}
+
+.product-offer-badge{
+
+    position:absolute;
+    top:15px;
+    left:15px;
+
+    background:#dc3545;
+    color:#fff;
+
+    padding:5px 10px;
+    border-radius:20px;
+
+    font-size:12px;
+    font-weight:600;
+
+    z-index:2;
+}
+
+.price-box{
+
+    margin:12px 0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    flex-wrap:wrap;
+}
+
+.offer-price{
+
+    font-size:22px;
+    font-weight:700;
+    color:#222;
+}
+
+.original-price{
+
+    color:#999;
+    text-decoration:line-through;
+    font-size:16px;
+}
+
+.offer-percent{
+
+    color:#198754;
+    font-weight:700;
+    font-size:14px;
+}
+
+.normal-price{
+
+    font-size:22px;
+    font-weight:700;
+    color:#222;
+}

@@ -10,8 +10,8 @@ const userOrderService = require("../services/userOrderService");
 const PDFDocument = require("pdfkit");
 const Order = require("../models/Order");
 const userWalletService = require("../services/userWalletService");
-//const paypalService = require("../services/paypalService");
 const stripe = require("../config/stripe");
+const offerHelper = require("../helpers/offerHelper");
 
 // ADD ADDRESS
 
@@ -22,12 +22,29 @@ exports.loadHome = async (req, res) => {
 
   try {
 
-    const products = await Product.find({
+    let products = await Product.find({
       isDeleted: false,
       isListed: true
     })
+    .populate("category")
     .sort({ createdAt: -1 })
     .limit(8);
+
+    // Apply offer to every product
+    products = products.map(product => {
+
+      const offer = offerHelper.getProductOfferPrice(product);
+
+      product = product.toObject();
+
+      product.originalPrice = offer.originalPrice;
+      product.finalPrice = offer.finalPrice;
+      product.discountAmount = offer.discountAmount;
+      product.offerPercentage = offer.offerPercentage;
+
+      return product;
+
+    });
 
     res.render("user/home", {
       user: req.user || null,
