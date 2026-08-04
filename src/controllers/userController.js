@@ -507,17 +507,6 @@ exports.removeCartProduct=async(req,res,next)=>{
 
 //=====================week3=================
 
-// exports.buyNow = async (req, res, next) => {
-//   try {
-
-//     const productId = req.params.productId;
-
-//     res.redirect(`/checkout?productId=${productId}`);
-
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 
 exports.buyNow = async (req, res, next) => {
@@ -808,91 +797,6 @@ delete req.session.appliedCoupon;
 
 
 // =====================================
-// CREATE PAYPAL ORDER
-
-
-// exports.createPayPalOrder = async (req, res, next) => {
-
-//     try {
-
-//         const buyNow = req.session.buyNow || null;
-
-//         const data = await userCheckoutService.getCheckoutData(
-//             req.user._id,
-//             buyNow
-//         );
-
-//         // Apply coupon if available
-//         if (req.session.appliedCoupon) {
-
-//             data.discount = req.session.appliedCoupon.discount;
-//             data.total = req.session.appliedCoupon.total;
-
-//         }
-
-//         // PayPal Sandbox works in USD.
-//         //  convert INR to USD.
-//         const usdAmount = (data.total / 85).toFixed(2);
-
-//         const paypalOrder = await paypalService.createOrder(
-//             Number(usdAmount)
-//         );
-
-//         res.json({
-
-//             success: true,
-//             //redirectUrl: "/orders/" + order.orderId
-//              orderID: paypalOrder.id
-//         });
-
-//     } catch (error) {
-
-//         next(error);
-
-//     }
-
-// };
-
-//==========================================================
-// CAPTURE PAYPAL PAYMENT
-
-// exports.capturePayPalOrder = async (req, res, next) => {
-
-//     try {
-
-//         const buyNow = req.session.buyNow || null;
-
-//         // Capture payment from PayPal
-//         await paypalService.captureOrder(
-//             req.body.orderID
-//         );
-
-//         // Create order in our database
-//         const order = await userOrderService.placeOrder(
-//             req.user._id,
-//             req.body.selectedAddress,
-//             "PayPal",
-//             buyNow
-//         );
-
-//         // Clear session
-//         delete req.session.buyNow;
-//         delete req.session.appliedCoupon;
-
-//         res.json({
-
-//             success: true,
-//            orderId: order._id
-
-//         });
-
-//     } catch (error) {
-
-//         next(error);
-
-//     }
-
-// };
 
 //==================================
 
@@ -1054,36 +958,6 @@ exports.stripeCancel = async (req, res, next) => {
 };
 
 //=================================
-// PAYMENT SUCCESS PAGE
-
-// exports.getPaymentSuccess = async (req, res, next) => {
-
-//     try {
-
-//         const order = await Order.findById(
-//             req.params.id
-//         );
-
-//         if (!order) {
-
-//             return res.redirect("/orders");
-
-//         }
-
-//         res.render(
-//             "user/payment-success",
-//             {
-//                 order
-//             }
-//         );
-
-//     } catch (error) {
-
-//         next(error);
-
-//     }
-
-// };
 
 
 //==========================================================

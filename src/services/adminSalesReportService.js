@@ -1,14 +1,16 @@
 const Order = require("../models/Order");
 
-exports.getSalesReport = async (
+exports.getSalesReport = async ({
       filter,
     fromDate,
     toDate
-) => {
+}) => {
 
  
 let query = {
-    paymentStatus: "Paid"
+    paymentStatus: {
+        $in: ["Paid", "Refunded"]
+    }
 };
 
 const today = new Date();
@@ -80,20 +82,23 @@ else if (filter === "yearly") {
 // CUSTOM DATE
 else if (filter === "custom") {
 
-    if (fromDate && toDate) {
-
-        const start = new Date(fromDate);
-
-        const end = new Date(toDate);
-
-        end.setDate(end.getDate() + 1);
-
-        query.createdAt = {
-            $gte: start,
-            $lt: end
-        };
-
+    if (!fromDate || !toDate) {
+        throw new Error("Please select both From Date and To Date.");
     }
+
+    const start = new Date(fromDate);
+    const end = new Date(toDate);
+
+    if (start > end) {
+        throw new Error("From Date cannot be later than To Date.");
+    }
+
+    end.setDate(end.getDate() + 1);
+
+    query.createdAt = {
+        $gte: start,
+        $lt: end
+    };
 
 }
 
@@ -107,7 +112,7 @@ else if (filter === "custom") {
         totalOrders: orders.length,
 
         totalSales: orders.reduce(
-            (sum, order) => sum + order.subtotal,
+            (sum, order) => sum + (order.subtotal || 0),
             0
         ),
 
@@ -122,7 +127,7 @@ else if (filter === "custom") {
         ),
 
         netSales: orders.reduce(
-            (sum, order) => sum + order.total,
+            (sum, order) => sum + (order.total || 0),
             0
         )
 

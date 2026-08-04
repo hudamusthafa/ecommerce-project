@@ -20,17 +20,31 @@ await adminSalesReportService.getSalesReport({
 });
 
 res.render("admin/sales-report",{
-    orders,
+   orders,
     summary,
     filter,
     fromDate,
-    toDate
+    toDate,
+    error: req.query.error || ""
 });
-    } catch (error) {
+}catch (error) {
 
-        next(error);
+    res.render("admin/sales-report", {
+        orders: [],
+        summary: {
+            totalOrders: 0,
+            totalSales: 0,
+            totalDiscount: 0,
+            couponDiscount: 0,
+            netSales: 0
+        },
+        filter: req.query.filter || "daily",
+        fromDate: req.query.fromDate || "",
+        toDate: req.query.toDate || "",
+        error: error.message
+    });
 
-    }
+}
 
 };
 
@@ -150,10 +164,10 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
       .font("Helvetica");
 
     doc.text(`Total Orders : ${summary.totalOrders}`);
-    doc.text(`Total Sales : ₹${summary.totalSales}`);
-    doc.text(`Total Discount : ₹${summary.totalDiscount}`);
-    doc.text(`Coupon Discount : ₹${summary.couponDiscount}`);
-    doc.text(`Net Sales : ₹${summary.netSales}`);
+    doc.text(`Total Sales : Rs. ${summary.totalSales.toLocaleString()}/-`);
+    doc.text(`Total Discount : Rs. ${summary.totalDiscount.toLocaleString()}/-`);
+    doc.text(`Coupon Discount : Rs. ${summary.couponDiscount.toLocaleString()}/-`);
+    doc.text(`Net Sales : Rs.${summary.netSales.toLocaleString()}/-`);
 
     doc.moveDown();
 
@@ -183,11 +197,12 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
       .font("Helvetica-Bold")
       .fontSize(11);
 
-    doc.text("Order ID", 60, tableTop);
-    doc.text("Customer", 190, tableTop);
-    doc.text("Payment", 320, tableTop);
-    doc.text("Total", 410, tableTop);
-    doc.text("Date", 480, tableTop);
+doc.text("Order ID", 50, tableTop);
+doc.text("Customer", 165, tableTop);
+doc.text("Amount", 280, tableTop);
+doc.text("Discount", 345, tableTop);
+doc.text("Final", 405, tableTop);
+doc.text("Date", 480, tableTop);
 
     let y = tableTop + 30;
 
@@ -195,30 +210,32 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
       .font("Helvetica")
       .fontSize(10);
 
-    orders.forEach(order => {
+orders.forEach(order => {
 
-      doc.text(order.orderId, 60, y, {
-        width: 120
-      });
+    doc.text(order.orderId, 50, y, {
+        width: 110
+    });
 
-      doc.text(
+    doc.text(
         order.user?.name || "-",
-        190,
+        165,
         y,
         {
-          width: 110
+            width: 105
         }
-      );
+    );
 
-      doc.text(order.paymentMethod, 320, y);
+    doc.text(`Rs. ${order.subtotal.toLocaleString()}/-`, 280, y);
 
-      doc.text(`₹${order.total}`, 410, y);
+    doc.text(`Rs. ${(order.discount || 0).toLocaleString()}/-`, 345, y);
 
-      doc.text(
+    doc.text(`Rs. ${order.total.toLocaleString()}/-`, 405, y);
+
+    doc.text(
         new Date(order.createdAt).toLocaleDateString("en-GB"),
         480,
         y
-      );
+    );
 
       y += 25;
 
@@ -296,21 +313,23 @@ exports.downloadSalesReportExcel = async (req, res, next) => {
         // COLUMN WIDTHS
       
 
-        worksheet.columns = [
+worksheet.columns = [
 
-            { width: 28 },
-            { width: 28 },
-            { width: 18 },
-            { width: 18 },
-            { width: 18 }
+    { width: 24 }, 
+    { width: 25 }, 
+    { width: 16 }, 
+    { width: 16 }, 
+    { width: 16 },
+    { width: 18 }, 
+    { width: 16 }  
 
-        ];
+];
 
         // =========================
         // TITLE
         
 
-        worksheet.mergeCells("A1:E1");
+       worksheet.mergeCells("A1:G1");
 
         worksheet.getCell("A1").value = "AURA";
 
@@ -333,7 +352,7 @@ exports.downloadSalesReportExcel = async (req, res, next) => {
 
         worksheet.getRow(1).height = 32;
 
-        worksheet.mergeCells("A2:E2");
+        worksheet.mergeCells("A2:G2");
 
         worksheet.getCell("A2").value = "Jewellery Store";
 
@@ -343,7 +362,7 @@ exports.downloadSalesReportExcel = async (req, res, next) => {
 
         };
 
-        worksheet.mergeCells("A4:E4");
+        worksheet.mergeCells("A4:G4");
 
         worksheet.getCell("A4").value = "SALES REPORT";
 
@@ -374,7 +393,7 @@ exports.downloadSalesReportExcel = async (req, res, next) => {
 ]);
 
 worksheet.mergeCells(
-    `A${reportHeader.number}:E${reportHeader.number}`
+    `A${reportHeader.number}:G${reportHeader.number}`
 );
 
 reportHeader.eachCell(cell => {
@@ -434,7 +453,7 @@ const summaryHeader = worksheet.addRow([
 ]);
 
 worksheet.mergeCells(
-    `A${summaryHeader.number}:E${summaryHeader.number}`
+    `A${summaryHeader.number}:G${summaryHeader.number}`
 );
 
 summaryHeader.eachCell(cell => {
@@ -490,11 +509,13 @@ const netSalesRow = worksheet.addRow([
         // ORDERS TABLE
         
 
-       const ordersHeader = worksheet.addRow([
+const ordersHeader = worksheet.addRow([
     "Order ID",
     "Customer",
+    "Order Amount",
+    "Discount",
+    "Final Amount",
     "Payment",
-    "Total",
     "Date"
 ]);
 
@@ -527,24 +548,28 @@ ordersHeader.eachCell(cell => {
 
 });
 
-        orders.forEach(order => {
+orders.forEach(order => {
 
-            worksheet.addRow([
+    worksheet.addRow([
 
-                order.orderId,
+        order.orderId,
 
-                order.user?.name || "-",
+        order.user?.name || "-",
 
-                order.paymentMethod,
+        order.subtotal,
 
-                order.total,
+        order.discount || 0,
 
-                new Date(order.createdAt)
-                    .toLocaleDateString("en-GB")
+        order.total,
 
-            ]);
+        order.paymentMethod,
 
-        });
+        new Date(order.createdAt)
+            .toLocaleDateString("en-GB")
+
+    ]);
+
+});
 
         // =========================
         // ALIGNMENT
@@ -556,17 +581,19 @@ ordersHeader.eachCell(cell => {
 
         };
 
-        worksheet.getColumn(5).alignment = {
-
-            horizontal: "center"
-
-        };
+            worksheet.getColumn(7).alignment = {
+                horizontal: "center"
+            };
 
         // =========================
         // CURRENCY FORMAT
         
 
- worksheet.getColumn(4).numFmt = '₹#,##0.00';
+ worksheet.getColumn(3).numFmt = '₹#,##0.00';
+worksheet.getColumn(4).numFmt = '₹#,##0.00';
+worksheet.getColumn(5).numFmt = '₹#,##0.00';
+
+
 
 totalSalesRow.getCell(2).numFmt = '₹#,##0.00';
 
@@ -618,7 +645,7 @@ const footerRow = worksheet.addRow([
 ]);
 
 worksheet.mergeCells(
-    `A${footerRow.number}:E${footerRow.number}`
+    `A${footerRow.number}:G${footerRow.number}`
 );
 
 footerRow.getCell(1).alignment = {
