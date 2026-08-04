@@ -194,6 +194,14 @@
       <h3>Update Order Status</h3>
 
 
+                  <% if(error){ %>
+
+              <div class="error-box">
+                  <%= error %>
+              </div>
+
+              <% } %>
+
 <%
 const requestedItems = order.items.filter(
     item => item.status === "Return Requested"
@@ -286,6 +294,9 @@ const isBulkReturn =
                     Reject Return
                 </button>
             </form>
+
+
+
 
         </div>
 

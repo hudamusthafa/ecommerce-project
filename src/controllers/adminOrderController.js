@@ -42,7 +42,7 @@ exports.getOrderDetails=async(req,res,next)=>{
     const order = await adminOrderService.getOrderDetails(req.params.id);
 
 
-    res.render("admin/order-details",{order });
+    res.render("admin/order-details",{order,error:req.query.error });
 
   }catch(error){
 
@@ -52,21 +52,37 @@ exports.getOrderDetails=async(req,res,next)=>{
 
 
 //UPDATE ORDER DETAILS
-exports.updateOrderStatus = async(req,res,next)=>{
 
-  try{
+exports.updateOrderStatus = async (req, res) => {
 
-    await adminOrderService.updateOrderStatus(
-      req.params.id,
-      req.body.status
-    );
+    try {
 
-    res.redirect("/admin/orders/" + req.params.id);
+        if (!req.body.status) {
 
-  }catch(error){
-    next(error);
-  }
+            return res.redirect(
+                "/admin/orders/" +
+                req.params.id +
+                "?error=Please select a new status before updating."
+            );
+        }
 
+        await adminOrderService.updateOrderStatus(
+            req.params.id,
+            req.body.status
+        );
+
+        res.redirect("/admin/orders/" + req.params.id);
+
+    } catch (error) {
+
+        return res.redirect(
+            "/admin/orders/" +
+            req.params.id +
+            "?error=" +
+            encodeURIComponent(error.message)
+        );
+
+    }
 };
 
 //approve single product return
