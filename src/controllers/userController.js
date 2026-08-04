@@ -176,12 +176,16 @@ exports.getProfile = (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
 
+     const referralLink =
+    `${req.protocol}://${req.get("host")}/register?ref=${req.user.referralCode}`;
+
     const { name, email, gender } = req.body;
 
     // NAME VALIDATION
     if (!name || name.trim() === "") {
       return res.render("user/profile", {
         user: req.user,
+        referralLink,
         error: "Name is required",
         success: null
       });
@@ -193,6 +197,7 @@ exports.updateProfile = async (req, res) => {
     if (!email || !emailRegex.test(email)) {
       return res.render("user/profile", {
         user: req.user,
+        referralLink,
         error: "Enter a valid email",
         success: null
       });
@@ -205,6 +210,7 @@ exports.updateProfile = async (req, res) => {
     ) {
       return res.render("user/profile", {
         user: req.user,
+        referralLink,
         error: "Google users cannot change email",
         success: null
       });
@@ -222,15 +228,25 @@ exports.updateProfile = async (req, res) => {
 
     await userService.updateUser(req.user._id, updates);
 
+   
+
+
     return res.render("user/profile", {
       user: { ...req.user, ...updates },
+      referralLink,
       error: null,
       success: "Profile updated successfully"
     });
 
   } catch (err) {
+
+ const referralLink =
+  `${req.protocol}://${req.get("host")}/register?ref=${req.user.referralCode}`;
+
+
     return res.render("user/profile", {
       user: req.user,
+      referralLink,
       error: "Error updating profile",
       success: null
     });

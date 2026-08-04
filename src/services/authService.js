@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Otp = require("../models/Otp");
+const userWalletService = require("./userWalletService");
 
 // //--------------------------------REGISTER
 //fn to generate referral code
@@ -22,7 +23,7 @@ exports.registerService = async (name, email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   //generate referal code
-const referralCode = generateReferralCode();
+// const referralCode = generateReferralCode();
 
   const user = await User.create({
     name,
@@ -154,6 +155,24 @@ const user = await User.create({
     referredBy: referrer ? referrer._id : null
 
 });
+
+// Referral reward(credit)
+if (referrer) {
+
+    await userWalletService.creditWallet(
+        referrer._id,
+        100,
+        "Referral bonus"
+    );
+
+    await userWalletService.creditWallet(
+        user._id,
+        100,
+        "Welcome referral bonus"
+    );
+
+}
+
 
   await Otp.deleteMany({ email: emailLower });
 
