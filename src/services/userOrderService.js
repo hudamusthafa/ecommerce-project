@@ -4,7 +4,7 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const userWalletService = require("./userWalletService");
-
+const offerHelper = require("../helpers/offerHelper");
 //==========================================================
 
 exports.placeOrder = async (
@@ -33,7 +33,9 @@ exports.placeOrder = async (
 
     if(product.stock<buyNow.quantity) throw new Error("Product is out of stock");
 
-    const subtotal = product.price * buyNow.quantity;
+    const offer = offerHelper.getProductOfferPrice(product);
+
+    const subtotal = offer.finalPrice * buyNow.quantity;
 
 const shipping = 0;
 
@@ -70,10 +72,24 @@ if (paymentMethod === "Wallet") {
       user:userId,
       orderId,
       items:[{
-        product:product._id,
-        quantity:buyNow.quantity,
-        price:product.price,
-        status:"Placed"
+
+    //         product:product._id,
+    // quantity:buyNow.quantity,
+    // price:offer.finalPrice,
+    // status:"Placed"
+            product: product._id,
+            quantity: buyNow.quantity,
+
+            price: offer.finalPrice,
+
+            originalPrice: offer.originalPrice,
+
+            offerPercentage: offer.offerPercentage,
+
+            offerDiscount:
+                offer.originalPrice - offer.finalPrice,
+
+            status: "Placed"
       }],
       address:{
         fullName:selectedAddress.fullName,
@@ -156,19 +172,49 @@ if(cart.items.length === 0){
       );
     }
   }
+//apply offer to every products
+cart.items.forEach(item => {
+
+    const offer = offerHelper.getProductOfferPrice(item.product);
+
+    item.product.finalPrice = offer.finalPrice;
+
+    item.product.originalPrice = offer.originalPrice;
+
+});
+
+
 
   //Convert Cart Items into Order Items
   const orderItems=cart.items.map(item=>({
-    product:item.product._id,
-    quantity:item.quantity,
-    price:item.product.price,
-    status:"Placed"
+
+    //   product:item.product._id,
+    // quantity:item.quantity,
+    // price:item.product.finalPrice,
+    // status:"Placed"
+      product: item.product._id,
+
+    quantity: item.quantity,
+
+    price: item.product.finalPrice,
+
+    originalPrice: item.product.originalPrice,
+
+    offerPercentage: item.product.offerPercentage,
+
+    offerDiscount:
+        item.product.originalPrice -
+        item.product.finalPrice,
+
+    status: "Placed"
   }));
 
-  const subtotal=cart.items.reduce(
-    (total,item)=>total+(item.product.price*item.quantity),
+  const subtotal = cart.items.reduce(
+    (total, item) =>
+        total + (item.product.finalPrice * item.quantity),
     0
-  );
+);
+
 
 const shipping = 0;
 

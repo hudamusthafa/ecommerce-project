@@ -3,6 +3,8 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const Coupon = require("../models/Coupon");
 const Order = require("../models/Order");
+const offerHelper = require("../helpers/offerHelper");
+
 
 exports.getCheckoutData = async(userId,buyNow = null) => {
 
@@ -26,8 +28,16 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
   if(product.stock <= 0){
     throw new Error(product.name + "Out Of Stock")
   }
-  const subtotal =
-    product.price * buyNow.quantity;
+
+  //offer applying
+  const offer = offerHelper.getProductOfferPrice(product);
+
+product.originalPrice = offer.originalPrice;
+product.finalPrice = offer.finalPrice;
+product.offerPercentage = offer.offerPercentage;
+
+const subtotal = product.finalPrice * buyNow.quantity;
+
 
   return {
 
@@ -51,12 +61,28 @@ exports.getCheckoutData = async(userId,buyNow = null) => {
 
 }
 
+//cart section
 
   const cart = await Cart.findOne({
     user: userId
   })
   .populate("items.product");
 
+
+  //offer applying
+  cart.items.forEach(item => {
+
+    if (!item.product) return;
+
+    const offer = offerHelper.getProductOfferPrice(item.product);
+
+    item.product.originalPrice = offer.originalPrice;
+
+    item.product.finalPrice = offer.finalPrice;
+
+    item.product.offerPercentage = offer.offerPercentage;
+
+});
 
 
   
@@ -112,7 +138,7 @@ if (removedProducts.length > 0) {
     (total,item) => {
        if(item.product && item.product.stock > 0){
 
-      return total + (item.product.price * item.quantity);
+      return total + (item.product.finalPrice * item.quantity);
     }
     return total;
   },
@@ -169,6 +195,12 @@ exports.applyCoupon = async (userId, couponCode,buyNow = null) => {
         throw new Error("This coupon has expired.");
     }
 
+
+        // Usage limit reached
+    if (coupon.usedCount >= coupon.usageLimit) {
+        throw new Error("This coupon has reached its usage limit.");
+    }
+
    let subtotal = 0;
 
 if (buyNow) {
@@ -181,7 +213,9 @@ if (buyNow) {
         throw new Error("Product not found.");
     }
 
-    subtotal = product.price * buyNow.quantity;
+
+    const offer = offerHelper.getProductOfferPrice(product);
+subtotal = offer.finalPrice * buyNow.quantity;
 
 } else {
 
@@ -197,8 +231,8 @@ if (buyNow) {
     cart.items.forEach(item => {
 
         if (!item.product) return;
-
-        subtotal += item.product.price * item.quantity;
+  const offer = offerHelper.getProductOfferPrice(item.product);
+subtotal += offer.finalPrice * item.quantity;
 
     });
 

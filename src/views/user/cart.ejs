@@ -136,9 +136,29 @@ Some items are now available in limited quantity.
       </div>
 
       <!-- PRICE -->
-      <div class="cart-price">
-        ₹ <%= item.product.price %>
-      </div>
+
+
+    <div class="cart-price">
+
+  <% if(item.product.offerPercentage > 0){ %>
+
+    <div>
+      <strong>₹ <%= item.product.finalPrice %></strong><br>
+
+      <small style="text-decoration:line-through;color:#999;">
+        ₹ <%= item.product.originalPrice %>
+      </small>
+    </div>
+
+  <% } else { %>
+
+    ₹ <%= item.product.price %>
+
+  <% } %>
+
+</div>
+
+
 
       <!-- QUANTITY -->
 <div class="cart-quantity">
@@ -179,7 +199,7 @@ Some items are now available in limited quantity.
 
         <% if(item.product.stock > 0){ %>
 
-          ₹ <%= item.product.price * item.quantity %>
+          ₹ <%= item.product.finalPrice * item.quantity %>
 
         <% } else { %>
 
@@ -219,7 +239,7 @@ const canCheckout =
             item.product.stock > 0 &&
             !item.isUnavailable
           ){
-            return total + (item.product.price * item.quantity);
+            return total + (item.product.finalPrice * item.quantity);
           }
 
           return total;

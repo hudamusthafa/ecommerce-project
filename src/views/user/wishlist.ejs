@@ -72,7 +72,35 @@
             </p>
 
             <!-- PRICE -->
-            <h4>₹ <%= product.price %></h4>
+<% if(product.offerPercentage > 0){ %>
+
+<div class="price-box">
+
+    <span class="offer-price">
+        ₹ <%= product.finalPrice %>
+    </span>
+
+    <span class="original-price">
+        ₹ <%= product.originalPrice %>
+    </span>
+
+    <span class="offer-percent">
+        <%= product.offerPercentage %>% OFF
+    </span>
+
+</div>
+
+<% } else { %>
+
+<div class="price-box">
+
+    <span class="normal-price">
+        ₹ <%= product.price %>
+    </span>
+
+</div>
+
+<% } %>
 
             <!-- STOCK -->
             <% if(product.stock>0){ %>

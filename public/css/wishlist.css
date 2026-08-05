@@ -180,3 +180,45 @@
   font-weight: 600;
   cursor: not-allowed;
 }
+.price-box{
+
+    margin:12px 0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+
+}
+
+.offer-price{
+
+    font-size:22px;
+    font-weight:700;
+    color:#222;
+
+}
+
+.original-price{
+
+    color:#999;
+    text-decoration:line-through;
+    font-size:15px;
+
+}
+
+.offer-percent{
+
+    color:#198754;
+    font-weight:700;
+    font-size:14px;
+
+}
+
+.normal-price{
+
+    font-size:22px;
+    font-weight:700;
+    color:#222;
+
+}

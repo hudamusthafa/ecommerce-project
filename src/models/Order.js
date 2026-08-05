@@ -24,6 +24,17 @@ const orderSchema = new mongoose.Schema({
   quantity:Number,
 
   price:Number,
+  originalPrice:Number,
+  offerPercentage:{
+    type:Number,
+    default:0
+  },
+
+  // Amount saved
+  offerDiscount:{
+    type:Number,
+    default:0
+  },
 
   status:{
     type:String,

@@ -461,6 +461,24 @@ exports.getCart = async (req, res) => {
     const { cart, cartUpdated,hasUnavailableItems } =
       await userCartService.getCart(req.user._id);
 
+if (cart) {
+
+  cart.items.forEach(item => {
+
+    if (!item.product) return;
+
+    const offer = offerHelper.getProductOfferPrice(item.product);
+
+    item.product.originalPrice = offer.originalPrice;
+
+    item.product.finalPrice = offer.finalPrice;
+
+    item.product.offerPercentage = offer.offerPercentage;
+
+  });
+
+}
+
     res.render(
       "user/cart",
       {
@@ -561,24 +579,41 @@ exports.buyNow = async (req, res, next) => {
 
 //GET WISHLIST
 
-exports.getWishlist=async(req,res,next)=>{
-  try{
+exports.getWishlist = async (req, res, next) => {
 
-    const wishlist=await userWishlistService.getWishlist(
-      req.user._id
-    );
+    try {
 
-   res.render("user/wishlist",{
-  wishlist: wishlist || { products: [] },
-  user:req.user || null
-});
+        const wishlist = await userWishlistService.getWishlist(
+            req.user._id
+        );
 
-  }catch(error){
+        if (wishlist) {
 
-   next(error);
-  }
+            wishlist.products.forEach(product => {
+
+                const offer =
+                    offerHelper.getProductOfferPrice(product);
+
+                product.originalPrice = offer.originalPrice;
+                product.finalPrice = offer.finalPrice;
+                product.offerPercentage = offer.offerPercentage;
+
+            });
+
+        }
+
+        res.render("user/wishlist", {
+            wishlist: wishlist || { products: [] },
+            user: req.user || null
+        });
+
+    } catch (error) {
+
+        next(error);
+
+    }
+
 };
-
 //==========================================================
 
 //ADD TO WISHLIST
@@ -682,13 +717,21 @@ exports.getCheckout=async(req,res,next)=>{
 
 //  Buy Now from wishlist
     if(req.query.product){
+
       req.session.buyNow = {
         productId: req.query.product,
         quantity: 1
       };
     }
 
-   
+
+
+// Cart checkout
+else  {
+    delete req.session.buyNow;
+}
+ 
+
    const data =
       await userCheckoutService.getCheckoutData(
         req.user._id,
@@ -697,6 +740,9 @@ exports.getCheckout=async(req,res,next)=>{
 
 
 const coupons = await userCheckoutService.getAvailableCoupons();
+
+
+
 
 // Apply session coupon for display
 if (req.session.appliedCoupon) {
@@ -778,7 +824,6 @@ exports.applyCoupon = async (req, res, next) => {
             success: false,
             message: error.message
         });
-
     }
 
 };
