@@ -1078,3 +1078,24 @@
     font-size:14px;
 
 }
+.coupon-warning{
+    color:#dc3545;
+    font-size:13px;
+    font-weight:600;
+    margin:10px 0;
+}
+
+.coupon-disabled-btn{
+    width:100%;
+    background:#d9d9d9;
+    color:#666;
+    border:none;
+    padding:10px;
+    border-radius:6px;
+    cursor:not-allowed;
+    font-weight:600;
+}
+
+.use-coupon-btn{
+    width:100%;
+}

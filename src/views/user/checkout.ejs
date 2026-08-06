@@ -943,38 +943,61 @@
 
         </div>
 
-        <% coupons.forEach(coupon => { %>
+<% coupons.forEach(coupon => { %>
 
-            <div class="coupon-card">
+<%
+const eligible = subtotal >= coupon.minPurchase;
+const remaining = coupon.minPurchase - subtotal;
+%>
 
-                <h4><%= coupon.code %></h4>
+<div class="coupon-card">
 
-                <p><%= coupon.description %></p>
+    <h4><%= coupon.code %></h4>
 
-                <small>
-                    Minimum Purchase ₹<%= coupon.minPurchase %>
-                </small>
+    <p><%= coupon.description %></p>
 
-                <small>
-                    Expires:
-                    <%= new Date(coupon.expiryDate).toLocaleDateString("en-GB") %>
-                </small>
+    <small>
+        Minimum Purchase ₹<%= coupon.minPurchase %>
+    </small>
 
-                <div class="coupon-footer">
+    <br>
 
-                    <button
-                        type="button"
-                        class="use-coupon-btn"
-                        onclick="selectCoupon('<%= coupon.code %>')"
-                    >
-                        Use Coupon
-                    </button>
+    <small>
+        Expires:
+        <%= new Date(coupon.expiryDate).toLocaleDateString("en-GB") %>
+    </small>
 
-                </div>
+    <div class="coupon-footer">
 
-            </div>
+        <% if(eligible){ %>
 
-        <% }) %>
+            <button
+                type="button"
+                class="use-coupon-btn"
+                onclick="selectCoupon('<%= coupon.code %>')">
+                Use Coupon
+            </button>
+
+        <% } else { %>
+
+            <p class="coupon-warning">
+                Add ₹<%= remaining %> more to use this coupon
+            </p>
+
+            <button
+                type="button"
+                class="coupon-disabled-btn"
+                disabled>
+                Not Eligible
+            </button>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+<% }) %>
 
     </div>
 
