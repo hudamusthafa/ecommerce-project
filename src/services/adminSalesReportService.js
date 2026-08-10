@@ -8,8 +8,11 @@ exports.getSalesReport = async ({
 
  
 let query = {
-    paymentStatus: {
-        $in: ["Paid", "Refunded"]
+     paymentMethod: {
+        $in: ["COD", "Wallet", "Stripe"]
+    },
+    orderStatus: {
+        $nin: ["Cancelled"]
     }
 };
 
