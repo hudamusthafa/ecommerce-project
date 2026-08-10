@@ -1313,7 +1313,7 @@ const response = await fetch(
         },
 
         body: JSON.stringify({
-            selectedAddress
+             selectedAddress: document.getElementById("selectedAddress").value
         })
     }
 );
