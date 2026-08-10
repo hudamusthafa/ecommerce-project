@@ -18,6 +18,9 @@ let query = {
 
 const today = new Date();
 
+let reportFrom;
+let reportTo;
+
 // DAILY
 if (filter === "daily") {
 
@@ -31,10 +34,16 @@ if (filter === "daily") {
 
     dayEnd.setDate(dayEnd.getDate() + 1);
 
+    reportFrom = dayStart;
+    reportTo = new Date(dayEnd);
+    reportTo.setDate(reportTo.getDate() - 1);
+
     query.createdAt = {
         $gte: dayStart,
         $lt: dayEnd
     };
+
+
 
 }
 
@@ -52,6 +61,10 @@ else if (filter === "weekly") {
     const weekEnd = new Date(weekStart);
 
     weekEnd.setDate(weekEnd.getDate() + 7);
+
+    reportFrom = weekStart;
+    reportTo = new Date(weekEnd);
+    reportTo.setDate(reportTo.getDate() - 1);
 
     query.createdAt = {
         $gte: weekStart,
@@ -75,6 +88,13 @@ else if (filter === "yearly") {
         1
     );
 
+
+reportFrom = yearStart;
+reportTo = new Date(yearEnd);
+reportTo.setDate(reportTo.getDate() - 1);
+
+
+
     query.createdAt = {
         $gte: yearStart,
         $lt: yearEnd
@@ -91,6 +111,9 @@ else if (filter === "custom") {
 
     const start = new Date(fromDate);
     const end = new Date(toDate);
+
+    reportFrom = start;
+    reportTo = end;
 
     if (start > end) {
         throw new Error("From Date cannot be later than To Date.");
@@ -138,7 +161,9 @@ else if (filter === "custom") {
 
     return {
         orders,
-        summary
+        summary,
+        reportFrom,
+        reportTo
     };
 
 };

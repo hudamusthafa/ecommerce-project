@@ -12,7 +12,8 @@ const fromDate = req.query.fromDate || "";
 
 const toDate = req.query.toDate || "";
 
-const { orders, summary } =
+const { orders,summary,reportFrom,reportTo} =
+
 await adminSalesReportService.getSalesReport({
     filter,
     fromDate,
@@ -58,7 +59,7 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
     const fromDate = req.query.fromDate || "";
     const toDate = req.query.toDate || "";
 
-    const { orders, summary } =
+    const { orders, summary ,reportFrom,reportTo} =
       await adminSalesReportService.getSalesReport({
         filter,
         fromDate,
@@ -129,13 +130,17 @@ exports.downloadSalesReportPDF = async (req, res, next) => {
 
     doc.text(`Report Type : ${filter}`);
 
-    if (filter === "custom") {
+    if(filter !== "daily"){
+        doc.text(
+    `From : ${reportFrom.toLocaleDateString("en-GB")}`
+    );
 
-      doc.text(`From : ${fromDate}`);
-      doc.text(`To : ${toDate}`);
-
+    doc.text(
+        `To : ${reportTo.toLocaleDateString("en-GB")}`
+    );
     }
 
+   
     doc.text(
       `Generated On : ${new Date().toLocaleDateString("en-GB")}`
     );
@@ -294,7 +299,7 @@ exports.downloadSalesReportExcel = async (req, res, next) => {
         const fromDate = req.query.fromDate || "";
         const toDate = req.query.toDate || "";
 
-        const { orders, summary } =
+        const { orders, summary,reportFrom, reportTo } =
             await adminSalesReportService.getSalesReport({
                 filter,
                 fromDate,
@@ -424,19 +429,20 @@ reportHeader.eachCell(cell => {
             filter.toUpperCase()
         ]);
 
-        if (filter === "custom") {
 
-            worksheet.addRow([
-                "From",
-                fromDate
-            ]);
+ if(filter !== "daily"){
+        worksheet.addRow([
+       "From",
+    reportFrom.toLocaleDateString("en-GB")
+    ]);
 
-            worksheet.addRow([
-                "To",
-                toDate
-            ]);
+    worksheet.addRow([
+        "To",
+        reportTo.toLocaleDateString("en-GB")
+    ]);
+ }
 
-        }
+  
 
         worksheet.addRow([
             "Generated On",
@@ -687,7 +693,7 @@ worksheet.views = [
 
         await workbook.xlsx.write(res);
 
-        res.end();
+        return res.end();
 
     } catch (error) {
 
