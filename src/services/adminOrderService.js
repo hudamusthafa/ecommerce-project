@@ -290,12 +290,15 @@ exports.approveAllReturns = async (orderId) => {
     throw new Error("Order not found");
   }
 
-
+let refundAmount = 0;
   for (const item of order.items) {
 
     if (item.status === "Return Requested") {
+      refundAmount += item.price * item.quantity;
 
       item.status = "Returned";
+
+      
 
       await Product.findByIdAndUpdate(
         item.product._id,
@@ -314,17 +317,18 @@ exports.approveAllReturns = async (orderId) => {
 
 // Refund entire order amount
 
-if (order.paymentStatus === "Paid") {
+if (refundAmount > 0) {
 
     await userWalletService.creditWallet(
         order.user,
-        order.total,
+        refundAmount,
         "Return Refund",
         order.orderId
     );
 
-    order.paymentStatus = "Refunded";
-
+    if (order.paymentStatus === "Paid") {
+        order.paymentStatus = "Refunded";
+    }
 }
 
 
