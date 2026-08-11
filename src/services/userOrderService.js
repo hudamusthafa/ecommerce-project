@@ -694,7 +694,10 @@ exports.approveReturn = async (orderId, productId) => {
 
 // Refund to wallet only if payment  completed
 
-if (order.paymentStatus === "Paid") {
+if (order.paymentMethod === "COD" ||
+    order.paymentMethod === "Wallet" ||
+    order.paymentMethod === "Stripe"
+  ) {
 
     const refundAmount = item.price * item.quantity;
 

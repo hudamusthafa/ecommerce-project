@@ -33,14 +33,14 @@ exports.creditWallet = async (
     orderId = ""
 ) => {
 
-  
+
 
     let wallet = await Wallet.findOne({
         user: userId
     });
 
-    if (!wallet) {
 
+    if (!wallet) {
         wallet = new Wallet({
             user: userId
         });
@@ -52,11 +52,8 @@ exports.creditWallet = async (
     wallet.transactions.unshift({
 
         type: "Credit",
-
         amount,
-
         description,
-
         orderId
 
     });

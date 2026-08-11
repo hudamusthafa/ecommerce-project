@@ -189,7 +189,14 @@ await Product.findByIdAndUpdate(
 
 // Refund wallet if payment already completed
 
-if (order.paymentStatus === "Paid") {
+if (
+    order.paymentMethod === "COD" ||
+    order.paymentMethod === "Wallet" ||
+    order.paymentMethod === "Stripe"
+) {
+
+
+
 
     const refundAmount = item.price * item.quantity;
 
@@ -282,6 +289,7 @@ exports.approveAllReturns = async (orderId) => {
   if (!order) {
     throw new Error("Order not found");
   }
+
 
   for (const item of order.items) {
 
