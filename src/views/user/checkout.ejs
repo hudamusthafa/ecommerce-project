@@ -1213,6 +1213,8 @@ async function applyCoupon() {
 
     const data = await response.json();
 
+   
+
 
     if(!data.success){
       showToast(data.message, "warning");
@@ -1240,6 +1242,26 @@ async function applyCoupon() {
   }
 
 }
+
+
+
+
+function showToast(message, type = "success") {
+
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+
+    toast.className = "toast " + type;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
+
 
 
 const removeBtn = document.getElementById("removeCouponBtn");

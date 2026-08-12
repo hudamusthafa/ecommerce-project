@@ -201,6 +201,15 @@ exports.applyCoupon = async (userId, couponCode,buyNow = null) => {
         throw new Error("This coupon has reached its usage limit.");
     }
 
+    const userCouponUsage = await Order.countDocuments({
+    user: userId,
+    coupon: coupon._id
+});
+
+if (userCouponUsage >= coupon.perUserLimit) {
+    throw new Error("You have already used this coupon.");
+}
+
    let subtotal = 0;
 
 if (buyNow) {

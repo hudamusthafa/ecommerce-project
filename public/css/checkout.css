@@ -1099,3 +1099,26 @@
 .use-coupon-btn{
     width:100%;
 }
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 14px 22px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    display: none;
+}
+
+.toast.show {
+    display: block;
+}
+
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast.warning {
+    background-color: #dc3545;
+}
