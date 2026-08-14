@@ -129,7 +129,32 @@
   </select>
 
  
+<!-- OFFER FILTER -->
 
+<select
+  name="offer"
+  onchange="this.form.submit()"
+>
+
+  <option value="">
+    All 
+  </option>
+
+  <option
+    value="withOffer"
+    <%= offer === "withOffer" ? "selected" : "" %>
+  >
+    With Offer
+  </option>
+
+  <option
+    value="withoutOffer"
+    <%= offer === "withoutOffer" ? "selected" : "" %>
+  >
+    Without Offer
+  </option>
+
+</select>
   
 
 </form>
@@ -378,7 +403,7 @@
   <% if(currentPage>1){ %>
 
     <a
-      href="/admin/products?page=<%= currentPage-1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+      href="/admin/products?page=<%= currentPage-1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>&offer=<%= offer %>"
     >
       Prev
     </a>
@@ -388,7 +413,7 @@
   <% for(let i=1;i<=totalPages;i++){ %>
 
     <a
-      href="/admin/products?page=<%= i %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+      href="/admin/products?page=<%= i %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>&offer=<%= offer %>"
       class="<%= currentPage===i ? 'active-page' : '' %>"
     >
       <%= i %>
@@ -399,7 +424,7 @@
   <% if(currentPage<totalPages){ %>
 
     <a
-      href="/admin/products?page=<%= currentPage+1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>"
+      href="/admin/products?page=<%= currentPage+1 %>&search=<%= search %>&category=<%= category %>&stock=<%= stock %>&status=<%= status %>&offer=<%= offer %>"
     >
       Next
     </a>

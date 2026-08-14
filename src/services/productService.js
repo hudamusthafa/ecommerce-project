@@ -7,6 +7,7 @@ exports.getProducts=async(
   category,
   stock,
   status,
+  offer,
   page,
   limit
 )=>{
@@ -48,6 +49,18 @@ else if(stock==="outOfStock"){
 
   else if(status==="unlisted"){
     query.isListed=false;
+  }
+
+  //offer filter
+  if(offer === "withOffer"){
+   query.productOffer ={$gt:0}
+  }
+  else if(offer === "withoutOffer"){
+    query.$or = [
+    { productOffer: { $lte: 0 } },
+    { productOffer: { $exists: false } },
+    { productOffer: null }
+  ];
   }
 
   // PAGINATION

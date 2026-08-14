@@ -22,6 +22,9 @@ exports.getProducts=async(req,res,next)=>{
     // STATUS FILTER
     const status=req.query.status||"";
 
+    //offer filter
+    const offer = req.query.offer || "" ;
+
     // PAGINATION
     const page=parseInt(req.query.page)||1;
 
@@ -36,6 +39,7 @@ exports.getProducts=async(req,res,next)=>{
       category,
       stock,
       status,
+      offer,
       page,
       limit
     );
@@ -50,6 +54,7 @@ exports.getProducts=async(req,res,next)=>{
       category,
       stock,
       status,
+      offer,
       categories
     });
 
