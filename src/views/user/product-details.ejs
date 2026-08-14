@@ -107,7 +107,11 @@
             <div class="button-row-layout">
               <a href="/buy-now/<%= product._id %>" class="btn-buy-now">Buy Now</a>
               
-              <button class="btn-add-cart" onclick="addToCart('<%= product._id %>', this)">Add To Cart</button>
+              <button 
+              class="btn-add-cart" 
+              onclick="addToCart('<%= product._id %>', this)"
+              >Add To Cart
+            </button>
               
               <button class="btn-wishlist" onclick="addToWishlist('<%= product._id %>', this)">
                 <% if(typeof isWishlisted !== "undefined" && isWishlisted) { %>
@@ -245,25 +249,109 @@ function changeVariant(element, variantName) {
   });
   targetImg.classList.add("active");
 }
+// function addToCart(productId, btn) {
+//   fetch("/cart/add/" + productId, { method: "POST" })
+//   .then(res => res.json())
+//   .then(data => {
+//     if(data.success) {
+//       btn.innerText = "Added ✓";
+//       btn.style.background = "#5e3e29";
+//     }
+//   });
+// }
+// function addToWishlist(productId, btn) {
+//   fetch("/wishlist/add/" + productId, { method: "POST" })
+//   .then(res => res.json())
+//   .then(data => {
+//     if(data.success) {
+//       btn.innerText = 'Wishlisted';
+//       btn.style.background = "#fffdf9";
+//     }
+//   });
+// }
 function addToCart(productId, btn) {
-  fetch("/cart/add/" + productId, { method: "POST" })
-  .then(res => res.json())
-  .then(data => {
+
+
+ 
+  fetch("/cart/add/" + productId, {
+    method: "POST"
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(data) {
+
     if(data.success) {
-      btn.innerText = "Added ✓";
-      btn.style.background = "#5e3e29";
+
+      
+      showToast("✓ Added to cart!", "success");
+
+   btn.innerText = "Added ✓";
+  btn.style.background = "#2e7d32";
+   
+      
+
+      // Update cart count in header
+      const badge = document.querySelector(".cart-badge");
+      if(badge){
+        badge.innerText = parseInt(badge.innerText) + 1;
+      } else {
+        const cartIcon = document.querySelector(".cart-icon");
+        if(cartIcon){
+          const newBadge = document.createElement("span");
+          newBadge.className = "cart-badge";
+          newBadge.innerText = "1";
+          cartIcon.appendChild(newBadge);
+        }
+      }
+
+   } else {
+
+    showToast("⚠ " + data.message, "warning");
+
+    if(data.message === "Already in cart") {
+        btn.innerText = "Added ✓";
+        btn.style.background = "#2e7d32";
+        btn.disabled = true;
+    } else {
+        btn.innerText = "Add To Cart";
+        btn.disabled = false;
     }
-  });
+
 }
-function addToWishlist(productId, btn) {
-  fetch("/wishlist/add/" + productId, { method: "POST" })
-  .then(res => res.json())
-  .then(data => {
-    if(data.success) {
-      btn.innerText = 'Wishlisted';
-      btn.style.background = "#fffdf9";
-    }
   });
+
+}
+
+// ADD TO WISHLIST
+function addToWishlist(productId, btn) {
+
+  fetch("/wishlist/add/" + productId, {
+    method: "POST"
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(data) {
+
+    if(data.success) {
+
+    
+      showToast("✓ Added to wishlist!", "success");
+
+    
+      btn.style.background = "#e63946";
+      btn.style.color = "#fff";
+      
+
+    } else {
+
+      showToast("⚠ " + data.message, "warning");
+
+    }
+
+  });
+
 }
 </script>
 </body>
