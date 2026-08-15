@@ -12,6 +12,7 @@ const Order = require("../models/Order");
 const userWalletService = require("../services/userWalletService");
 const stripe = require("../config/stripe");
 const offerHelper = require("../helpers/offerHelper");
+const statusCodes = require("../helpers/status_codes");
 
 // ADD ADDRESS
 
@@ -76,7 +77,7 @@ exports.addAddress = async (req, res) => {
     await userService.addAddress(req.user._id, req.body);
 
      if (req.query.fromCheckout) {
-      return res.status(200).json({
+      return res.status(statusCodes.OK).json({
         success: true
       });
     }
@@ -87,13 +88,13 @@ exports.addAddress = async (req, res) => {
      console.error(err);
 
     if (req.query.fromCheckout) {
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         success: false,
         message: err.message || "Unable to add address"
       });
     }
 
-    return res.status(500).send("Error adding address");
+    return res.status(statusCodes.SERVER_ERROR).send("Error adding address");
   }
 };
 //==========================================================
@@ -110,7 +111,7 @@ exports.deleteAddress = async (req, res) => {
 
   } catch (err) {
     
-   res.status(500).json({
+   res.status(statusCodes.SERVER_ERROR).json({
       success: false
     });
 
@@ -820,7 +821,7 @@ exports.applyCoupon = async (req, res, next) => {
 
     } catch (error) {
 
-        res.status(400).json({
+        res.status(statusCodes.BAD_REQUEST).json({
             success: false,
             message: error.message
         });

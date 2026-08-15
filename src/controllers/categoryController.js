@@ -1,4 +1,5 @@
 const categoryService=require("../services/categoryService");
+const statusCodes = require("../helpers/status_codes");
 
 // ================= CATEGORY LIST PAGE ==================
 
@@ -9,9 +10,11 @@ exports.getCategories=async(req,res,next)=>{
     // SEARCH
     const search=req.query.search||"";
 
+   
+
     // PAGINATION
     const page=parseInt(req.query.page)||1;
-    const limit=4;
+    const limit=5;
 
     // SERVICE
     const result=await categoryService.getCategories(search,page,limit);
@@ -23,10 +26,11 @@ exports.getCategories=async(req,res,next)=>{
       totalPages:result.totalPages,
       currentPage:page,
       search
+      
     });
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -48,7 +52,7 @@ exports.addCategory=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!name || name.trim()===""){
-      return res.status(400).render("admin/add-category",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/add-category",{
         error:"Category name is required"
       });
     }
@@ -57,7 +61,7 @@ exports.addCategory=async(req,res,next)=>{
     const existingCategory=await categoryService.getCategoryByName(name);
 
     if(existingCategory){
-      return res.status(400).render("admin/add-category",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/add-category",{
         error:"Category already exists"
       });
     }
@@ -73,7 +77,7 @@ exports.addCategory=async(req,res,next)=>{
     res.redirect("/admin/categories");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -89,7 +93,7 @@ exports.getEditCategory=async(req,res,next)=>{
     // CATEGORY NOT FOUND
     if(!category){
       const error=new Error("Category not found");
-      error.statusCode=404;
+      error.statusCode=statusCodes.NOT_FOUND;
       return next(error);
     }
 
@@ -99,7 +103,7 @@ exports.getEditCategory=async(req,res,next)=>{
     });
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -116,7 +120,7 @@ exports.updateCategory=async(req,res,next)=>{
 
       const category=await categoryService.getCategoryById(req.params.id);
 
-      return res.status(400).render("admin/edit-category",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/edit-category",{
         category,
         error:"Category name is required"
       });
@@ -129,7 +133,7 @@ exports.updateCategory=async(req,res,next)=>{
 
       const category=await categoryService.getCategoryById(req.params.id);
 
-      return res.status(400).render("admin/edit-category",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/edit-category",{
         category,
         error:"Category already exists"
       });
@@ -145,7 +149,7 @@ exports.updateCategory=async(req,res,next)=>{
     res.redirect("/admin/categories");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -160,7 +164,7 @@ exports.deleteCategory=async(req,res,next)=>{
     // CATEGORY NOT FOUND
     if(!category){
       const error=new Error("Category not found");
-      error.statusCode=404;
+      error.statusCode=statusCodes.NOT_FOUND;
       return next(error);
     }
 
@@ -170,7 +174,7 @@ exports.deleteCategory=async(req,res,next)=>{
     res.redirect("/admin/categories");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };

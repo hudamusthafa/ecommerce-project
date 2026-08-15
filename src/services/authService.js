@@ -3,8 +3,7 @@ const User = require("../models/User");
 const Otp = require("../models/Otp");
 const userWalletService = require("./userWalletService");
 
-// //--------------------------------REGISTER
-//fn to generate referral code
+
 
 const generateReferralCode = () => {
     return "AURA" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -36,7 +35,6 @@ exports.registerService = async (name, email, password) => {
   return user;
 };
 
-////--------------------------- LOGIN
 
 
 exports.loginService = async (email, password) => {
@@ -64,9 +62,7 @@ exports.loginService = async (email, password) => {
 
   return user;
 };
-//--------------------------------------------------
 
-// SEND OTP
 
 exports.sendOtpService = async (name, email, password, referralCode) => {
   const emailLower = email.toLowerCase();
@@ -106,8 +102,6 @@ if (referralCode && referralCode.trim()) {
 
   return otp;
 };
-
-////---------------------------- VERIFY OTP
 
 
 exports.verifyOtpService = async (email, otp, name, password,referralCode) => {
@@ -180,8 +174,6 @@ if (referrer) {
 };
 
 
-//------------FORGOT PASSWORD----------
-
 exports.forgotPasswordService = async (email) => {
   const emailLower = email.toLowerCase();
 
@@ -204,7 +196,6 @@ exports.forgotPasswordService = async (email) => {
   return otp;
 };
 
-// ---------------- RESET PASSWORD ----------------
 
 exports.resetPasswordService = async (email, password) => {
   const emailLower = email.toLowerCase();
@@ -224,7 +215,6 @@ exports.resetPasswordService = async (email, password) => {
 
   return true;
 };
-// ---------------- CHANGE PASSWORD IN PROFILE----------------
 
 exports.changePasswordService = async (userId, currentPassword, newPassword) => {
 

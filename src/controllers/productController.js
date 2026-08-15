@@ -3,6 +3,7 @@ const categoryService=require("../services/categoryService");
 const sharp=require("sharp");
 const fs=require("fs");
 const path=require("path");
+const statusCodes = require("../helpers/status_codes");
 
 //=========================================================
 
@@ -59,7 +60,7 @@ exports.getProducts=async(req,res,next)=>{
     });
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };

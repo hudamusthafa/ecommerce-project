@@ -4,6 +4,7 @@ const Product = require("../models/Product");
 const Coupon = require("../models/Coupon");
 const Order = require("../models/Order");
 const offerHelper = require("../helpers/offerHelper");
+const statusCodes = require("../helpers/status_codes");
 
 
 exports.getCheckoutData = async(userId,buyNow = null) => {
@@ -90,7 +91,7 @@ const subtotal = product.finalPrice * buyNow.quantity;
   if(!cart){
 
     const error = new Error("Cart is empty");
-    error.statusCode = 400;
+    error.statusCode = statusCodes.BAD_REQUEST;
     throw error;
 
   }
@@ -128,7 +129,7 @@ if (removedProducts.length > 0) {
       "Your cart is empty"
     );
 
-    error.statusCode = 400;
+    error.statusCode = statusCodes.BAD_REQUEST;
     throw error;
 
   }

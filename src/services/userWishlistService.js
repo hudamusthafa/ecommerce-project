@@ -1,5 +1,6 @@
 const Wishlist=require("../models/Wishlist");
 const Product=require("../models/Product");
+const statusCodes = require("../helpers/status_codes");
 
 // ADD TO WISHLIST
 
@@ -10,7 +11,7 @@ exports.addToWishlist=async(userId,productId)=>{
 
   if(!product || product.isDeleted){
     const error=new Error("Product unavailable");
-    error.statusCode=404;
+    error.statusCode=statusCodes.NOT_FOUNT;
     throw error;
   }
 
@@ -67,7 +68,7 @@ exports.getWishlist=async(userId)=>{
 };
 //===========================================
 
-// REMOVE WISHLIST ITEM
+
 
 exports.removeWishlistItem=async(
   userId,
@@ -80,7 +81,7 @@ exports.removeWishlistItem=async(
 
   if(!wishlist){
     const error=new Error("Wishlist not found");
-      error.statusCode=404;
+      error.statusCode=statusCodes.NOT_FOUNT;
       throw error;
   }
 

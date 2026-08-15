@@ -1,8 +1,10 @@
 const Category = require("../models/Category");
 
 
-// GET ALL CATEGORIES
+
 exports.getCategories = async (search, page, limit) => {
+
+
 
   const query = {};
 
@@ -13,6 +15,7 @@ exports.getCategories = async (search, page, limit) => {
       $options: "i"
     };
   }
+
 
   // PAGINATION
   const skip = (page - 1) * limit;
@@ -41,19 +44,19 @@ exports.getActiveCategories = async () => {
 
 };
 
-// ADD CATEGORY
+
 exports.addCategory = async (data) => {
   return await Category.create(data);//save categoryOffer automatically.
 };
 
 
-// GET CATEGORY BY ID
+
 exports.getCategoryById = async (id) => {
   return await Category.findById(id);
 };
 
 
-// CHECK CATEGORY BY NAME
+
 exports.getCategoryByName = async (name) => {
 
   return await Category.findOne({
@@ -65,7 +68,6 @@ exports.getCategoryByName = async (name) => {
 };
 
 
-// UPDATE CATEGORY
 exports.updateCategory = async (id, data) => {
 
   return await Category.findByIdAndUpdate(

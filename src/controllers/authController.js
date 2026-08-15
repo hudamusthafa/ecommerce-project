@@ -1,5 +1,6 @@
 const Otp=require("../models/Otp");
 
+
 const {
   registerService,
   loginService,
@@ -11,6 +12,7 @@ const {
 }=require("../services/authService");
 
 const sendEmail=require("../helpers/sendEmail");
+const statusCodes = require("../helpers/status_codes");
 
 // ===================== REGISTER ========================
 
@@ -28,7 +30,7 @@ exports.register=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!name || !email || !password){
-      return res.status(400).render("user/register",{
+      return res.status(statusCodes.BAD_REQUEST).render("user/register",{
         message:"All fields required"
       });
     }
@@ -40,7 +42,7 @@ exports.register=async(req,res,next)=>{
 
   }catch(error){
 
-    return res.status(400).render("user/register",{
+    return res.status(statusCodes.BAD_REQUEST).render("user/register",{
       message:error.message
     });
 
@@ -63,7 +65,7 @@ exports.login=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!email || !password){
-      return res.status(400).render("user/login",{
+      return res.status(statusCodes.BAD_REQUEST).render("user/login",{
         message:"All fields required"
       });
     }
@@ -74,7 +76,7 @@ exports.login=async(req,res,next)=>{
     req.login(user,(err)=>{
 
       if(err){
-        return res.status(500).render("user/login",{
+        return res.status(statusCodes.SERVER_ERROR).render("user/login",{
           message:"Login failed"
         });
       }
@@ -100,7 +102,7 @@ exports.sendOtp=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!name || !email || !password){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"All fields required"
       });
     }
@@ -113,13 +115,13 @@ exports.sendOtp=async(req,res,next)=>{
     // SEND EMAIL
     sendEmail(email.toLowerCase(),otp).catch(err=>console.log(err));
 
-    res.status(200).json({
+    res.status(statusCodes.OK).json({
       message:"OTP sent successfully"
     });
 
   }catch(error){
 
-    res.status(400).json({
+    res.status(statusCodes.BAD_REQUEST).json({
       message:error.message
     });
 
@@ -135,7 +137,7 @@ exports.verifyOtp=async(req,res,next)=>{
 
     // REQUIRED VALIDATION
     if(!email || !otp){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"All fields required"
       });
     }
@@ -147,7 +149,7 @@ exports.verifyOtp=async(req,res,next)=>{
 
       user=await verifyOtpService(email,otp,name,password,referralCode);
 
-      return res.status(200).json({
+      return res.status(statusCodes.OK).json({
         message:"User verified successfully",
         user:{
           name:user.name,
@@ -164,25 +166,25 @@ exports.verifyOtp=async(req,res,next)=>{
 
     // INVALID OTP
     if(!record){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"Invalid OTP"
       });
     }
 
     // EXPIRED OTP
     if(record.expiresAt<new Date()){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"OTP expired"
       });
     }
 
-    res.status(200).json({
+    res.status(statusCodes.OK).json({
       message:"OTP verified"
     });
 
   }catch(error){
 
-    res.status(500).json({
+    res.status(statusCodes.SERVER_ERROR).json({
       message:error.message
     });
 
@@ -198,7 +200,7 @@ exports.forgotPassword=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!email){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"Email required"
       });
     }
@@ -211,13 +213,13 @@ exports.forgotPassword=async(req,res,next)=>{
     // SEND EMAIL
     sendEmail(email,otp).catch(err=>console.log(err));
 
-    res.status(200).json({
+    res.status(statusCodes.OK).json({
       message:"OTP sent successfully"
     });
 
   }catch(error){
 
-    res.status(400).json({
+    res.status(statusCodes.BAD_REQUEST).json({
       message:error.message
     });
 
@@ -233,7 +235,7 @@ exports.resetPassword=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!email || !password){
-      return res.status(400).json({
+      return res.status(statusCodes.BAD_REQUEST).json({
         message:"All fields required"
       });
     }
@@ -241,13 +243,13 @@ exports.resetPassword=async(req,res,next)=>{
     // RESET PASSWORD
     await resetPasswordService(email,password);
 
-    res.status(200).json({
+    res.status(statusCodes.OK).json({
       message:"Password updated"
     });
 
   }catch(error){
 
-    res.status(500).json({
+    res.status(statusCodes.SERVER_ERROR).json({
       message:error.message
     });
 
@@ -269,7 +271,7 @@ exports.changePassword=async(req,res,next)=>{
 
     // EMPTY VALIDATION
     if(!currentPassword || !newPassword || !confirmPassword){
-      return res.status(400).render("user/profile",{
+      return res.status(statusCodes.BAD_REQUEST).render("user/profile",{
         user:req.user,
         message:"All fields are required"
       });
@@ -277,7 +279,7 @@ exports.changePassword=async(req,res,next)=>{
 
     // PASSWORD MATCH
     if(newPassword!==confirmPassword){
-      return res.status(400).render("user/profile",{
+      return res.status(statusCodes.BAD_REQUEST).render("user/profile",{
         user:req.user,
         message:"Passwords do not match"
       });
@@ -297,7 +299,7 @@ exports.changePassword=async(req,res,next)=>{
 
   }catch(error){
 
-    return res.status(400).render("user/profile",{
+    return res.status(statusCodes.BAD_REQUEST).render("user/profile",{
       user:req.user,
       message:error.message
     });

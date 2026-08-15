@@ -2,7 +2,7 @@ const Cart=require("../models/Cart");
 const Product=require("../models/Product");
 
 
-// ADD TO CART
+
 exports.addToCart=async(userId,productId)=>{
 // CHECK PRODUCT
   const product=await Product.findById(productId);
@@ -66,9 +66,6 @@ exports.addToCart=async(userId,productId)=>{
   return cart;
 };
 
-
-
-// GET CART PRODUCTS
 
 exports.getCart = async (userId) => {
 
@@ -135,7 +132,7 @@ const hasUnavailableItems = cart.items.some(
 
 };
 
-// UPDATE QUANTITY
+
 
 exports.updateQuantity=async(
 
@@ -186,7 +183,7 @@ exports.updateQuantity=async(
   return cart;
 };
 
-// REMOVE PRODUCT
+
 
 exports.removeCartProduct=async(userId,productId)=>{
 

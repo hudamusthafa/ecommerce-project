@@ -1,6 +1,6 @@
 const Product=require("../models/Product");
 
-// ================= GET ALL PRODUCTS ====================
+
 
 exports.getProducts=async(
   search,
@@ -83,20 +83,18 @@ else if(stock==="outOfStock"){
   };
 };
 
-// ================= ADD PRODUCT ====================
+
 
 exports.addProduct=async(data)=>{
   return await Product.create(data);
 };
 
-// ================= GET PRODUCT BY ID ====================
+
 
 exports.getProductById=async(id)=>{
   return await Product.findById(id)
     .populate("category");
 };
-
-// ================= UPDATE PRODUCT ====================
 
 
 exports.updateProduct=async(id,data)=>{

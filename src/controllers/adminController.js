@@ -1,5 +1,5 @@
 const adminService=require("../services/adminService");
-
+const statusCodes = require("../helpers/status_codes");
 /* ==================== ADMIN LOGIN ===================== */
 
 exports.getLogin=(req,res)=>{
@@ -19,14 +19,14 @@ exports.postLogin=async(req,res,next)=>{
 
     // EMAIL VALIDATION
     if(!email || !email.includes("@")){
-      return res.status(400).render("admin/login",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/login",{
         error:"Enter a valid email"
       });
     }
 
     // PASSWORD VALIDATION
     if(!password || password.length<6){
-      return res.status(400).render("admin/login",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/login",{
         error:"Password must be at least 6 characters"
       });
     }
@@ -37,7 +37,7 @@ exports.postLogin=async(req,res,next)=>{
     req.login(admin,(err)=>{
 
       if(err){
-        return res.status(500).render("admin/login",{
+        return res.status(statusCodes.SERVER_ERROR).render("admin/login",{
           error:"Login failed"
         });
       }
@@ -47,7 +47,7 @@ exports.postLogin=async(req,res,next)=>{
 
   }catch(error){
 
-    return res.status(400).render("admin/login",{
+    return res.status(statusCodes.BAD_REQUEST).render("admin/login",{
       error:error.message
     });
 
@@ -87,7 +87,7 @@ exports.getUsers=async(req,res,next)=>{
     });
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -102,7 +102,7 @@ exports.blockUser=async(req,res,next)=>{
     res.redirect("/admin/users");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -115,7 +115,7 @@ exports.unblockUser=async(req,res,next)=>{
     res.redirect("/admin/users");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -136,7 +136,7 @@ exports.postAddUser=async(req,res,next)=>{
 
     // PASSWORD MATCH CHECK
     if(password!==confirmPassword){
-      return res.status(400).render("admin/add-user",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/add-user",{
         error:"Passwords do not match",
         formData:req.body
       });
@@ -149,7 +149,7 @@ exports.postAddUser=async(req,res,next)=>{
 
   }catch(error){
 
-    return res.status(400).render("admin/add-user",{
+    return res.status(statusCodes.BAD_REQUEST).render("admin/add-user",{
       error:error.message,
       formData:req.body
     });
@@ -167,7 +167,7 @@ exports.getEditUser=async(req,res,next)=>{
     // USER NOT FOUND
     if(!user){
       const error=new Error("User not found");
-      error.statusCode=404;
+      error.statusCode=statusCodes.NOT_FOUND;
       return next(error);
     }
 
@@ -178,7 +178,7 @@ exports.getEditUser=async(req,res,next)=>{
     });
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
@@ -193,7 +193,7 @@ exports.postEditUser=async(req,res,next)=>{
 
       const user=await adminService.getUserById(req.params.id);
 
-      return res.status(400).render("admin/edit-user",{
+      return res.status(statusCodes.BAD_REQUEST).render("admin/edit-user",{
         user,
         error:"Phone must be 10 digits",
         success:null
@@ -209,7 +209,7 @@ exports.postEditUser=async(req,res,next)=>{
 
     const user=await adminService.getUserById(req.params.id);
 
-    return res.status(400).render("admin/edit-user",{
+    return res.status(statusCodes.BAD_REQUEST).render("admin/edit-user",{
       user,
       error:error.message,
       success:null
@@ -228,7 +228,7 @@ exports.deleteUser=async(req,res,next)=>{
     res.redirect("/admin/users");
 
   }catch(error){
-    error.statusCode=500;
+    error.statusCode=statusCodes.SERVER_ERROR;
     next(error);
   }
 };
