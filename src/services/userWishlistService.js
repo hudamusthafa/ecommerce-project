@@ -2,7 +2,7 @@ const Wishlist=require("../models/Wishlist");
 const Product=require("../models/Product");
 const statusCodes = require("../helpers/status_codes");
 
-// ADD TO WISHLIST
+
 
 exports.addToWishlist=async(userId,productId)=>{
 
@@ -50,13 +50,11 @@ exports.addToWishlist=async(userId,productId)=>{
 };
 //=============================================
 
-// GET WISHLIST
+
 
 exports.getWishlist=async(userId)=>{
 
-  return await Wishlist.findOne({
-    user:userId
-  })
+  return await Wishlist.findOne({user:userId})
 
   .populate({
     path:"products",
@@ -70,14 +68,9 @@ exports.getWishlist=async(userId)=>{
 
 
 
-exports.removeWishlistItem=async(
-  userId,
-  productId
-)=>{
+exports.removeWishlistItem=async(userId,productId)=>{
 
-  const wishlist=await Wishlist.findOne({
-    user:userId
-  });
+  const wishlist=await Wishlist.findOne({user:userId});
 
   if(!wishlist){
     const error=new Error("Wishlist not found");

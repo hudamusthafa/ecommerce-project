@@ -266,3 +266,7 @@ input[readonly]{
 .copy-btn:hover{
     opacity:.9;
 }
+
+.password-section {
+  grid-column: 1;
+}

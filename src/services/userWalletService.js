@@ -1,14 +1,11 @@
 const Wallet = require("../models/Wallet");
 
-// Get Wallet
 
 exports.getWallet = async (userId) => {
 
   
 
-    let wallet = await Wallet.findOne({
-        user: userId
-    });
+    let wallet = await Wallet.findOne({ user: userId});
 
     // Create wallet if it doesn't exist
     if (!wallet) {
@@ -23,9 +20,7 @@ exports.getWallet = async (userId) => {
     return wallet;
 };
 
-
-// Credit Wallet
-
+//==================================
 exports.creditWallet = async (
     userId,
     amount,
@@ -35,9 +30,7 @@ exports.creditWallet = async (
 
 
 
-    let wallet = await Wallet.findOne({
-        user: userId
-    });
+    let wallet = await Wallet.findOne({ user: userId});
 
 
     if (!wallet) {
@@ -66,7 +59,7 @@ exports.creditWallet = async (
 
 
 
-//// ================== Debit Wallet====================
+//// ================== 
 
 
 exports.debitWallet = async (
@@ -76,18 +69,14 @@ exports.debitWallet = async (
     orderId = ""
 ) => {
 
-    const wallet = await Wallet.findOne({
-        user: userId
-    });
+    const wallet = await Wallet.findOne({user: userId});
 
     if (!wallet) {
-
         throw new Error("Wallet not found.");
 
     }
 
     if (wallet.balance < amount) {
-
         throw new Error("Insufficient wallet balance.");
 
     }
@@ -95,19 +84,14 @@ exports.debitWallet = async (
     wallet.balance -= amount;
 
     wallet.transactions.unshift({
-
         type: "Debit",
-
         amount,
-
         description,
-
         orderId
 
     });
 
     await wallet.save();
-
     return wallet;
 
 };

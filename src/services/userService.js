@@ -1,14 +1,14 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
-// GET USER BY ID
+
 exports.getUserById = async (userId) => {
   return await User.findById(userId);
 };
 
-// ADD ADDRESS
+
 exports.addAddress = async (userId, addressData) => {
-  const user = await User.findById(userId);
+  const user =await User.findById(userId);
 
   user.address.push(addressData);
   await user.save();
@@ -16,9 +16,9 @@ exports.addAddress = async (userId, addressData) => {
   return user;
 };
 
-// DELETE ADDRESS
+
 exports.deleteAddress = async (userId, addressId) => {
-  const user = await User.findById(userId);
+  const user =await User.findById(userId);
 
   user.address = user.address.filter(
     addr => addr._id.toString() !== addressId
@@ -27,8 +27,8 @@ exports.deleteAddress = async (userId, addressId) => {
   await user.save();
 };
 
-// UPDATE ADDRESS
-exports.updateAddress = async (userId, addressId, data) => {
+
+exports.updateAddress = async(userId, addressId, data) => {
   const user = await User.findById(userId);
 
   const address = user.address.id(addressId);
@@ -39,12 +39,14 @@ exports.updateAddress = async (userId, addressId, data) => {
 
   await user.save();
 };
+
+
 // UPDATE USER PROFILE
 exports.updateUser = async (userId, updates) => {
   return await User.findByIdAndUpdate(userId, updates,{ returnDocument: "after" });
 };
 
-//set paswrd
+
 
 exports.setPassword = async (userId, newPassword) => {
   const user = await User.findById(userId);

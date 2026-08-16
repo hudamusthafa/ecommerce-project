@@ -7,17 +7,13 @@ const offerHelper = require("../helpers/offerHelper");
 
 
 
-// PRODUCT LIST PAGE
+
 
 exports.getProducts=async(query)=>{
 
-  // SEARCH
+  
   const search=query.search || "";
-
-  // CATEGORY
   const category=query.category || "";
-
-  // SORT
   const sort=query.sort || "";
 
   // PRICE FILTER
@@ -89,7 +85,7 @@ exports.getProducts=async(query)=>{
 
   }
 
-  // PRODUCTS
+ 
   const products=await Product.find(filter)
 
   .populate("category")
@@ -120,13 +116,11 @@ exports.getProducts=async(query)=>{
 
 
 
-  // TOTAL PRODUCTS
   const totalProducts=await Product.countDocuments(filter);
 
-  // TOTAL PAGES
   const totalPages=Math.ceil(totalProducts/limit);
 
-  // CATEGORIES
+  
   const categories=await Category.find({
    isListed: true
 
@@ -151,7 +145,7 @@ exports.getProducts=async(query)=>{
 
 //==================================================
 
-// PRODUCT DETAILS PAGE
+
 
 exports.getProductDetails=async(productId,userId)=>{
 
@@ -182,7 +176,7 @@ productData.offerPercentage = offer.offerPercentage;
 
 
  
-  // RELATED PRODUCTS
+
   const relatedProducts=await Product.find({
 
     _id:{ $ne:productId },

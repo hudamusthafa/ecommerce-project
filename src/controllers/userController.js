@@ -260,6 +260,9 @@ exports.updateProfile = async (req, res) => {
 // CHANGE PASSWORD (improved)
 exports.changePassword = async (req, res) => {
   try {
+
+
+
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -291,6 +294,9 @@ exports.changePassword = async (req, res) => {
     });
 
   } catch (err) {
+
+
+
     return res.render("user/profile", {
       user: req.user,
       error: err.message,
@@ -318,14 +324,14 @@ exports.setPassword = async (req, res) => {
     if (!newPassword || !confirmPassword) {
       return res.render("user/profile", {
         user: req.user,
-        message: "All fields are required"
+        error: "All fields are required"
       });
     }
 
     if (newPassword !== confirmPassword) {
       return res.render("user/profile", {
         user: req.user,
-        message: "Passwords do not match"
+        error: "Passwords do not match"
       });
     }
 
@@ -333,7 +339,7 @@ exports.setPassword = async (req, res) => {
 if (req.user.password && req.user.password !== "google" && req.user.password !== "google-auth") {
       return res.render("user/profile", {
         user: req.user,
-        message: "Password already exists"
+        error: "Password already exists"
       });
     }
 
@@ -349,7 +355,7 @@ if (req.user.password && req.user.password !== "google" && req.user.password !==
   } catch (err) {
     res.render("user/profile", {
       user: req.user,
-      message: err.message
+      error: err.message
     });
   }
 };
