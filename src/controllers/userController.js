@@ -722,6 +722,9 @@ exports.moveWishlistToCart = async(req,res,next)=>{
 exports.getCheckout=async(req,res,next)=>{
   try{
 
+
+
+
 //  Buy Now from wishlist
     if(req.query.product){
 
@@ -731,13 +734,13 @@ exports.getCheckout=async(req,res,next)=>{
       };
     }
 
+      else if(req.query.buyNow !== "true"){
 
-
-// Cart checkout
-else  {
     delete req.session.buyNow;
-}
- 
+
+  }
+
+
 
    const data =
       await userCheckoutService.getCheckoutData(

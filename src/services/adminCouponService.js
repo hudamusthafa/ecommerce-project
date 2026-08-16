@@ -2,7 +2,7 @@ const Coupon = require("../models/Coupon");
 
 //=======================================
 
-// GET COUPONS
+
 exports.getCoupons = async (search = "") => {
 
   const query = {};
@@ -25,7 +25,6 @@ exports.getCoupons = async (search = "") => {
 };
 //========================================
 
-// ADD COUPON
 exports.addCoupon = async (data) => {
 
   const {
@@ -46,7 +45,7 @@ exports.addCoupon = async (data) => {
  
 
 
-  // Check duplicate coupon
+  
   const existingCoupon = await Coupon.findOne({
     code: code.trim().toUpperCase()
   });
@@ -55,7 +54,7 @@ exports.addCoupon = async (data) => {
     throw new Error("Coupon code already exists.");
   }
 
-  // Validate dates
+  
   if (new Date(startDate) >= new Date(expiryDate)) {
     throw new Error("Expiry date must be later than the start date.");
   }
