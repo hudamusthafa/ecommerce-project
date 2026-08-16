@@ -1068,6 +1068,7 @@ exports.getOrderSuccess = async (req, res, next) => {
         res.render("user/order-success", {
 
             order,
+            orderId: order.orderId,
             user: req.user
 
         });
