@@ -503,11 +503,15 @@ order.total =
 
 
 
-// Refund to wallet 
+// // Refund to wallet 
 
-if (order.paymentMethod === "paid") {
+
+
+
+if (order.paymentStatus === "Paid") {
 
   const refundAmount = item.price * item.quantity;
+
 
   await userWalletService.creditWallet(
     order.user,

@@ -187,6 +187,9 @@ await Product.findByIdAndUpdate(
     }
 );
 
+
+
+
 // Refund wallet if payment already completed
 
 if (
@@ -194,8 +197,6 @@ if (
     order.paymentMethod === "Wallet" ||
     order.paymentMethod === "Stripe"
 ) {
-
-
 
 
     const refundAmount = item.price * item.quantity;
