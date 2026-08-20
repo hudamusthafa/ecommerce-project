@@ -87,6 +87,54 @@ const refundAmount = refundedItems.reduce(
 
 <% } %>
 
+
+
+
+
+<% if(refund){ %>
+
+<div class="refund-success">
+
+  <div class="refund-icon">
+    <i class="fas fa-check-circle"></i>
+  </div>
+
+  <div class="refund-content">
+
+    <h3>Refund Processed Successfully</h3>
+
+    <p>
+      Your cancelled product has been refunded.
+    </p>
+
+    <p class="refund-amount">
+      ₹<%= refund %> has been credited to your Aura Wallet.
+    </p>
+
+    <div class="refund-info">
+
+      <span>
+        <strong>Payment Method:</strong>
+        <%= order.paymentMethod %>
+      </span>
+
+      <span>
+        <strong>Refunded To:</strong>
+        Aura Wallet
+      </span>
+
+    </div>
+
+  </div>
+
+  <a href="/wallet" class="wallet-link">
+    View Wallet
+  </a>
+
+</div>
+
+<% } %>
+
   <!-- error msg -->
 
   <% if(cancelled){ %>

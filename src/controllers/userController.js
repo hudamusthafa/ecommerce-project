@@ -1134,6 +1134,7 @@ exports.getOrderDetails = async (req, res, next) => {
     );
 
     const cancelled = req.query.cancelled;
+    const refund = req.query.refund;
 
     // Get wallet
     const wallet = await userWalletService.getWallet(
@@ -1169,7 +1170,8 @@ exports.getOrderDetails = async (req, res, next) => {
       order,
       user: req.user,
       cancelled,
-      refundMessage
+      refundMessage,
+      refund
     });
 
   } catch (error) {
@@ -1182,20 +1184,50 @@ exports.getOrderDetails = async (req, res, next) => {
 //==========================================================
 
 //cancel each product
-exports.cancelProduct = async(req,res,next)=>{
-  try{
+// exports.cancelProduct = async(req,res,next)=>{
+//   try{
 
-    await userOrderService.cancelProduct(
+//     await userOrderService.cancelProduct(
+//       req.params.orderId,
+//       req.params.productId,
+//       req.body.reason
+//     );
+
+//     res.redirect(
+//       "/orders/" + req.params.orderId
+//     );
+
+//   }catch(error){
+
+//     next(error);
+
+//   }
+// };
+
+exports.cancelProduct = async (req, res, next) => {
+  try {
+
+    const order = await userOrderService.cancelProduct(
       req.params.orderId,
       req.params.productId,
       req.body.reason
     );
 
-    res.redirect(
-      "/orders/" + req.params.orderId
+    const cancelledItem = order.items.find(
+      item => item.product.toString() === req.params.productId
     );
 
-  }catch(error){
+    const refundAmount =
+      cancelledItem.price * cancelledItem.quantity;
+
+    res.redirect(
+      "/orders/" +
+      req.params.orderId +
+      "?cancelled=true&refund=" +
+      refundAmount
+    );
+
+  } catch (error) {
 
     next(error);
 
