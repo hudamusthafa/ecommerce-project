@@ -1471,19 +1471,48 @@ exports.downloadInvoice=async(req,res,next)=>{
 
     let y=tableTop+30;
 
-    doc.fillColor("black")
-      .font("Helvetica");
+doc.fillColor("black")
+  .font("Helvetica");
 
-    order.items.forEach(item=>{
+const activeItems = order.items.filter(
+  item => item.status !== "Cancelled" && item.status !== "Returned"
+);
 
-      if(item.status==="Cancelled") return;
+const invoiceSubtotal = activeItems.reduce(
+  (total, item) => total + (item.price * item.quantity),
+  0
+);
+
+const invoiceShipping = activeItems.length > 0 ? order.shipping : 0;
+const invoiceDiscount = activeItems.length > 0 ? order.discount : 0;
+
+const invoiceTotal =
+  invoiceSubtotal + invoiceShipping - invoiceDiscount;
+
+
+if (activeItems.length === 0) {
+  doc.fillColor("gray")
+    .font("Helvetica")
+    .text("No active products", 50, y, {
+      width: 500,
+      align: "center"
+    });
+
+  y += 25;
+}
+
+
+  
+
+    activeItems.forEach(item=>{
+
 
 const productName=item.product?.name || "Product";
 
- doc.text(item.product.name, 50, y, { width: 220 });
+ doc.text(productName, 50, y, { width: 220 });
   doc.text(item.quantity.toString(), 300, y);
-  doc.text(`₹${item.price}`, 360, y);
-  doc.text(`₹${item.quantity * item.price}`, 460, y);
+  doc.text(`Rs. ${item.price}`, 360, y);
+  doc.text(`Rs. ${item.quantity * item.price}`, 460, y);
 
       y+=25;
 
@@ -1503,15 +1532,15 @@ const productName=item.product?.name || "Product";
       .fillColor("black")
       .font("Helvetica");
 
-    doc.text(`Subtotal : ₹${order.subtotal}`,{
+    doc.text(`Subtotal : Rs. ${invoiceSubtotal}`,{
       align:"right"
     });
 
-    doc.text(`Shipping : ₹${order.shipping}`,{
+    doc.text(`Shipping : Rs. ${invoiceShipping}`,{
       align:"right"
     });
 
-    doc.text(`Discount : ₹${order.discount}`,{
+    doc.text(`Discount : Rs. ${invoiceDiscount}`,{
       align:"right"
     });
 
@@ -1521,8 +1550,10 @@ const productName=item.product?.name || "Product";
       .fillColor("#9a6434")
       .font("Helvetica-Bold");
 
-    doc.text(`Grand Total : ₹${order.total}`,{
-      align:"right"
+    doc.text(`Grand Total : Rs. ${invoiceTotal}`, 300, doc.y, {
+      width: 250,
+      align: "right",
+      lineBreak: false
     });
 
     doc.moveDown(2);
