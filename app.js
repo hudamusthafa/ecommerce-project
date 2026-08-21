@@ -6,6 +6,7 @@ const methodOverride = require("method-override");
 const errorMiddleware = require("./src/middleware/errorMiddleware");
 const { noCache } = require("./src/middleware/cacheMiddleware");
 const MongoStore = require("connect-mongo").default;
+const statusCodes = require("./src/helpers/status_codes");
 
 
 dotenv.config();
@@ -15,7 +16,7 @@ const passport = require("passport");
 require("./src/config/passport");
 
 
-//const MongoStore = require("connect-mongo")(session);
+
 
 // Routes
 const authRoutes = require("./src/routes/authRoutes");
@@ -100,7 +101,12 @@ app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 
 app.use((req, res) => {
-  res.status(404).render("user/404");
+
+  if (req.originalUrl.startsWith("/admin")) {
+    return res.status(statusCodes.NOT_FOUND).render("admin/404");
+  }
+
+  res.status(statusCodes.NOT_FOUND).render("user/404");
 });
 
 // Error middleware
