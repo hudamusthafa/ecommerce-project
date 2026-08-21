@@ -1183,26 +1183,7 @@ exports.getOrderDetails = async (req, res, next) => {
 
 //==========================================================
 
-//cancel each product
-// exports.cancelProduct = async(req,res,next)=>{
-//   try{
 
-//     await userOrderService.cancelProduct(
-//       req.params.orderId,
-//       req.params.productId,
-//       req.body.reason
-//     );
-
-//     res.redirect(
-//       "/orders/" + req.params.orderId
-//     );
-
-//   }catch(error){
-
-//     next(error);
-
-//   }
-// };
 
 exports.cancelProduct = async (req, res, next) => {
   try {
@@ -1210,7 +1191,8 @@ exports.cancelProduct = async (req, res, next) => {
     const order = await userOrderService.cancelProduct(
       req.params.orderId,
       req.params.productId,
-      req.body.reason
+      req.body.reason,
+      req.user._id
     );
 
     const cancelledItem = order.items.find(
@@ -1242,7 +1224,8 @@ exports.cancelOrder=async(req,res,next)=>{
 
     await userOrderService.cancelOrder(
       req.params.id,
-      req.body.reason
+      req.body.reason,
+      req.user._id
     );
 
    res.redirect(
@@ -1290,7 +1273,8 @@ exports.returnOrder=async(req,res,next)=>{
 
     await userOrderService.returnOrder(
       req.params.id,
-      req.body.reason
+      req.body.reason,
+      req.user._id
     );
 
     res.redirect("/orders/"+req.params.id);
@@ -1310,7 +1294,8 @@ exports.returnProduct = async (req, res, next) => {
     await userOrderService.returnProduct(
       req.params.orderId,
       req.params.productId,
-      req.body.reason
+      req.body.reason,
+      req.user._id
     );
 
     res.redirect("/orders/" + req.params.orderId);

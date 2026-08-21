@@ -373,9 +373,12 @@ exports.getOrderDetails=async(orderId,userId)=>{
 
 // CANCEL ORDER
 
-exports.cancelOrder = async (orderId, reason) => {
+exports.cancelOrder = async (orderId, reason,userId) => {
 
-  const order = await Order.findById(orderId);
+    const order = await Order.findOne({
+    _id: orderId,
+    user: userId
+  });
 
   if (!order) {
     throw new Error("Order not found");
@@ -433,10 +436,14 @@ return order;
 exports.cancelProduct = async (
   orderId,
   productId,
-  reason
+  reason,
+  userId
 ) => {
 
-  const order = await Order.findById(orderId);
+  const order = await Order.findOne({
+    _id: orderId,
+    user: userId
+  });
 
   if(!order){
     throw new Error("Order not found");
@@ -578,9 +585,13 @@ exports.reorderProduct=async(userId,productId)=>{
 
 // RETURN ORDER
 
-exports.returnOrder = async (orderId, reason) => {
+exports.returnOrder = async (orderId, reason,userId) => {
 
-  const order = await Order.findById(orderId);
+    const order = await Order.findOne({
+    _id: orderId,
+    user: userId
+  });
+
 
   if (!order) {
     throw new Error("Order not found");
@@ -598,16 +609,7 @@ exports.returnOrder = async (orderId, reason) => {
     throw new Error("Order already returned");
   }
 
-  //  Request return for all products — admin will approve and restore stock
-  // order.orderStatus = "Return Requested";
-  // order.returnReason = reason;
-
-  // order.items.forEach(item=>{
-  //   order.item = "Return Requested";
-  //   order.returnReason = reason;
-  // })
-
-  // await order.save();
+  
 
   order.items.forEach(item => {
   if (item.status === "Delivered") {
@@ -624,10 +626,13 @@ await order.save();
 //==========================================================
 
 // RETURN SINGLE PRODUCT
-exports.returnProduct = async (orderId, productId, reason) => {
+exports.returnProduct = async (orderId, productId, reason,userId) => {
 
 
-  const order = await Order.findById(orderId);
+   const order = await Order.findOne({
+    _id: orderId,
+    user: userId
+  });
 
   if (!order) throw new Error("Order not found");
 
