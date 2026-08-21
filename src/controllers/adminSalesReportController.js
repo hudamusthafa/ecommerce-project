@@ -431,15 +431,19 @@ reportHeader.eachCell(cell => {
 
 
  if(filter !== "daily"){
-        worksheet.addRow([
-       "From",
-    reportFrom.toLocaleDateString("en-GB")
-    ]);
+worksheet.addRow([
+    "From",
+    fromDate
+        ? new Date(fromDate + "T00:00:00").toLocaleDateString("en-GB")
+        : reportFrom.toLocaleDateString("en-GB")
+]);
 
-    worksheet.addRow([
-        "To",
-        reportTo.toLocaleDateString("en-GB")
-    ]);
+worksheet.addRow([
+    "To",
+    toDate
+        ? new Date(toDate + "T00:00:00").toLocaleDateString("en-GB")
+        : reportTo.toLocaleDateString("en-GB")
+]);
  }
 
   
