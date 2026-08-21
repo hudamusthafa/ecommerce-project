@@ -365,6 +365,36 @@ const refundAmount = refundedItems.reduce(
 
 </div>
 
+  <!-- PAYMENT METHOD -->
+ <div>
+    <h4>Payment Method</h4>
+    <p>
+      <%= order.paymentMethod %>
+    </p>
+  </div>
+
+  <!-- COUPON -->
+
+  <div>
+    <h4>Coupon</h4>
+
+    <% if(order.discount && order.discount > 0){ %>
+
+      <p class="coupon-applied">
+        <i class="fa-solid fa-tag"></i>
+        Coupon Applied
+      </p>
+
+    <% } else { %>
+
+      <p>No Coupon Applied</p>
+
+    <% } %>
+  </div>
+
+
+
+
   </div>
 
 
@@ -473,6 +503,14 @@ const refundAmount = refundedItems.reduce(
       <span>Total</span>
       <span>₹<%= order.total %></span>
     </div>
+
+<a
+  href="/orders/<%= order._id %>/invoice"
+  class="invoice-btn"
+>
+  <i class="fa-solid fa-file-invoice"></i>
+  Download Invoice
+</a>
 
   </div>
 

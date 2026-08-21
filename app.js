@@ -68,23 +68,6 @@ app.use(noCache);
  app.use(async (req, res, next) => {
   try {
 
-//     if (
-//       req.session &&
-//       req.session.passport &&
-//       !req.user &&
-//       !req.originalUrl.startsWith("/admin")
-//     ) {
-//       return req.logout(() => {
-//         req.session.destroy(() => {
-//           res.clearCookie("connect.sid");
-//           return res.redirect(
-//             "/login?message=" +
-//             encodeURIComponent("Your account has been blocked by admin")
-//           );
-//         });
-//       });
-//     }
-
     res.locals.user = req.user || null;
     res.locals.cartCount = 0;
 
@@ -115,6 +98,10 @@ app.get("/", (req, res) => {
 app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
+
+app.use((req, res) => {
+  res.status(404).render("user/404");
+});
 
 // Error middleware
 app.use(errorMiddleware);

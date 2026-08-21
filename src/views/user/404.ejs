@@ -1,0 +1,57 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Page Not Found | Aura</title>
+
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/404.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+
+
+<body>
+
+
+<%- include("../partials/header") %>
+
+<div class="empty-page-container">
+
+  <div class="empty-cart-card">
+
+    <i class="fa-solid fa-circle-exclamation error-icon"></i>
+
+    <h1>404</h1>
+
+    <h2>Page Not Found</h2>
+
+    <p>
+      Sorry, the page you're looking for doesn't exist
+      or may have been moved.
+    </p>
+
+    <a href="/products" class="shop-btn">
+      <i class="fa-solid fa-bag-shopping"></i>
+      Continue Shopping
+    </a>
+
+  </div>
+
+</div>
+
+<%- include("../partials/footer") %>
+</body>
+
+</html>
