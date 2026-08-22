@@ -1,3 +1,4 @@
+const User = require("../models/User");
 
 //user auth
 
@@ -31,18 +32,44 @@ exports.isLoggedOut = (req, res, next) => {
 };
 
 
-//  (ADMIN AUTH)
-exports.isAdminLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated() && req.user && req.user.isAdmin) {
-    return next();
-  }
 
-  return res.redirect("/admin/login");
+
+
+exports.isAdminLoggedIn = async (req, res, next) => {
+  try {
+
+    if (!req.session.adminId) {
+      return res.redirect("/admin/login");
+    }
+
+    const admin = await User.findById(req.session.adminId);
+
+    if (!admin || !admin.isAdmin || admin.isDeleted) {
+      delete req.session.adminId;
+      return res.redirect("/admin/login");
+    }
+
+    if (admin.isBlocked) {
+      delete req.session.adminId;
+      return res.redirect("/admin/login");
+    }
+
+    req.admin = admin;
+
+    next();
+
+  } catch (error) {
+    next(error);
+  }
 };
 
-//  (ADMIN LOGIN BLOCK)
+
+
+
+
 exports.isAdminLoggedOut = (req, res, next) => {
-  if (req.isAuthenticated() && req.user && req.user.isAdmin) {
+
+  if (req.session.adminId) {
     return res.redirect("/admin/dashboard");
   }
 

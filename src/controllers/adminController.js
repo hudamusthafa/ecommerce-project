@@ -2,15 +2,19 @@ const adminService=require("../services/adminService");
 const statusCodes = require("../helpers/status_codes");
 /* ==================== ADMIN LOGIN ===================== */
 
-exports.getLogin=(req,res)=>{
 
-  // PREVENT LOGIN ACCESS AFTER LOGIN
-  if(req.isAuthenticated() && req.user && req.user.isAdmin){
+exports.getLogin = (req, res) => {
+
+  if (req.session.adminId) {
     return res.redirect("/admin/dashboard");
   }
 
-  res.render("admin/login",{error:null});
+  res.render("admin/login", {
+    error: null
+  });
 };
+
+
 
 exports.postLogin=async(req,res,next)=>{
   try{
@@ -31,19 +35,22 @@ exports.postLogin=async(req,res,next)=>{
       });
     }
 
-    // ADMIN LOGIN
-    const admin=await adminService.adminLogin(email,password);
 
-    req.login(admin,(err)=>{
 
-      if(err){
-        return res.status(statusCodes.SERVER_ERROR).render("admin/login",{
-          error:"Login failed"
-        });
-      }
+const admin = await adminService.adminLogin(email, password);
 
-      return res.redirect("/admin/dashboard");
+req.session.adminId = admin._id;
+
+req.session.save((err) => {
+
+  if (err) {
+    return res.status(statusCodes.SERVER_ERROR).render("admin/login", {
+      error: "Login failed"
     });
+  }
+
+  return res.redirect("/admin/dashboard");
+});
 
   }catch(error){
 

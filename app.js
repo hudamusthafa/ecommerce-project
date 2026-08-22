@@ -38,13 +38,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
 
-//  Session configuration with MongoDB store
-app.use(session({
+
+const userSession = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 
-store: MongoStore.create({
+  store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
     collectionName: "sessions"
   }),
@@ -53,14 +53,58 @@ store: MongoStore.create({
     maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true
   }
-}));
+});
+
+
+//admin session
+const adminSession = session({
+  secret: process.env.SESSION_SECRET,
+
+  name: "admin.sid",
+
+  resave: false,
+  saveUninitialized: false,
+
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: "admin-sessions"
+  }),
+
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true
+  }
+});
+
+
 
 
 app.use(methodOverride("_method"));
 
+// USER SESSION
+app.use((req, res, next) => {
+
+  if (req.originalUrl.startsWith("/admin")) {
+    return next();
+  }
+
+  userSession(req, res, next);
+});
+
+// ADMIN SESSION
+app.use("/admin", adminSession);
+
 // Passport middleware
 app.use(passport.initialize());
-app.use(passport.session());
+
+app.use((req, res, next) => {
+
+  if (req.originalUrl.startsWith("/admin")) {
+    return next();
+  }
+
+  passport.session()(req, res, next);
+});
 
 app.use(noCache);
 

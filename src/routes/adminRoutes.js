@@ -34,16 +34,6 @@ router.put("/edit-user/:id",isAdminLoggedIn,adminController.postEditUser);
 // DELETE USER
 router.delete("/delete-user/:id",isAdminLoggedIn,adminController.deleteUser);
 
-// LOGOUT
-router.get("/logout",isAdminLoggedIn,(req,res,next)=>{
-  req.logout(err=>{
-    if(err) return next(err);
-    req.session.destroy(()=>{
-      res.clearCookie("connect.sid");
-      res.redirect("/admin/login");
-    });
-  });
-});
 
 // CATEGORY MANAGEMENT
 router.get("/categories",isAdminLoggedIn,categoryController.getCategories);
@@ -108,5 +98,22 @@ router.post("/orders/:orderId/product/:productId/reject-return",isAdminLoggedIn,
 router.post("/orders/:orderId/approve-return-all",isAdminLoggedIn,adminOrderController.approveAllReturns);
 // BULK REJECT RETURN
 router.post("/orders/:orderId/reject-return-all",isAdminLoggedIn,adminOrderController.rejectAllReturns);
+
+
+
+router.get("/logout", isAdminLoggedIn, (req, res, next) => {
+
+  req.session.destroy((err) => {
+
+    if (err) {
+      return next(err);
+    }
+
+    res.clearCookie("admin.sid");
+
+    res.redirect("/admin/login");
+  });
+
+});
 
 module.exports=router;

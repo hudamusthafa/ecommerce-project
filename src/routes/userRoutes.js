@@ -119,15 +119,28 @@ router.post("/orders/:orderId/product/:productId/return", cacheMiddleware.noCach
 router.get("/orders/:id/invoice",cacheMiddleware.noCache,isLoggedIn,userController.downloadInvoice);
 
 
-// LOGOUT
-router.get("/logout",isLoggedIn,(req,res,next)=>{
-  req.logout(err=>{
-    if(err) return next(err);
-    req.session.destroy(()=>{
-      res.clearCookie("connect.sid");
+
+router.get("/logout", isLoggedIn, (req, res, next) => {
+
+  req.logout((err) => {
+
+    if (err) {
+      return next(err);
+    }
+
+    req.session.save((err) => {
+
+      if (err) {
+        return next(err);
+      }
+
       res.redirect("/login");
     });
+
   });
+
 });
+
+
 
 module.exports=router;
